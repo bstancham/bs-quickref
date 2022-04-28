@@ -1,0 +1,441 @@
+* MORE HELP
+The Rust Book: https://doc.rust-lang.org/book/index.html
+
+current bookmark:
+https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html
+https://doc.rust-lang.org/book/ch05-03-method-syntax.html
+
+* INSTALLATION AND SETUP
+** download and install rust
+Download Rust through rustup, a command line tool for managing Rust versions and associated tools.
+
+Installing rustup on linux or mac
+
+This command downloads a script and starts the installation of the rustup tool, which installs the latest stable version of Rust.
+
+#+BEGIN_SRC 
+$ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+#+END_SRC
+
+--proto '=https' --> specifies the protocol used to download
+
+--tlsv1.2 --> use tls version 1.2 during transfer
+
+https://sh.rustup.rs --> the url of the download
+
+ | sh --> pipes the resulting script into sh
+
+
+THE INSTALLER DOES THIS
+
+add these commands to the cargo bin directory
+
+~/.cargo/bin
+
+This can be modified with the CARGO_HOME environment variable.
+
+Rustup metadata and toolchains will be installed into the Rustup
+home directory, located at:
+
+  /home/bsc/.rustup
+
+This can be modified with the RUSTUP_HOME environment variable.
+
+This path will then be added to your PATH environment variable by
+modifying the profile files located at:
+
+  /home/bsc/.profile
+/home/bsc/.zprofile
+
+You can uninstall at any time with rustup self uninstall and
+these changes will be reverted.
+
+Current installation options:
+
+
+   default host triple: x86_64-unknown-linux-gnu
+     default toolchain: stable
+               profile: default
+  modify PATH variable: yes
+
+** LINKER
+
+Additionally, you’ll need a linker of some kind. It’s likely one is already
+installed, but when you try to compile a Rust program and get errors indicating
+that a linker could not execute, that means a linker isn’t installed on your
+system and you’ll need to install one manually. C compilers usually come with
+the correct linker. Check your platform’s documentation for how to install a C
+compiler. Also, some common Rust packages depend on C code and will need a C
+compiler. Therefore, it might be worth installing one now.
+
+** UPDATING TO LATEST RUST VERSION
+
+$ rustup update
+
+** UNINSTALL
+
+$ rustup self unistall
+
+** TROUBLESHOOTING
+
+To check whether you have Rust installed correctly, open a shell and enter this line:
+
+$ rustc --version
+
+You should see the version number, commit hash, and commit date for the latest stable version that has been released in the following format:
+
+rustc x.y.z (abcabcabc yyyy-mm-dd)
+
+If you see this information, you have installed Rust successfully! If you don’t see this information and you’re on Windows, check that Rust is in your %PATH% system variable. If that’s all correct and Rust still isn’t working, there are a number of places you can get help. The easiest is the #beginners channel on the official Rust Discord. There, you can chat with other Rustaceans (a silly nickname we call ourselves) who can help you out. Other great resources include the Users forum and Stack Overflow.
+
+*** rust commands not available
+
+Make sure that you have ~/.cargo/bin added to your path
+
+also environment variables $CARGO_HOME etc
+
+** LOCAL DOCUMENTATION
+
+The installation of Rust also includes a copy of the documentation locally, so you can read it offline. Run rustup doc to open the local documentation in your browser.
+
+Any time a type or function is provided by the standard library and you’re not sure what it does or how to use it, use the application programming interface (API) documentation to find out!
+
+** RACER (for code completion)
+
+install racer and emacs/racer integration
+
+* HELLO WORLD
+
+Filename: main.rs
+
+fn main() {
+    println!("Hello, world!");
+}
+
+Writing and Running a Rust Program
+
+Next, make a new source file and call it main.rs. Rust files always end with the .rs extension. If you’re using more than one word in your filename, use an underscore to separate them. For example, use hello_world.rs rather than helloworld.rs.
+
+Now open the main.rs file you just created and enter the code in Listing 1-1.
+
+Filename: main.rs
+
+fn main() {
+    println!("Hello, world!");
+}
+
+Listing 1-1: A program that prints Hello, world!
+
+Save the file and go back to your terminal window. On Linux or macOS, enter the following commands to compile and run the file:
+
+$ rustc main.rs
+$ ./main
+Hello, world!
+
+On Windows, enter the command .\main.exe instead of ./main:
+
+> rustc main.rs
+> .\main.exe
+Hello, world!
+
+Regardless of your operating system, the string Hello, world! should print to the terminal. If you don’t see this output, refer back to the “Troubleshooting” part of the Installation section for ways to get help.
+
+If Hello, world! did print, congratulations! You’ve officially written a Rust program. That makes you a Rust programmer—welcome!
+Anatomy of a Rust Program
+
+Let’s review in detail what just happened in your “Hello, world!” program. Here’s the first piece of the puzzle:
+
+fn main() {
+
+}
+
+These lines define a function in Rust. The main function is special: it is always the first code that runs in every executable Rust program. The first line declares a function named main that has no parameters and returns nothing. If there were parameters, they would go inside the parentheses, ().
+
+Also, note that the function body is wrapped in curly brackets, {}. Rust requires these around all function bodies. It’s good style to place the opening curly bracket on the same line as the function declaration, adding one space in between.
+
+At the time of this writing, an automatic formatter tool called rustfmt is under development. If you want to stick to a standard style across Rust projects, rustfmt will format your code in a particular style. The Rust team plans to eventually include this tool with the standard Rust distribution, like rustc. So depending on when you read this book, it might already be installed on your computer! Check the online documentation for more details.
+
+Inside the main function is the following code:
+
+
+    println!("Hello, world!");
+
+This line does all the work in this little program: it prints text to the screen. There are four important details to notice here. First, Rust style is to indent with four spaces, not a tab.
+
+Second, println! calls a Rust macro. If it called a function instead, it would be entered as println (without the !). We’ll discuss Rust macros in more detail in Chapter 19. For now, you just need to know that using a ! means that you’re calling a macro instead of a normal function.
+
+Third, you see the "Hello, world!" string. We pass this string as an argument to println!, and the string is printed to the screen.
+
+Fourth, we end the line with a semicolon (;), which indicates that this expression is over and the next one is ready to begin. Most lines of Rust code end with a semicolon.
+Compiling and Running Are Separate Steps
+
+You’ve just run a newly created program, so let’s examine each step in the process.
+
+Before running a Rust program, you must compile it using the Rust compiler by entering the rustc command and passing it the name of your source file, like this:
+
+$ rustc main.rs
+
+If you have a C or C++ background, you’ll notice that this is similar to gcc or clang. After compiling successfully, Rust outputs a binary executable.
+
+On Linux, macOS, and PowerShell on Windows, you can see the executable by entering the ls command in your shell. On Linux and macOS, you’ll see two files. With PowerShell on Windows, you’ll see the same three files that you would see using CMD.
+
+$ ls
+main  main.rs
+
+With CMD on Windows, you would enter the following:
+
+> dir /B %= the /B option says to only show the file names =%
+main.exe
+main.pdb
+main.rs
+
+This shows the source code file with the .rs extension, the executable file (main.exe on Windows, but main on all other platforms), and, when using Windows, a file containing debugging information with the .pdb extension. From here, you run the main or main.exe file, like this:
+
+$ ./main # or .\main.exe on Windows
+
+If main.rs was your “Hello, world!” program, this line would print Hello, world! to your terminal.
+
+If you’re more familiar with a dynamic language, such as Ruby, Python, or JavaScript, you might not be used to compiling and running a program as separate steps. Rust is an ahead-of-time compiled language, meaning you can compile a program and give the executable to someone else, and they can run it even without having Rust installed. If you give someone a .rb, .py, or .js file, they need to have a Ruby, Python, or JavaScript implementation installed (respectively). But in those languages, you only need one command to compile and run your program. Everything is a trade-off in language design.
+
+Just compiling with rustc is fine for simple programs, but as your project grows, you’ll want to manage all the options and make it easy to share your code. Next, we’ll introduce you to the Cargo tool, which will help you write real-world Rust programs.
+
+* CARGO (BUILD SYSTEM AND PACKAGE MANAGER)
+** creating a new cargo project
+
+$ cargo new PROJECT_NAME
+
+This creates a new directory called PROJECT_NAME containing the following things:
+- Cargo.toml (the cargo config file)
+- a new git repository and .gitignore file
+- src dir containing a single file - main.rs
+
+** basic cargo commands
+$ cargo new PROJECT NAME
+
+$ cargo build
+
+$ cargo build --release
+
+$ cargo check
+
+$ cargo run
+
+** Cargo.toml
+This is the configuraition file, which tells cargo how to build your project.
+
+It is located in the root directory of the project.
+
+Written in the TOML (Tom’s Obvious, Minimal Language) format.
+
+* DATA TYPES
+** SCALAR TYPES (represent a single value)
+*** INTEGER
+
+Integer types:
+
+| LENGTH  | SIGNED | UNSIGNED |
+|---------+--------+----------|
+| 8-bit   | i8     | u8       |
+| 16-bit  | i16    | u16      |
+| 32-bit  | i32    | u32      |
+| 64-bit  | i64    | u64      |
+| 128-bit | i128   | u128     |
+| arch    | isize  | usize    |
+
+Default is integer type is i32
+
+Arch type uses the default integer type of the operating system.
+
+| NUMBER LITERALS | EXAMPLE     |
+|-----------------+-------------|
+| Decimal         | 98_222      |
+| Hex             | 0xff        |
+| Octal           | 0o77        |
+| Binary          | 0b1111_0000 |
+| Byte (u8 only)  | b'A'        |
+
+*** FLOATING-POINT NUMBER
+
+Two floating point number types:
+- f32
+- f64
+
+Default is f64
+
+*** BOOLEAN
+*** CHARACTER
+
+fn main() {
+    let c = 'z';
+    let z = 'ℤ';
+    let heart_eyed_cat = '😻';
+}
+
+Rust’s char type is four bytes in size and represents a Unicode Scalar Value,
+which means it can represent a lot more than just ASCII. Accented letters;
+Chinese, Japanese, and Korean characters; emoji; and zero-width spaces are all
+valid char values in Rust. Unicode Scalar Values range from U+0000 to U+D7FF and
+U+E000 to U+10FFFF inclusive. However, a “character” isn’t really a concept in
+Unicode, so your human intuition for what a “character” is may not match up with
+what a char is in Rust. We’ll discuss this topic in detail in “Storing UTF-8
+Encoded Text with Strings” in Chapter 8.
+
+** COMPOUND TYPES
+*** TUPLE
+tuple declaration:
+
+  let tup: = (500, 6.4, 1);
+
+with type annotation:
+
+  let tup: (i32, f64, u8) = (500, 6.4, 1);
+
+can use pattern matching to destructure a tuple value:
+
+  let (x, y, z) = tup;
+  println!("The value of y is: {}", y);
+
+directly access elements by their index:
+
+  let x: (i32, f64, u8) = (500, 6.4, 1);
+  let five_hundred = x.0;
+  let six_point_four = x.1;
+  let one = x.2;
+
+*** ARRAY
+
+- fixed length
+- all elements must be the same type
+- use vector if you want to grow or shrink number of elements
+
+basic declaration:
+
+  let a = [1, 2, 3, 4, 5];
+
+type annotation for an array is the type of element followed by the number of elements:
+
+  let a: [i32; 5] = [1, 2, 3, 4, 5];
+
+syntax to initialize a new array full of identical elements:
+
+  let a = [3; 5];
+
+access elements by their index (indexing an array):
+
+  let a = [1, 2, 3, 4, 5];
+  let first = a[0];
+  let second = a[1];
+
+* STRUCTS
+
+DEFINING A STRUCT:
+
+struct User {
+    username: String,
+    email: String,
+    sign_in_count: u64,
+    active: bool,
+}
+
+CREATING AN INSTANCE OF A STRUCT:
+
+let user1 = User {
+        email: String::from("someone@example.com"),
+        username: String::from("someusername123"),
+        active: true,
+        sign_in_count: 1,
+};
+
+CREATING A MUTABLE INSTANCE:
+
+let mut user1 = User {
+        email: String::from("someone@example.com"),
+        username: String::from("someusername123"),
+        active: true,
+        sign_in_count: 1,
+};
+
+// can now alter contents
+user1.email = String::from("anotheremail@example.com");
+
+// A function which builds a User struct from email and username:
+fn build_user(email: String, username: String) -> User {
+    User {
+        email: email,
+        username: username,
+        active: true,
+        sign_in_count: 1,
+    }
+}
+
+// can use field init shorthand when function params have exactly the same name as struct fields:
+fn build_user(email: String, username: String) -> User {
+    User {
+        email,
+        username,
+        active: true,
+        sign_in_count: 1,
+    }
+}
+
+// struct update syntax
+// email and username are specified - rest of fields are copied from user1
+let user2 = User {
+        email: String::from("another@example.com"),
+        username: String::from("anotherusername567"),
+        ..user1
+};
+
+TUPLE STRUCTS
+// can use tuple structs to define new compound types without having to name every field
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+// note that the black and origin values are different types even though they contain exactly the same
+let black = Color(0, 0, 0);
+let origin = Point(0, 0, 0);
+
+** ownership of struct data
+Normally it is easier if a struct owns all of it's own data.
+
+It is possible for a struct to contain references but it requires the use of lifetimes.
+
+** defining methods on a struct
+
+* VARIABLES
+
+Assign variables with 'let'
+
+Variables are immutable by default
+
+Use 'mut' to define a mutable variable
+
+Type annotation is optional
+
+  let x: u32 = 306;
+
+const - must have type annotation
+
+can use if in variable declaration:
+
+  let number = if condition { 5 } else { 6 };
+
+* FUNCTIONS
+* COMMENTS
+* CONTROL FLOW
+* OWNERSHIP
+
+Ownership is Rust’s most unique feature, and it enables Rust to make memory
+safety guarantees without needing a garbage collector. Therefore, it’s important
+to understand how ownership works in Rust. In this chapter, we’ll talk about
+ownership as well as several related features: borrowing, slices, and how Rust
+lays data out in memory.
+
+OWNERSHIP RULES
+- Each value in Rust has a variable that’s called its owner.
+- There can only be one owner at a time.
+- When the owner goes out of scope, the value will be dropped.
+
+REFERENCES AND BORROWING
+
+SLICES

@@ -1,0 +1,7 @@
+#+TITLE: UNITY QUICKSTART GUIDE
+
+* installation and setup
+https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux
+
+* sprites and animation
+

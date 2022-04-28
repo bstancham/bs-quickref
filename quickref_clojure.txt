@@ -1,0 +1,981 @@
+;;;; CLOJURE QUICKSTART GUIDE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;; SETUP AND INSTALL ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; download & unzip clojure
+; ... navigate into the expanded directory and run this to start the REPL:
+; $ java -cp clojure-1.8.0.jar clojure.main
+
+
+
+
+
+;;;; TOOLS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; LEININGEN
+; * command line tool to automate things when working with clojure.
+; * automate development cycle - compilation/classpath/jar files/etc.
+; * much enhanced REPL. Emacs or other tools can connect to it. This lets you eval Clojure code in emacs, etc.
+; * Leiningen is very popular. Most Clojure libraries require or assume you have Leiningen installed.
+; * Build project. (compile things by a config file. (the config file is named “project.clj”))
+; * Manage packages. Install/fetch/search packages with dependencies automatically.
+; * Run Clojure REPL with the libraries you need loaded for you.
+; * Package your Clojure project into one self-contained file. (a Java “uber” jar file.)
+; * Publish your lib to standard repositories. (Java world's “Maven Central” at http://search.maven.org/, or Clojure's Clojars at https://clojars.org/ )
+;;;; usage:
+; $ lein repl
+; & lein -h faq | less # read FAQ
+
+
+
+;;;; EMACS:
+; - clojure-mode - major mode for clojure editing
+; - CIDER        - a Clojure interactive development environment and REPL for Emacs (connects to LEININGEN)
+; - projectile   - for navigating inside your projects swiftly
+        
+; http://clojure-doc.org/articles/tutorials/emacs.html
+
+; M-x cider-jack-in ; start CIDER REPL
+; C-c C-c           ; kill current process (break infinite loop etc)
+; M-.               ; jump to source code for something
+
+
+;;;; BASICS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; HELLO WORLD
+(println "hello, world!")
+(println "hello" "world" "-" "good" "morning" "y'all!") ; print/println can take a list
+
+;;;; DOCSTRINGS & DOCUMENTATION
+(doc println)      ; access docstring for a function
+(doc clojure.core) ; access docstring for a namespace
+(doc clojure.core/println) ; fully qualified path
+
+(dir clojure.core) ; list items in namespace
+
+(find-doc #"search str") ; search for regex in documentation
+
+(source println) ; show source code for a function
+
+;;;; MISC
+'(1, 2,,, 3,4 5) ; comma counts as whitespace!
+
+(comment This is a block comment
+...
+...
+end of comment)
+
+
+
+;;;; DATA STRUCTURES
+; nil --- possible value for any data type - same value as null in java
+; NUMBERS --- default is LONG - auto-promote to BigInt - ratios etc...
+; STRINGS
+; CHARACTERS
+; KEYWORDS
+; SYMBOLS
+; COLLECTIONS --- immutable and persistent
+; --- LIST
+; --- VECTOR
+; --- MAP
+; --- STRUCTMAP --- consider using records instead
+; --- ARRAYMAP
+; --- SET
+
+
+
+;;;; BOOLEAN VALUES
+true
+false
+
+
+;;;; TESTING EQUALITY
+(= 1 (+ 2 -1)) ; true
+(= (list 1 2 3) (vector 1 2 3)) ; true --> = compares contents, so list & vector with same contents are equal!
+
+
+
+
+;;;; COLLECTIONS
+(count '(1 2 3 4)) ; number of elements
+(concat '(1 2 3) '() '() '() '(4) '()) ; '(1 2 3 4)
+(flatten '(1 2 3 (4 5 6 (7 8)) 9 10 (11 12 13)) ; why doesn't this work?
+; concat
+; conj
+; reverse
+
+
+
+;;;; LISTS
+(list 1 2 3)     ; a list
+(quote '(1 2 3)) ; same
+'(1 2 3)         ; same
+(cons 1 '(2 3))  ; same
+(first '(1 2 3)) ; head of list (CAR)
+(rest '(1 2 3))  ; rest of list (CDR)
+(second '(1 2 3))
+(last '(1 2 3))
+
+(conj '(4 5 6) 3 2 1) ; add 3, 2 & 1 to front of the given list
+
+(= '(1 2 3 4) '(4 3 2 1)) ; false --> same items, but in different order
+
+(range 3 8)
+(reverse (range 0 10))
+
+
+
+;;;; VECTORS (indexable lists)
+(vector 1 2 3) ; a vector
+[1 2 3]        ; same
+(vec '(1 2 3)) ; same - convert list to vector
+(get '[5 4 3 2 1] 1) ; get nth value
+
+(conj '[1 2 3] 4 5 6) ; conj adds to the END of vector (unlike list)
+
+
+
+;;;;; HASH-MAP
+(hash-map :a 23, :b 34 :c 12)
+{:a 23 :b 34 :c 12}   ; same
+{:a 23, :b 34, :c 12} ; same - commas are optional
+(def my-hash {:a 23 :b 34 :c 12})
+(:b my-hash) ; acces value of the key :b
+(conj {:a 23, :b 34} [:c 12] [:d 106]) ; conj adds key/value pairs
+(select-keys {:a 23 :b 34 :c 12} '(:a :c))
+(:age {:age 27 :name "Michael"})      ; keyword as function - returns it's value...
+(get {:age 27 :name "Michael"} :age)  ; same
+(:girth {:age 27 :name "Michael"} "no-such key!")  ; may provide default value
+(get {:age 27 :name "Michael"} :age "not found!")  ; same
+(map :age [{:age 45 :name "Joe"} {:age 42 :name "Jill"} {:age 17 :name "Matt"}]) ; ... works nice with map
+(zipmap '(:a :b :c) '(1 2 3)) ; combines a collection of keys & collection of values into a map
+; fill map with default value
+(let [ m {} d 23]
+        (doseq [
+                l '(:a :b :c :d)]
+          (set! m (conj m [l d]))))
+
+
+
+;;;; SEQUENCES
+(interleave '(1 2 3 4 5) "@")
+(interleave '(1 2 3 4 5) "@_@")
+(interleave '(1 2 3 4 5) (repeat "@_@"))
+
+
+
+; LAZY SEQUENCES
+(take 5 (repeat "YO!"))
+(repeat 5 10001)
+(take 5 (iterate #(+ 3 %) 0))
+(apply * (repeat 3 2)) ; equivalent to: (* 2 2 2)
+
+
+
+
+
+;;;; SETS
+(set '(1 2 2 4 5 5)) ; construct a set from a list
+#{1 2 4 5} ; same set --> duplicate values are discarded
+(= #{1 2 4 5} #{5 4 2 1}) ; true --> sets are equal even though items given in different order
+(clojure.set/union #{1 3 4 5} #{1 2 5 6 7}) ; merge
+(conj #{3 4 5} 1 2) ; add the extra keys
+(clojure.set/superset? #{1 2 3 4} #{1 2}) ; true
+(clojure.set/subset? #{4} #{1 2 3 4}) ; true
+(clojure.set/intersection #{1 2 3 4 5 6} #{4 5 6 7 8 9})
+(#{1 2 3} 7) ; using a set as a function - returns NIL if item is not in set...
+(#{1 2 3} 2) ; ... or returns the item, if it is in the set.
+(contains? #{909 36 2012 13} 36) ; true (NOTE: different behaviour for numerically indexed collections!
+
+
+
+;;;; LOCAL VARIABLES (LEXICAL SCOPE)
+(let [x 7]
+  (* x 2))
+; (let) binds sequentially - like let* in other lisps
+(let [x 5
+      y (+ x 2)]
+  (* x y))
+
+; vector destructuring...
+(let [[a b c] [1 2 4]] ; a=1 b=2 c=4
+  (+ a c))
+
+
+
+;;;; GLOBAL VARIABLES
+(def my-list '(1 2 3 4 "dingle"))
+
+
+
+;;;; FUNCTIONS
+
+(defn average [x y] (/ (+ x y) 2))
+
+(defn rfun [:a 0 :b 0]
+  (+ a b))
+
+
+(defn round
+  "Round down a double to the given precision (number of significant digits)"
+  [^double d ^long precision] ; args with type-hints (type-hints not usually necessary, more of an optimisation)
+  {:pre [(not (nil? d)) (not (nil? precision))]} ; preconditions set on args
+  (let [factor (Math/pow 10 precision)]
+    (/ (Math/floor (* d factor)) factor)))
+
+
+; function definition with internal function definitions
+(defn bs-fn-inside
+  [x y]
+  (let [mult2 (fn [n] (* n 2))
+        sub2 (fn [n] (- n 2))]
+    (+ (mult2 x) (sub2 y))))
+
+(bs-fn-inside 10 10)
+
+
+
+
+
+
+;;;; MULTI-ARITY FUNCTIONS (METHOD OVERLOADING)
+(defn tax-amount
+  ([amount] ; 1-arity --> call the 2-arity version, with default values
+     (tax-amount amount 35))
+  ([amount rate]
+     (Math/round (double (* amount (/ rate 100))))))
+
+
+;;;; DESTRUCTURING OF FUNCTION ARGUMENTS
+
+; positional destructuring
+(defn funpos [[first second third]]
+  (println third second first))
+
+(defn funpos-ignore [[_ _ third]] ; convention to use underscore for ignored values
+  (println "THIRD ITEM IS" third))
+
+(defn funpos-deep [[[_ i] _]] ; deeper nested level
+  (println "NESTED VALUE:" i))
+
+(funpos [1 2 3])
+(funpos-ignore [1 2 3])
+(funpos-deep [["deep1" "deep2"] "shallow2"])
+
+
+; map destructuring
+(defn funmap [{n :name s :species a :age}]
+  (format "NAME: %s\nSPECIES: %s\nAGE: %s\n" n s a))
+
+(funmap {:name "john" :species "otter" :age 34})
+
+
+; variadic functions (varying number of arguments)
+(defn funvar [message & args] ; all extra args go into a list called here 'args'
+  (println message args))
+
+(funvar "Hello!" 1 2 3 4 5 6)
+
+
+; named parameters
+(defn funmap-default [& {:keys [name species age] :or {name "Bill" species "Rhino" age 12}}]
+  (format "NAME: %s\nSPECIES: %s\nAGE: %s\n" name species age))
+
+(funmap-default :age 96)
+
+
+
+
+;;;; ANONYMOUS FUNCTIONS - like lambda in other lisps
+(map (fn [a b] (* a b)) [1 2 3] [4 5 6])
+(map #(* %1 %2) [1 2 3] [4 5 6]) ; same thing in shorthand #(* %1 %2)
+(map #(+ %1 5) [1 2 3]) ; add 5 to each
+(#(* % 2) 8) ; multiply by 2
+
+; recursion using anonymous function syntax
+((fn foo [x] ; named!
+   (when (> x 0)
+     (conj
+      (foo (dec x)) x))) 5)
+
+
+
+
+
+
+
+
+
+
+
+;;;; HIGHER ORDER FUNCTIONS
+(map + [1 2 3] [4 5 6]) ; equivalent to (list (+ 1 4) (+ 2 5) (+ 3 6))
+(map average [1 2 3] [4 5 6])
+
+(filter #(> % 5) '(1 2 3 4 5 6 7 8)) ; returns '(6 7 8)
+
+(reduce #(+ %1 %2) '(1 2 3 4)) ; returns 10 --> reduce takes first 2 values & applies func to them, then applies func to the result and the third value etc... reducing down to a single value.
+
+(defn r [a b]
+  (cond (nil? a) 0
+        (nil? b) a
+        true (+ a b)))
+
+
+(reduce #(cond (nil? %1) 0
+       (nil? %2) %1
+       true (+ %1 %2)) [])
+
+
+; overloading
+(defn r
+  ([]
+   (r 0 0))
+  ([first]
+   (r first 0))
+  ([first second]
+   (+ first second)))
+
+; multi-arity - each one is a separate routine
+(fn
+  ([] 0)
+  ([first] first)
+  ([first second] (+ first second)))
+
+
+
+
+;;;; LIST COMPREHENSIONS
+(for ['[:a :b :c]]
+...
+
+; 4x table + 1
+(for [x (range 40)
+      :when (= 1 (rem x 4))]
+  x)
+; same
+(for [x (iterate #(+ 4 %) 0)
+            :let [z (inc x)]
+            :while (< z 40)]
+        z)
+; same
+(for [[x y] (partition 2 (range 20))]
+        (+ x y))
+; same
+(->> (range 40) (filter #(= (mod % 4) 1)))
+
+; common divisors
+(defn common-divisors
+  "Returns a list of common divisors, using list comprehension."
+  [a b]
+  (for [x (range 1 (+ 1 (min a b)))
+        :when (= 0 (+ (mod a x)
+                      (mod b x)))]
+    x))
+
+(common-divisors 60 90)
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; UNDERSTAND THESE!
+; into
+; comp --- compose
+; transduce
+; eduction
+; sequence
+; chunk
+; partial
+
+; -> : applies the arg as the first element in each of the following forms
+(last (sort (rest (reverse [2 5 4 1 3 2]))))
+(-> [6 5 4 1 3 6] (reverse) (rest) (sort) (last)) ; same - maybe more readable
+
+; ->> : applies the arg as the last element in each of the following forms
+(reduce + (map inc (take 3 (drop 2 [2 5 4 1 3 6]))))
+(->> [2 5 4 1 3 6] (drop 2) (take 3) (map inc) (reduce +)) ; same but maybe more readable
+
+; APPLY
+; ... takes contents of a collection and applies them as arguments to a given function...
+(apply + '(1 2 3 4 5))
+(+ '(1 2 3 4 5)) ; ERROR!
+; applying > to the list of 2 numbers returned by map...
+(apply > (map count [[1 2 3 4] [5 6 7]])) ; true
+
+
+
+
+
+;;;; STRING FUNCTIONS
+
+; format uses java.lang.String.format
+(format "Hello, %s" "NIGEL")
+(format "decimal %d  octal %o  hex %x  upper-case hex %X" 63 63 63 63)
+(format "%.4f" 3.2) ; 4 decimal places
+
+(.toUpperCase "dingdong") ; calls the string method .toUpperCase on the string instance given
+
+(str "ding" "DONG")     ; joins strings
+(str \h \e \l \l \o \!) ; join characters into string
+(str 9056)              ; convert number into string
+
+
+
+
+;;;; REGULAR EXPRESSIONS
+
+(re-pattern "hello*")
+#"hello*"             ; same
+
+(re-matcher (re-pattern "hello*") "hello john")
+
+(def m (re-matcher #"hello.*john" "hello jack and john and judy"))
+(re-find m)
+(re-groups m)
+
+; quick way to apply regex
+(re-seq #"[A-Z]+" "DE3439_-.serB23ZEDfink")           ; ("DE" "B" "ZED")
+
+(reduce str '("DE" "B" "--->" "dongle" "doodle" "!")) ; using reduce to combine list into single string
+(reduce str (re-seq #"[A-Z]+" "HeLLo WorlD!"))        ; "HLLWD"
+
+
+
+
+
+
+
+
+
+;;;; CONDITIONAL STATEMENTS
+
+(if true 1 2)  ; => 1
+(if false 1 2) ; => 2
+
+
+
+
+;;;; LOOPING AND ITERATION
+
+(doseq [x '(1 2 3 4 5)] ; bind local variables
+  (println x))          ; &body
+
+
+; LOOP is the recursion point for recur...
+; ... other than that, it works exactly the same as let...
+
+(loop [x 10]          ; bind value to 'x'
+  (when (> x 0)       ; if x is 0 or less, do nothing (exit loop)
+    (println x)
+    (recur (- x 1)))) ; recur with value decremented by 1
+
+(loop [x 0                    ; bind variables
+       y 2
+       result ()]
+  (if (> x 8)                 ; have we finished yet?
+    result                    ; YES: return result
+    (recur (+ x 1)            ; NO:  recur with updated values
+           (* y 2)
+           (conj result y))))
+
+(defn bs-sum
+  "Adds up the sum of all the values in a collection."
+  [coll]
+  (loop [total 0
+         c coll]
+    (if (> (count c) 0)
+      (recur (+ total (first c)) (rest c))
+      total)))
+
+(bs-sum '(1 2 3 4 5))
+
+
+
+;;;; JAVA INTEROP
+
+;; MEMBER ACCESS
+; (.instanceMember instance args*)
+; (.instanceMember Classname args*)
+; (.-instanceField instance)
+; (Classname/staticMethod args*)
+; Classname/staticField
+(.-x (java.awt.Point. 1 2))
+
+
+(let [p (java.awt.Point. 4 5)] ; init new Point
+  (format "X=%d Y=%d" (.-x p) (.-y p))) ; access instance fields(
+
+
+
+
+
+
+
+; make multiple method calls on the same object ... doto returns the object at the end
+(doto (javax.swing.JFrame.)
+  (.setLayout (java.awt.GridLayout. 2 2 3 3))
+  (.add (javax.swing.JTextField.))
+  (.add (javax.swing.JLabel. "Enter some text"))
+  (.setSize 300 80)
+  (.setVisible true))
+
+
+
+
+;;;; CLOJURE PROJECTS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+
+;;;; STANDALONE SCRIPTS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; For simple programs, you might forego creating a project for them and instead put everything needed into a single Clojure sourcecode file (a standalone “script”, like a Python or Perl script). These scripts can be run with help from the inlein tool.
+
+; Just download and install inlein, then make a my-script.clj file containing something like:
+
+; #!/usr/bin/env inlein
+
+'{:dependencies [[org.clojure/clojure "1.8.0"]]}
+
+(println "Hi! You passed:" *command-line-args*)
+
+; Make it executable (chmod +x my-script.clj) and run it in the usual way:
+
+; $ my-script.clj foo bar baz
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;; a simple swing app
+(import '(javax.swing JFrame JLabel JTextField JButton)
+        '(java.awt.event ActionListener)
+        '(java.awt GridLayout))
+(defn celsius []
+  (let [frame (JFrame. "Celsius Converter")
+        temp-text (JTextField.)
+        celsius-label (JLabel. "Celsius")
+        convert-button (JButton. "Convert")
+        fahrenheit-label (JLabel. "Fahrenheit")]
+    (.addActionListener
+     convert-button
+     (reify ActionListener
+            (actionPerformed
+             [_ evt]
+             (let [c (Double/parseDouble (.getText temp-text))]
+               (.setText fahrenheit-label
+                         (str (+ 32 (* 1.8 c)) " Fahrenheit"))))))
+    (doto frame
+      (.setLayout (GridLayout. 2 2 3 3))
+      (.add temp-text)
+      (.add celsius-label)
+      (.add convert-button)
+      (.add fahrenheit-label)
+      (.setSize 300 80)
+      (.setVisible true))))
+(celsius)
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; 4CLOJURE PROBLEMS
+
+((fn [v l] (map #(vector %1 v) l)) 0 [:a :b :c]) ; make list of key-value pairs
+
+(conj (hash-map :a 1) (hash-map :b 2))
+
+(defn make-map-same-val
+  "Makes a hash-map giving the same default value to a list of keys."
+  [v l]
+   (loop [hm (hash-map (first l) v)
+          remaining-keys (rest l)]
+   (if (< (count remaining-keys) 1)
+     hm
+     (recur (conj (hash-map (first remaining-keys) v) hm)
+            (rest remaining-keys)))))
+
+ (make-map-same-val 0 '[:a :b :c :d])
+
+((fn [d l] (loop [hm (hash-map (first l) d)
+                 rem-keys (rest l)]
+            (if (< (count rem-keys) 1)
+              hm
+              (recur (conj hm (hash-map (first rem-keys)))
+                     (rest rem-keys))))) 0 [:a :b :c])
+
+(defn bs-fib
+  "Creates a fibbionacci sequence of the specified length."
+  [n]
+  (loop [result '()]
+    (let [i (count result)]
+      (if (>= i n)
+        result
+        (recur (concat result (list (+ (if (> i 0) (last result) 1)
+                                       (if (> i 1) (second (reverse result)) 0)))))))))
+
+(bs-fib 20)
+
+
+(defn bs-max
+  "Returns the largest number."
+  [& numbers]
+  (loop [nums numbers
+         largest nil]
+    (if (empty? nums)
+      largest
+      (recur (rest nums)
+             (if (or (nil? largest)
+                     (> (first nums) largest))
+               (first nums)
+               largest)))))
+
+(bs-max 9 31 23 5 64 52 12)
+(bs-max -3054 -27 -36)
+(bs-max) ; returns nil
+
+
+
+
+
+
+(defn fill-map 
+  "makes a list of key-value pairs initialized to the same default value.
+  v = value
+  l = list of keys"
+  [v l]
+  (map #(vector %1 v) l))
+
+(fill-map 0 [:a :b :c])
+
+
+
+
+
+(defn bs-range
+  "Very pointless! Makes a vector containing a range up to n. In between each value is the keyword :bs."
+  [n]
+  (loop [i 0
+         v []]
+    (if (< i n)
+      (recur (inc i) (conj v i :bs))
+      v)))
+
+
+(defn bs-interpose-alternate
+  "Interposes val in between each item of coll."
+  [coll val]
+  (loop [i 0
+         v []]
+    (if (< i (count coll))
+      (recur (inc i) (conj v (nth coll i) val))
+      v)))
+
+; problem #28
+(defn bs-flatten 
+  "Flatten nested sequences into a single list."
+  [coll]
+  (loop [input coll
+         output '()]
+    (if (empty? input)
+      output
+      (recur (rest input)
+             (concat output
+                     (if (coll? (first input))
+                       (bs-flatten (first input))
+                       (list (first input))))))))
+
+(bs-flatten '(1 2 3 ((4 5) 6 7) 8 9 (10 11 12 (((13))))))
+
+; problem #30
+(defn bs-rem-dup
+  "Removes consecutive duplicates from a sequence."
+  [coll]
+  (loop [input coll
+         output '()
+         prev-item nil]
+    (if (empty? input)
+      output
+      (recur (rest input)
+             (if (= prev-item (first input))
+               output
+               (concat output (list (first input))))
+             (first input)))))
+
+(bs-rem-dup '(1 1 1 1 2 2 3 3 3 4 4 4 3 3))
+(apply str (bs-rem-dup "lllllerrrrrrooooyyyyyy"))
+
+; problem #31
+(defn bs-munch
+  "Grabs the first value of a collection along with any other consecutive identical values and puts them in a list.
+Returns [consecutive-vals remainder]."
+  [coll]
+  (let [current (first coll)]
+    (loop [in coll
+           out '()]
+      (if (= (first in) current)
+        (recur (rest in)
+               (conj out current))
+        [out in]))))
+
+(bs-munch '(3 3 3 3 4 4 4 5 6 7 7 7 1 1 1 1))
+
+(defn bs-pack
+  "Packs consecutive duplicates into sub-lists."
+  [coll]
+  (loop [in coll
+         out '()]
+    (if (empty? in)
+      out
+      (let [[chunk remainder] (bs-munch in)]
+        (recur remainder
+               (concat out (list chunk)))))))
+
+(bs-pack '(1 1 1 1 2 2 3 4 5 6 6 6 6 6 6 1 2 2 8))
+
+
+
+; problem #32
+(defn bs-dup-seq
+  "Return a new sequence where evey item of the input sequence in duplicated."
+  [coll]
+  (loop [input coll
+         output (empty input)]
+    (if (empty? input)
+      output
+      (recur (rest input)
+             (concat output
+                     (list (first input))
+                     (list (first input)))))))
+
+(bs-dup-seq '(1 2 3 4 5 6))
+
+; problem #33
+(defn bs-rep-seq
+  [coll reps]
+  (let [repeat (fn [n v]
+                 (loop [out '()]
+                   (if (>= (count out) n)
+                     out
+                     (recur (conj out v)))))]
+    (loop [in coll
+           out '()]
+      (if (empty? in)
+        out
+        (recur (rest in)
+               (concat out (repeat reps (first in))))))))
+
+(bs-rep-seq [:a :b 23 "hiya!"] 3)
+
+
+; problem #34
+(defn bs-range
+  "Returns a sequence of integers in a given range."
+  [start end]
+  (let [increment (if (< start end) 1 -1)]
+    (loop [current start
+           coll '()]
+      (if (= current end)
+        coll
+        (recur (+ current increment)
+               (concat coll (list current)))))))
+
+(bs-range 1 9)
+(bs-range -15 2)
+(bs-range 20 -4)
+
+; problem #40
+; interpose item in between each...
+(#(let [separator %1]
+   (loop [in %2
+          out '()]
+     (if (empty? in)
+       out
+       (recur (rest in)
+              (concat out
+                      (list (first in))
+                      (when (> (count in) 1) (list separator)))))))
+"|||" '(1 2 3 4))
+
+; problem #41
+(defn bs-drop-nth
+  "Drop every nth item from a collection."
+  [coll n]
+  (loop [i 1
+         in coll
+         out '()]
+    (if (empty? in)
+      out
+      (recur (inc i)
+             (rest in)
+             (if (= 0 (mod i n))
+               out ; drop item
+               (concat out (list (first in))))))))
+
+(bs-drop-nth '(1 2 3 4 5 6 7 8 9 10 :a :b :c :d) 2)
+
+
+
+
+; problem #48
+(some #(when (even? %) %) [5 6 7 8]) ; some returns the first item of a collection which returns true in the predicate function...
+
+; problem #42
+(defn bs-factorial
+  "Calculates factorials.
+  In mathematics, the factorial of a non-negative integer n, denoted by n!, is the product of all positive integers less than or equal to n.
+  For example: 5! = 5 × 4 × 3 × 2 × 1 = 120."
+  [n]
+  ; (reduce * (range 1 (inc n)))) : NOTE: this would work just as well
+  (apply * (range 1 (inc n))))
+
+(bs-factorial 5) ; 120
+
+; problem #45
+; ... iterate generates an infinite lazy sequence... (take 5 ...) avoids infinite loop by telling it when to stop...
+(take 5 (iterate #(+ 3 %) 1)) ; => (1 4 7 10 13)
+
+; problem #49
+(defn bs-split-at
+  "Splits sequence at specifed point."
+  [n coll]
+  (loop [i 0
+         in coll
+         [seq1 seq2] [[] []]]
+    (if (empty? in)
+      [seq1 seq2]
+      (recur (inc i)
+             (rest in)
+             (if (< i n)
+               [(conj seq1 (first in)) seq2]
+               [seq1 (conj seq2 (first in))])))))
+
+(bs-split-at 3 '(1 2 3 4 5 6 7 8 9))
+
+; problem #61
+; ... map construction
+(defn bs-zipmap
+  [keys vals]
+  (apply hash-map (interleave keys vals)))
+
+(bs-zipmap [:a :b :c :d] [1 2 3 4])
+
+; problem #66
+(defn greatest-common-divisor
+  [a b]
+  (loop [n 1
+         greatest 1]
+    (if (or (> n a)
+            (> n b))
+      greatest
+      (recur (inc n)
+             (if (= 0 (+ (mod a n)
+                         (mod b n)))
+               n ; new GCD
+               greatest)))))
+
+(greatest-common-divisor 60 90)
+
+
+
+
+
+
+
+; problem #83
+(defn bs-part-true? [& args] (not (apply = args)))
+
+(bs-part-true? false false)
+(bs-part-true? true true true true true)
+(bs-part-true? true false true true true true)
+(bs-part-true? true)
+
+
+; problem #107
+; ... simple closures...
+(defn xn-func
+  "Returns a function (f x) which computes the nth power of x."
+  [n]
+  (let [f (fn [x]
+            (if (< n 1)
+              1
+              (loop [i n
+                     out x]
+                (if (<= i 1)
+                  out
+                                        ;(max out 1)
+                  (recur (dec i)
+                         (* out x))))))]
+    f))
+
+((xn-func 4) 4)
+((xn-func 8) 2)
+((xn-func 2) 16)
+
+(map (xn-func 3) [0 1 2 3 4])
+(map (xn-func 2) [0 1 2 3 4])
+(map #((xn-func %) 2) [0 1 2 3 4])
+
+(xn-func 0) 2
+(xn-func 1) 2
+(xn-func 2) 2
+(xn-func 3) 2
+(xn-func 4) 2
+
+
+
+
+
+; problem #156
+(defn bs-fill-map-default-val
+  "Fills all keys of a hash-map with default value"
+  [v ks]
+  (let [make-vals (fn [len value]
+                    (loop [output []]
+                      (if (>= (count output) len)
+                        output
+                        (recur (conj output value)))))]
+    (zipmap ks (make-vals (count ks) v))))
+
+(bs-fill-map-default-val "!!!" [:a :b :c :d])
+
+
+
+
+(defn bs-fill-seq
+  [len value]
+  (loop [output []]
+    (if (>= (count output) len)
+      output
+      (recur (conj output value)))))
+
+(bs-fill-seq 10 "BZZZ")
+
+
+
+
+
+
+(defn bs-range-simple
+  [start end]
+  (loop [out [start]]
+    (if (>= (+ 1 (last out)) end)
+      out
+      (recur (concat out (list (inc (last out))))))))
+
+(bs-range-simple 1 5)
+
+
+
+

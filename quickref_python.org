@@ -1,0 +1,1575 @@
+* MICK'S PYTHON BASICS
+
+#+BEGIN_SRC python
+
+# don't concatenate strings, just use string.format instead
+name = "Henry"
+x = 3
+"hello {}! Today's magic number is {}".format(name, x)
+
+# can also use the new super-compact f-string syntax
+s = f"My name is {name} and I am {x} years old"
+
+type(x) # returns the type of x
+
+# TYPES
+
+# str
+# int, float, complex
+# list, tuple, range
+# dict
+# set, frozenset
+# bool
+# BINARY: bytes, bytearray, memoryview
+
+#+END_SRC
+
+* Help and Documentation
+dir() --> lists all class members.
+help() --> displays documentation in less.
+member.__doc__
+print(member.__doc__) # displays nicer in the REPL
+help(UselessClass) # displays documentation for class
+help(UselessClass.say_hello) # displays documentation for method
+uselessInstance.__doc__
+UselessClass.__doc__
+... also...
+.__dict__
+dir()
+vars()
+inspect # module
+
+#+BEGIN_SRC python
+import re
+
+help(re)
+help(re.Match)
+# displays documentation (in terminal, uses less)
+
+dir(re)
+# shows all(*) attributes, maybe even stuff not in documentation
+#+END_SRC
+
+* PYTHON FUNDAMENTALS
+** Install (Ubuntu/Debian)
+(August 2021)
+
+ $ sudo apt-get install python 3.9
+
+For extra developer utilities:
+
+ $ sudo apt-get install python 3.9-full
+
+** Hello, World!
+#!/usr/bin/env python
+print("Hello, World!")
+
+** Assigning Variables
+NOTE: Global variables can not be re-assigned inside a function!
+
+** Importing Modules
+import foo
+from foo import *
+
+# import a user defined module
+...
+
+** Running A File As Main Class
+# Put this at the bottom of the file:
+if __name__ == '__main__':
+    ...
+    ...
+** Naming Conventions
+NOTE:
+- MODULES are filenames
+- PACKAGES are directories
+
+# MODULES: short all_lowercase - underscores_allowed
+# PACKAGES: short all lowercase - underscores discouraged
+# CLASSES: CapWords
+# EXCEPTIONS: CapWordsWithTheSuffixError
+# GLOBAL VARIABLES:
+# FUNCTIONS: lower_case_with_words_separated_by_underscores
+# FUNCTIONS & METHOD ARGUMENTS: 
+# ... Always use self for the first argument to instance methods.
+# ... Always use cls for the first argument to class methods.
+# CONSTANTS:
+# ... usually defined on a module level and written in all capital letters with underscores separating words. Examples include MAX_OVERFLOW and TOTAL.
+# METHOD NAMES & INSTANCE VARIABLES: 
+
+# SPECIAL FORMS:
+# * _single_leading_underscore: weak "internal use" indicator. E.g. from M import * does not import objects whose name starts with an underscore.
+# * single_trailing_underscore_: used by convention to avoid conflicts with Python keyword, e.g. class_='ClassName'.
+# * __double_leading_underscore: when naming a class attribute, invokes name mangling (inside class FooBar, __boo becomes _FooBar__boo).
+# * __double_leading_and_trailing_undersore__:  "magic" objects or attributes that live in user-controlled namespaces. E.g. __init__, __import__ or __file__. Never invent such names; only use them as documented.
+
+** Basic Philosophy (Java/Python Migration)
+# * Don't use getters and setters - use 'property' instead.
+# * A static method in java does not translate to a python classmethod (more likely a module-level function).
+# * Instead of a switch statement (or a bunch of if-then's) use a hash table.
+# * Watch for unnecessary code duplication - remember that functions can be passed as objects - learn about closures!
+# * Use lambda to make anonymous functions e.g. lambda x: x * 3 # anonymous function that multiplies a single argument by 3.
+# * Duck Typing
+# * tuples
+
+# ACCESS MODIFIERS / PRIVATE MEMBERS?
+# * Python has a 'consenting adults' philosophy regarding access modifiers...
+# ... a single leading underscore is used to mark a class member as private (see SPECIAL FORMS above). Private members can be accessed quite easily, but the convention is to not touch them.
+
+* PYTHON AND EMACS
+** python-mode
+C-c C-c ; python-shell-send-buffer ; execute python code in buffer and show results in python REPL
+
+** Emacs python REPL
+M-x run-python ; python REPL
+
+TO BREAK OUT OF INFINITE LOOP:
+C-c C-c ; keyboard interrrupt
+OR
+C-q C-c RET
+... C-q = (quoted-insert) ... use it to insert C-c, which is what is used to break in the shell.
+
+** elpy
+ELPY is Emacs Lisp PYthon environment
+
+It collects a lot of useful python stuff together
+
+M-x elpy-config
+
+ELPY TROUBLESHOOTING:
+- virtualenv issues (with zsh?)
+
+** pdb (python debugger)
+*** without emacs
+Navigate to program dir:
+
+$ pdb3 tests.py
+
+Starts up pdb and gives you a prompt:
+
+To get command summary:
+
+(pdb) help
+
+To print the value of something:
+
+(pdb) p __name__
+(pdb) p __file__
+
+... can pass any valid python expression to p
+
+To move on to next line in current function:
+
+(pdb) n
+
+To move on one step and stop as soon as possible (this will enter other functions and files):
+
+(pdb) step
+
+To jump to the end of function and see it's return value:
+
+(pdb) return
+
+To list the source code at area of execution
+
+(pdb) l
+
+To start again from the beginning:
+
+(pdb) restart
+
+** jupyter notebooks
+** more to look into
+
+- ipython --- python interpreter
+- pymacs --- interface between python and emacs lisp
+- ropemacs --- emacs frontend for rope (python refactoring library)
+- anaconda-mode
+
+http://www.jesshamrick.com/2012/09/18/emacs-as-a-python-ide/
+https://realpython.com/blog/python/emacs-the-best-python-editor/
+https://www.fullstackpython.com/emacs.html
+http://chillaranand.github.io/emacs-py-ide/
+https://robots.thoughtbot.com/emacs-as-a-python-ide
+
+* Python REPL
+
+To run a file:
+
+>>> exec(open("filename.py").read())
+
+exec executes a string as python code:
+
+>>> exec("print(1 + 4)")
+
+
+
+To reload a package e.g. because you've made changes to it:
+
+>>> import imp
+>>> imp.reload(ic)
+
+** python 2
+reload()
+execfile("filename.py") # load a file
+* 10 python tips and tricks (from youtube vid Sun Apr 14 20:06:13 2019)
+** ternary conditional
+x = 1 if CONDITION else 0
+
+** numbers may include underscores (instead of commas)
+
+open & close file
+... use a CONTEXT MANAGER instead
+with open('test.txt, 'r') as f:
+    file_contents = f.read()
+
+** ENUMERATE and ZIP
+returns the index AND the value
+
+for index, name in enumerate(names):
+    print(index, name)
+
+for index, name in enumerate(names, start=1):
+    print(index, name)
+
+for name, hero in zip(names, superheroes):
+    print(f'{name} is actually {hero}')
+... NOTE: can zip any number of lists...
+... ZIP will stop after the shortest list is finished
+... SEE itertools library
+
+** upacking tuples
+... use underscore for variable which is not going to be used
+a, _ = (1, 2)
+print(a)
+
+a, b, *c = (1, 2, 3, 4, 5, 6)
+a, b, *_ = (1, 2, 3, 4, 5, 6)
+a, b, *c, d = (1, 2, 3, 4, 5, 6)
+
+** getting and setting attributes
+setattr
+getattr
+
+** inputting secret info
+from getpass import getpass
+password = getpass()
+
+** running python with -m option
+searches sys.path for named module and run it as the main module
+
+** builtin help functions for use in the repl:
+
+>>> help(print)
+
+>>> from 
+>>> help(smtpd)
+
+>>> from datetime import datetime
+>>> dir(datetime)
+
+>>> datetime.today
+
+>>> datetime.today()
+
+* PYTHON UTILITIES
+* PIP (package manager)
+** Installation
+ $ sudo apt-get install python3-pip
+** Usage
+ $ python -m pip install pgzero
+
+or
+
+ $ sudo pip install pgzero
+
+* pip
+easy to use package manager
+
+  $ sudo apt-get install python3-pip
+
+Update pip:
+  $ pip3 install -U pip3
+
+  $ pip3 install package-name
+
+  $ pip3 search "query"
+
+  $ pip3 show package-name
+
+List all installed packages:
+  $ pip3 list
+
+  $ pip3 list --outdated
+
+  $ pip3 install package-name --upgrade
+
+  $ pip3 install package-name --upgrade --force-reinstall
+
+  $ pip3 uninstall package-name
+
+* Ipython/Jupyter
+** About
+Project Jupyter is an open source project was born out of the IPython Project in
+2014 as it evolved to support interactive data science and scientific computing
+across all programming languages
+
+- A powerful interactive shell.
+- A kernel for Jupyter.
+- Support for interactive data visualization and use of GUI toolkits.
+- Flexible, embeddable interpreters to load into your own projects.
+- Easy to use, high performance tools for parallel computing.
+
+** Getting Started
+Jupyter is installed by default with Anaconda
+
+More installation info here:
+https://jupyter.org/install
+
+Running Jupyter from shell:
+- navigate to directory containing your notebook file (.ipynb extension)
+- execute command: ~jupyter notebook~
+- this will open a web browser window with the Jupyter interface showing your current working dir
+
+IMPORTANT: remember to click "QUIT" when you've finished, otherwise the Jupyter
+server will still be running!
+
+** EIN - emacs mode for IPython
+maybe investigate this
+
+** Jupyter Notebook
+
+The notebook has input and output cells labelled with square bracket notation e.g. In[1], Out[1]
+
+The number in square brackets shows execution order
+
+The kernel has an execution counter
+- the first cell executed will show In[1], Out[1]
+- the next cell executed after that will show In[2], Out[2]
+- if you go back and execute the first cell again, it will show In[3], Out[3]
+
+* anaconda
+
+Anaconda is a distribution of the Python and R programming languages for
+scientific computing, that aims to simplify package management and deployment.
+
+
+
+11/02/2022
+
+downloaded the linux installer from official website
+
+it's a .sh file which is 500mb!
+
+got the hashsum with sha256sum and checked it against that published on the website
+
+run the installer from commandline using:
+
+installed in ~/anaconda3
+
+* PYTHON ENVIRONMENTS/VIRTUAL ENVIRONMENTS
+** intro
+https://realpython.com/python-virtual-environments-a-primer/
+
+From python 3.6 onwards use the builtin venv module
+
+Another way to deal with python environments is just to use anaconda and install
+packages via conda. All packages will be installed locally, so there's no issue
+with incompatible package versions etc.
+
+** usage
+Create a new virtual environment like this:
+
+  $ python3 -m venv env
+
+Creates a directory structure rooted in a new dir called env
+
+Activate it like this:
+
+  $ source env/bin/activate
+
+Should now have a prompt prefixed with the name of the environment, like this:
+
+  (env) $
+
+To demonstrate the difference:
+
+  (env) $ which python
+
+  (env) $ echo $PATH
+
+Should show the path to python executable in the virtual environment directory
+structure instead of the system's python
+
+Deactivate the virtual environment like this:
+
+  (env) $ deactivate
+
+** virtualenvwrapper
+
+  $ pip install virtualenvwrapper
+
+* DATA TYPES
+** type comparison/testing
+isinstance(1, int)   # test whether thing is instance of a particular type
+type(2.0)            # <class 'float'> # get type of thing
+type(2.0) == type(2) # False
+** TYPE CONVERSION/TYPE CASTING
+# converting sequence types
+list(x)
+tuple(x)
+set(x)
+# number conversion... pass number for conversion into one of these constructors...
+int(x)
+long(x)
+float(x)
+complex(x)
+
+** None (python equivalent of null)
+... None is an object (hence the CamelCase)
+
+$ var = None
+$ type(None)
+... for comparison, use 'is' rather than '=='
+$ if var is None: print("variable is None!")
+
+** BOOLEAN
+# literal | False | True
+# number  | ZERO  | all other
+# list    | []    | all other
+# tuple   | ()    | all other
+# set     | {}    | all other
+
+** STRING : sequences of Unicode characters, e.g. an HTML document.
+*** some string functions
+
+len("bing")             # get length
+
+"bing" + "flip"         # concatenate strings
+
+"Charlie Brown".upper() # convert upper case
+"Charlie Brown".lower() # convert lower case
+
+"->".join(['blah', 'bing', 'bong']) => 'blah->bing->bong'
+
+"have a bannana".find("ban") # => 7
+
+*** regular expressions (regexp)
+import re
+
+matches = re.findall("[tTnN]", )
+
+ALSO:
+
+re.match(pattern, str) --- gets match-object for given string or None on failure
+re.search(pattern, str) --- finds location of first match
+
+*** STRING FORMATTING
+
+... Use the new style formatting - it's more flexible and supports more features...
+
+s = string
+r = representation
+d = number (integer)
+f = number (float)
+
+OLD STYLE:
+'%s ding %s' % ('one', 'two')
+
+NEW STYLE:
+'{} ding {}'.format('one', 'two')
+
+'{1} ding {0}'.format('one', 'two') # positional parameters possible in new style
+
+'{:.2f}'.format(float) # format to two decimal places
+
+*** StringIO
+Can use it like StringBuffer in Java:
+
+#+BEGIN_SRC python :classname example
+from io import StringIO
+
+sio = StringIO()
+sio.write("bing")
+sio.write("bong")
+sio.write("flap")
+sio.getvalue() # => "bingbongflap"
+#+END_SRC
+
+*** UNICODE STRINGS
+
+These are all the same:
+unicode('abcde')
+u'abcde'
+u"abcde"
+
+Unicode characters:
+unichr(40960) # return u'\ua000' (unicode string of 1 length representing that code point)
+ord(u'\ua000') # return 40960 (returns the integer of a 1 character string)
+
+Unicode strings have many of the same methods that 8-bit strings have, although not always...
+
+** BYTE and BYTE ARRAY : e.g. a JPEG image file.
+....
+
+** NUMBER (can be integers, floats, fractions, or even complex numbers)
+
+# maths
+11 // 2  # 5 --> integer division, rounding DOWN to zero decimal places
+-11 // 2 # -6
+11 ** 2  # raise to power of 2
+11 % 2   # modulus (remainder after integer division)
+# assignment operators
+x = 11
+x += 1 # 12
+x /= 3 # 4.0
+# also: *=, -=, %= ...
+import math
+math.pi
+math.sin(math.pi / 2) # 1.0
+math.tan(math.pi / 4) # 0.99999999... (python doesn't have infinite precision - this should return 1.0)
+
+
+
+# fractions
+import fractions
+f = fractions.Fraction
+x = f(1, 3) # one third
+x * 2       # Fraction(2, 3)
+f(6, 4)     # automatically reduced to Fraction(3, 2)
+f(0, 0)     # ERROR - zero denominator
+
+** LIST (an ordered sequences of values)
+# creating lists
+l = list(['a', 'a', 'b', 'c', 'c']) # define a list
+l = ['a', 'a', 'b', 'c', 'c']       # ... the same
+# indexing lists
+l[0]  # first item
+l[-1] # last item (negative index counts back from end)
+# slicing lists
+[0,1,2,3,4,5,6,7][2:5] # returns [2,3,4]
+[0,1,2,3,4,5,6,7][:5]  # returns [0,1,2,3,4]
+[0,1,2,3,4,5,6,7][5:]  # returns [5,6,7]
+[0,1,2,3,4,5,6,7][-3:] # returns [5,6,7]
+[0,1,2,3,4,5,6,7][:-3] # returns [0,1,2,3,4]
+# Strings can be indexed and sliced just like lists (SEE ALSO: split)
+"dooberry.jpg"[-4:]    # returns ".jpg"
+
+# some list methods
+l.append(x)              # append a single item to end.
+l.extend(another_list)   # append contents of another list to the end.
+new_list = l + [1, 2, 3] # returns joined lists without affecting original
+l.insert(i, x)           # i=0 inserts at beginning, i=len(list) is same as append.
+l.remove(x)              # remove the item who's value is x - error if there's no such item.
+l.index(x)               # index of first item who's value is x.
+l.count(x)               # number of instances of x.
+l.sort(cmp=None, key=None, reverse=None)
+l.reverse()
+
+# NOTE: pop() takes the LAST item of the list unlike most other languages which do the FIRST
+l.pop()  # removes the last item on the list and returns it
+l.pop(i) # removes and returns item at i
+
+# search for values in list
+l = ['a', 'b', 'new', 'mpilgrim', 'new']
+l.count('new') # returns number of instances
+l.index('new') # returns index of first instance
+'a' in l # True
+if x in l: print("x is in the list")
+if x not in l: print("x is not in the list")
+l.pop()  # 'new' --> removes last item from list and returns it
+l.pop(1) # 'b'   --> pop item at index 1
+
+#### for any sequence type...
+len(l) # length of any sequence type
+# del ---> removes items by index rather than value
+del l[3]   # remove item at index 3
+del l[3:6] # remove range from 3 to 6
+del l[:]   # remove all items from list
+
+*** LIST: FUNCTIONAL METHODS
+filter(funcion, sequence)
+map(function, sequence)
+reduce(function, sequence)
+
+*** LIST COMPREHENSIONS
+#+BEGIN_SRC python 
+squares1 = [x**2 for x in range(10)]
+# ... is equivalent to...
+squares2 = []
+for x in range(10):
+    squares2.append(x**2)
+    
+# can filter items using conditionals
+nums1 = [x for x in range(100) if x % 21 ==0]
+# nums1 = [0, 21, 42, 63, 84]
+
+# another filter example
+nums2 = [x * 2 for x in range(10) if x % 3 == 0]
+# nums2 = [0, 6, 12, 18]
+#+END_SRC
+
+Comprehension on a list of filenames:
+- gets the list of filenames in the directory 'images'
+- excludes any which do not contain the string '.jpg'
+- joins the directory name to make a proper file path
+#+BEGIN_SRC python
+  files = [os.path.join('images', file_i)
+           for file_i in os.listdir('images')
+           if '.jpg' in file_i]
+#+END_SRC
+
+** TUPLE (an ordered sequence of immutable values)
+# ... faster than list
+# ... safer than list, coz it's immutable
+tup1 = ('physics', 'chemistry', 1997, 2000)
+tup2 = (1, 2, 3, 4, 5 )
+tup3 = "a", "b", "c", "d"
+empty_tuple = ()
+# To write a tuple containing a single value you have to include a comma, even though there is only one value:
+tup4 = (50,)
+
+tup1[0] # value at index 0
+
+
+
+### for functions returning a tuple, we can automatically unpack them like so...
+(x, y) = thing.get_position()
+print x
+print y
+
+** SET (an unordered set of unique values (can contain no duplicates))
+s1 = {'a', 'b', 'b', 'b', 'c'}           # set literal
+s2 = set(['a', 'a', 'a', 'b', 'b', 'c']) # set constructor can take list arg
+s2.add('z') # add a single value
+s2.update({1, 2, 3, 'x', 'y', 'z'}) # add multiple values
+s2.remove(3)    # discard specified value - KeyError exception if value not in set
+s2.discard('a') # discard specified value - no exception if value not in set
+s2.pop() # remove one value and return it
+s2.union(s1)        # return new set containing the union
+s2.intersection(s1) # return new set containing the intersection
+s2.difference(s1)   # return new set containing items in s2 but NOT s1
+s2.symmetric_difference(s1) # return new set containing all items in exactly one of the sets
+s2.issubset(s1)
+s2.issuperset(s1)
+s2.clear() # removes ALL values
+
+** DICTIONARY (an unordered collection of key-value pairs)
+# ... in other languages maybe called associative array, hashmap etc...
+dict = {} # make an empty dictionary
+ages = {'jack' : 32, 'jill' : 37} # dictionary literal (key:value pairs)
+ages['jack']       # return value for 'jack'
+ages['jack'] = 33  # assign new value to exiting key
+ages['bobby'] = 56 # add new key:value pair
+del ages['jill']   # remove jill
+ages.keys() # return all keys
+ages.values() # return all values
+ages.items() # returns a list of tuples i.e. [(jack, 32), (jill, 37)]
+
+#### DICTIONARY COMPREHENSIONS
+d = {n: n**2 for n in range(5)} # {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+d = {n: True for n in range(5)} # {0: True, 1: True, 2: True, 3: True, 4: True}
+
+* PROGRAMMING STYLE
+** PROPERTIES (USE THIS INSTEAD OF GETTERS AND SETTERS)
+
+# EXAMPLE 1: access 'name' attribute directly...
+class Thing:
+      def __init__(self):
+      	  self.name = "Dong"
+
+x = Thing()
+x.name = "bob"
+
+
+
+# EXAMPLE 2: use 'property' to add getter/setter behaviour, but it happens behind the scenes, so client code looks exactly the same as when we were accessing the attribute directly...
+class Thing2:
+    def __init__(self):
+        self._name = "Dong"
+
+    def set_name(self, name):
+        self._name = name.capitalize()
+
+    def get_name(self): return self._name
+
+    name = property(get_name, set_name)
+
+x = Thing()
+x.name = "bob"
+x.name # returns "Bob"
+
+
+
+# READ-ONLY PROPERTY - must extend 'object' to do this...
+class Thing3(object):
+    def __init__(self, name):
+        self._name = name
+
+    def set_name(self, name):
+        self._name = name.capitalize
+
+    @property
+    def name(self): return self._name
+
+    name = property(get_name, set_name)
+
+x = Thing("bob")
+x.name # returns "bob"
+
+** ITERATING LISTS
+for item in list_name:
+    print item
+
+# enumerate returns index AND value
+for i, v in enumerate(['bill', 'ben', 'jack', 'jill']):
+    print i, v
+
+# reverse direction iterator
+for i in reversed(range(0,10)):
+    print i
+
+# alphabetical sorted
+basket = ['apple', 'orange', 'apple', 'pear', 'orange', 'banana']
+for f in sorted(set(basket)):
+    print f
+
+** LOOPS
+for n in range(7): print n
+for n in range(5, 10): print n
+
+while True: print "I am rad!"
+
+** TERNARY CONDITIONAL OPERATOR
+value = A if <CONDITION> else B
+
+** DOCSTRINGS
+
+A docstring is a string literal that occurs as the first statement in a module,
+function, class, or method definition. Such a docstring becomes the __doc__
+special attribute of that object.
+
+GUIDELINES AND BEST PRACTICE
+- Always use triple quotes for consistency.
+- Single line for really simple cases.
+- If a class method is overriding the superclass method, it should be specified.
+- Python is case-sensitive. So keep the function argument names exactly same as in the function definition.
+
+MODULE DOCSTRING
+- If a string appears as the first statement of a file then it is the module doctring.
+- Should list all the classes, functions, exceptions, and dependencies on other modules.
+
+CLASS DOCTRING
+- Should list all the methods and attributes. If it’s inheriting from a super class, the details should be provided.
+
+FUNCTION DOCSTRING
+- Specify the behavior, input arguments, return types, and exceptions. If there are specific restrictions when the function can be called, it should be specified in the function docstring.
+
+MULTI-LINE DOCSTRING
+- summary line
+- then a blank line
+- description of args
+- closing quotes on a line of their own
+
+EXAMPLE:
+#+BEGIN_SRC python :classname example
+"""Summary line: this function does so and so.
+
+Arguments:
+num -- a number
+str -- a string
+
+Keyword arguments:
+plod -- the plod-factor (default 1.0)
+"""
+#+END_SRC
+
+* FUNCTION DEFININTION
+
+def function_name(arg1, arg2, arg3):
+    """This is the docstring."""
+    return 42
+
+def hiya(name='nobody'): # optional named argument with default value assigned
+   print("Hello, ", name)
+   # NOTE: All functions return a value. If there is no return statement, null is returned.
+
+** VARARGS and KWARGS 
+
+#### VARIABLE LENGTH POSITIONAL ARGS - splat operator *
+
+def p(*vargs):
+    for a in vargs: print(a)
+
+
+#### VARIABLE LENGTH KEYWORD ARGS - double splat operator **
+
+def greet_me(**kwargs):
+    if kwargs is not None:
+        for key, value in kwargs.iteritems():
+            print "%s == %s" %(key,value)
+
+
+#### USING *vargs AND **kwargs TO CALL A FUNCTION
+
+# first with *args
+>>> args = ("two", 3,5) # store args in a tuple
+>>> test_args_kwargs(*args)
+arg1: two
+arg2: 3
+arg3: 5
+
+# now with **kwargs:
+>>> kwargs = {"arg3": 3, "arg2": "two","arg1":5}
+>>> test_args_kwargs(**kwargs)
+arg1: 5
+arg2: two
+arg3: 3
+
+* OBJECTS/CLASSES
+** FUNDAMENTALS
+
+NOTE: new style classes are those that inherit from 'object'
+... 'object' has a few useful features, such as 'super()', like in java...
+
+
+
+# SIMPLEST POSSIBLE CLASS:
+class Nothing:
+    pass
+
+# SIMPLE CLASS DEFINITION:
+class UselessClass:
+    """Docstring - this is accessible in the REPL via the magic variable __doc__."""
+
+    i = 432.7 # a class variable
+    _x = 32   # a private class variable
+
+    # constructor
+    def __init__(self, num):
+        self.num = num # an instance variable
+
+    # a simple method
+    def say_hello(self): # in member functions: first arg is always self.
+        """Method docstring..."""
+        print("useless hello message")
+
+    # a private method
+    def _say_hello(self):
+        print("hello to myself!")
+
+# CLASS INSTANTIATION:
+uselessInstance = UselessClass()
+uselessInstance.__class__
+help(UselessClass) # displays documentation for class
+help(UselessClass.say_hello) # displays documentation for method
+uselessInstance.__doc__
+UselessClass.__doc__
+
+
+
+# CONSTRUCTORS:
+class PointlessClass:
+    """A class which inits some pointless variables in the constructor."""
+    def __init__(self, p, q):
+        self.p = p
+        self.q = q
+    def print_status(self):
+        print("p = " + self.p + ", q = " + self.q)
+
+** INHERITANCE:
+
+class ClassName(ParentClassName):
+
+# ... or...
+
+class ClassName(module_name.ParentClassName):
+
+# example:
+class TotallyUseless(UselessClass):
+    # overrides a method in the base class
+    def say_hello(self):
+        print("hello from a totally useless derived class")
+	UselessClass.say_hello(self) # explicitly calling the overridden base class method
+
+
+
+#### INHERITANCE AND CONSTRUCTORS:
+# NOTE: 'super' doesn't work unless base class extends 'object'... also multiple inheritance can be a problem...
+
+class Dink(object):
+    def __init__(self, message):
+        self.message = message
+
+class DinkDink(Dink):
+    def __init__(self, message, num):
+        super(DinkDink, self).__init__(message)
+        self.num = num
+
+
+
+
+#### CLASS METHODS:
+class Bingle:
+    @classmethod
+    def cm(cls):
+        print "a class method!"
+
+Bingle.cm() # no object instance required
+
+** STATIC METHODS
+# ... for methods which belong to a class, but don't require a reference to the class or an instance...
+class Bingle:
+    @staticmethod
+    def sm(msg):
+    	print "this is a static method --> message: ", msg
+
+** ABSTRACT METHODS/ABSTRACT CLASSES:
+
+# FIRST WAY:
+class BaseClass(object):
+    def do_thing(self):
+        raise NotImplementedError("Child classes must implement this method!")
+
+class ChildClass(BaseClass):
+    def do_thing(self):
+        print "The thing is implemented!"
+
+
+# SECOND WAY: using ABC (Abstract Base Class)
+import abc
+
+class BaseClass(object):
+    __metaclass__ = abc.ABCMeta
+
+    @abc.abstractmethod
+    def do_thing(self):
+
+** USEFUL BUILT IN FUNCTIONS:
+x = TotallyUseless()
+isinstance(x, TotallyUseless)
+issubclass(TotallyUseless, UselessClass)
+
+* ITERATORS
+
+# Behind the scenes, the for statement calls iter() on the container object. The function returns an iterator object that defines the method next() which accesses elements in the container one at a time. When there are no more elements, next() raises a StopIteration exception which tells the for loop to terminate. This example shows how it all works:
+
+>>> s = 'abc'
+>>> it = iter(s)
+>>> it
+<iterator object at 0x00A1DB50>
+>>> it.next()
+'a'
+>>> it.next()
+'b'
+>>> it.next()
+'c'
+>>> it.next()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+    it.next()
+StopIteration
+
+# seen the mechanics behind the iterator protocol, it is easy to add iterator behavior to your classes. Define an __iter__() method which returns an object with a next() method. If the class defines next(), then __iter__() can just return self:
+
+class Reverse:
+    """Iterator for looping over a sequence backwards."""
+    def __init__(self, data):
+        self.data = data
+        self.index = len(data)
+    def __iter__(self):
+        return self
+    def next(self):
+        if self.index == 0:
+            raise StopIteration
+        self.index = self.index - 1
+        return self.data[self.index]
+
+** #### GENERATORS
+# Generators are a simple and powerful tool for creating iterators. They are written like regular functions but use the 'yield' statement whenever they want to return data. Each time next() is called on it, the generator resumes where it left-off (it remembers all the data values and which statement was last executed). An example shows that generators can be trivially easy to create:
+
+>>> def reverse(data):
+>>>    for index in range(len(data)-1, -1, -1):
+>>>        yield data[index]
+
+... Anything that can be done with generators can also be done with class-based iterators. What makes generators so compact is that the __iter__() and next() methods are created automatically.
+... Local variables and execution state are automatically saved between calls. Makes the function easier to write and much more clear than an approach using instance variables like self.index and self.data.
+... When generators terminate, they automatically raise StopIteration
+
+* MISC
+** random numbers
+
+Two ways of doing the same thing...
+
+NOTE: the randint method gives a number between min and max INCLUSIVE.
+
+#+BEGIN_SRC python :classname example
+import random
+rand = Random()
+num = rand.randint(10, 20)
+#+END_SRC
+
+#+BEGIN_SRC python :classname example
+from random import randint
+num = randint(10, 20)
+#+END_SRC
+
+** TIME MODULE
+import time
+
+time.time()     # time in seconds
+time.ctime()    # time as string
+time.strftime(%Y_%m_%d) # as string (according to format code)
+# time.strptime() # as tuple (according to format code)
+
+*** time format codes
+%a 	Weekday as locale’s abbreviated name. 	Mon
+%A 	Weekday as locale’s full name. 	Monday
+%w 	Weekday as a decimal number, where 0 is Sunday and 6 is Saturday. 	1
+%d 	Day of the month as a zero-padded decimal number. 	30
+%-d 	Day of the month as a decimal number. (Platform specific) 	30
+%b 	Month as locale’s abbreviated name. 	Sep
+%B 	Month as locale’s full name. 	September
+%m 	Month as a zero-padded decimal number. 	09
+%-m 	Month as a decimal number. (Platform specific) 	9
+%y 	Year without century as a zero-padded decimal number. 	13
+%Y 	Year with century as a decimal number. 	2013
+%H 	Hour (24-hour clock) as a zero-padded decimal number. 	07
+%-H 	Hour (24-hour clock) as a decimal number. (Platform specific) 	7
+%I 	Hour (12-hour clock) as a zero-padded decimal number. 	07
+%-I 	Hour (12-hour clock) as a decimal number. (Platform specific) 	7
+%p 	Locale’s equivalent of either AM or PM. 	AM
+%M 	Minute as a zero-padded decimal number. 	06
+%-M 	Minute as a decimal number. (Platform specific) 	6
+%S 	Second as a zero-padded decimal number. 	05
+%-S 	Second as a decimal number. (Platform specific) 	5
+%f 	Microsecond as a decimal number, zero-padded on the left. 	000000
+%z 	UTC offset in the form +HHMM or -HHMM (empty string if the the object is naive). 	
+%Z 	Time zone name (empty string if the object is naive). 	
+%j 	Day of the year as a zero-padded decimal number. 	273
+%-j 	Day of the year as a decimal number. (Platform specific) 	273
+%U 	Week number of the year (Sunday as the first day of the week) as a zero padded decimal number. All days in a new year preceding the first Sunday are considered to be in week 0. 	39
+%W 	Week number of the year (Monday as the first day of the week) as a decimal number. All days in a new year preceding the first Monday are considered to be in week 0. 	39
+%c 	Locale’s appropriate date and time representation. 	Mon Sep 30 07:06:05 2013
+%x 	Locale’s appropriate date representation. 	09/30/13
+%X 	Locale’s appropriate time representation. 	07:06:05
+%% 	A literal '%' character.
+
+** ENUMS
+... since version 3.4
+
+from enum import Enum
+class Colour(Enum):
+    red, green, blue, yellow = range(1, 5)
+
+print(Color.red)       # nice and human-readable
+print(repr(Color.red)) # nice and human-readable
+print(Color.red.name)  # 'red'
+
+type(Color.red)        # <enum 'Color'>
+isinstance(Color.green, Color) # True
+
+for c in Color: print(c) # iteration (in definition order)
+
+... Enumeration members are hashable, so they can be used in dictionaries and sets (SEE DOCUMENTATION)
+
+
+... enum members CAN have the same values - to ensure unique values use the unique decorator:
+@enum.unique
+
+*** an old workaround
+
+class Materials:
+    Shaded, Shiny, Transparent, Matte = range(1, 5)
+
+>>> print Materials.Matte
+4
+
+* PRINT AND FORMAT
+** FORMAT see ... string formatting
+
+new way:
+
+"My string".format(...)
+
+** PPRINT (pretty print)
+from pprint import pprint
+pprint(__builtins__.__dict) # indents lists nicely on multiple lines
+
+* COMMAND LINE ARGUMENTS
+** BASICS
+
+#+BEGIN_SRC python :classname example
+import sys
+
+number_of_arguments = len(sys.argv)
+argument_list = sys.argv
+
+#+END_SRC
+
+** GETOPT
+
+import getopt
+
+getopt.getopt(args, options, [long_options])
+- args         -- LIST of arguments to be parsed
+- options      -- STRING of option letters to be recognized, options which require an argument should be followed by a colon :
+- long_options -- (optional) 
+
+:EXAMPLE_SCRIPT:
+#+BEGIN_SRC python :classname example
+#!/usr/bin/python
+
+import sys, getopt
+
+def main(argv):
+   inputfile = ''
+   outputfile = ''
+   try:
+      opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
+   except getopt.GetoptError:
+      print 'test.py -i <inputfile> -o <outputfile>'
+      sys.exit(2)
+   for opt, arg in opts:
+      if opt == '-h':
+         print 'test.py -i <inputfile> -o <outputfile>'
+         sys.exit()
+      elif opt in ("-i", "--ifile"):
+         inputfile = arg
+      elif opt in ("-o", "--ofile"):
+         outputfile = arg
+   print 'Input file is "', inputfile
+   print 'Output file is "', outputfile
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
+
+#+END_SRC
+:END:
+
+** ARGPARSE
+
+The argparse module makes it easy to write user-friendly command-line
+interfaces. The program defines what arguments it requires, and argparse will
+figure out how to parse those out of sys.argv. The argparse module also
+automatically generates help and usage messages and issues errors when users
+give the program invalid arguments.
+
+* EXCEPTION HANDLING
+** basic example
+try:
+    ...
+except NameError as err:
+    print("handling error:", err)
+finally:
+    print("Goodbye")
+
+** catch-all exception
+try:
+  ...
+except Exception as e:
+  print(f"caught exception: {e}")
+
+** USER-DEFINED EXCEPTIONS
+
+class Error(Exception):
+    """Base class for exceptions in this module."""
+    pass
+
+class InputError(Error):
+    """Exception raised for errors in the input.
+
+    Attributes:
+        expression -- input expression in which the error occurred
+        message -- explanation of the error
+    """
+
+    def __init__(self, expression, message):
+        self.expression = expression
+        self.message = message
+
+class TransitionError(Error):
+    """Raised when an operation attempts a state transition that's not
+    allowed.
+
+    Attributes:
+        previous -- state at beginning of transition
+        next -- attempted new state
+        message -- explanation of why the specific transition is not allowed
+    """
+
+    def __init__(self, previous, next, message):
+        self.previous = previous
+        self.next = next
+        self.message = message
+
+* EXTERNAL PROCESSES/SHELL COMMANDS ETC
+
+... used to use os.system...
+... since version 2.4, subprocess module is recommended instead...
+
+* FILE OPERATIONS
+
+import os
+
+os.path.exists(path) # True if file or dir exists
+os.path.isfile(path) # True, only for files (not dir)
+os.path.expanduser("~/Documents") # expands '~' to home dir
+
+# system independent way to build path
+os.path.join("bing" "flip" "diddle")
+
+# get current working dir
+os.getcwd()
+
+# change directory
+os.chdir("..")
+
+# also
+os.listdir()
+* FILE IO (READ AND WRITE FILES)
+read a file
+
+with open('filename.txt', 'r') as f:
+    ...
+
+* THREADS
+
+MODULES:
+- threading # since Python 2.4
+- thread
+... use threading module over thread, unless good reason...
+... threading constructs higher level interface on top of the thread module...
+... threading emulates the java threading model.
+
+SEE ALSO:
+- mutex
+- Queue
+- dummy_threading
+- multiprocessing
+
+FEATURES & ADVANTAGES OF THREADS:
+- Run multiple tasks concurrently.
+- Multiple threads within a process share the same data space with the main thread and can therefore share information or communicate with each other more easily than if they were separate processes.
+- Threads sometimes called light-weight processes and they do not require much memory overhead; they are cheaper than processes.
+- A thread has a beginning, an execution sequence, and a conclusion. It has an instruction pointer that keeps track of where within its context it is currently running.
+- It can be pre-empted (interrupted).
+- It can temporarily be put on hold (also known as sleeping) while other threads are running - this is called yielding.
+
+THREAD METHODS & OBJECTS:
+- threading.Thread
+- threading.Event
+- threading.Lock
+
+** threading module
+
+:THREADING-EXAMPLE: 
+** use threading
+#+BEGIN_SRC python :classname example
+#!/usr/bin/python
+
+import threading
+import time
+
+exitFlag = 0
+
+class myThread (threading.Thread):
+    def __init__(self, threadID, name, counter):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.counter = counter
+    def run(self):
+        print "Starting " + self.name
+        print_time(self.name, self.counter, 5)
+        print "Exiting " + self.name
+
+def print_time(threadName, delay, counter):
+    while counter:
+        if exitFlag:
+            threadName.exit()
+        time.sleep(delay)
+        print "%s: %s" % (threadName, time.ctime(time.time()))
+        counter -= 1
+
+# Create new threads
+thread1 = myThread(1, "Thread-1", 1)
+thread2 = myThread(2, "Thread-2", 2)
+
+# Start new Threads
+thread1.start()
+thread2.start()
+
+print("Exiting Main Thread")
+#+END_SRC
+* USER INPUT
+
+# get a line of user input as a string
+valA = raw_input("type something: ")
+
+# user input interpreted...
+valB = input("variable, object, expression etc: ")
+# Documentation says: Equivalent to eval(raw_input(prompt)).
+* GUI using Tkinter
+** intro
+- python interface to the Tk GUI toolkit
+- it's the standard GUI for python
+- included in basic distribution
+- very easy to get started
+** troubleshooting
+*** couldn't find Tkinter module
+NOTE: module name changed from Tkinter to tkinter under python 3
+
+If changing module name to lowercase doesn't fix it then try:
+  $ sudo apt-get install python3-tk
+** Tkinter examples
+*** Tkinter Hello, World
+#+BEGIN_SRC python :classname example
+#!/usr/bin/python3
+
+import tkinter
+
+# Construct GUI application:
+# This just makes an empty window
+top = tkinter.Tk()
+
+# Enter the main event loop to take action against each event triggered by the user
+top.mainloop()
+#+END_SRC
+*** Canvas with size and background color
+#+BEGIN_SRC python :classname example
+#!/usr/bin/python3
+
+import tkinter as tk
+
+top = tk.Tk()
+canv = tk.Canvas(top, width=500, height=200, bg="blue")
+
+canv.pack()
+top.mainloop()
+#+END_SRC
+** widget types
+*** Button
+*** Canvas
+The Canvas widget is used to draw shapes, such as lines, ovals, polygons and
+rectangles, in your application.
+
+EXAMPLE: make a window with a canvas and draw a few shapes...
+
+#+BEGIN_SRC python :classname example
+import tkinter as tk
+
+root = tk.Tk()
+canv = tk.Canvas(root, bg='blue', width=600, height=800)
+canv.pack()
+
+# draw some things on the canvas
+poly = canv.create_polygon([50, 50, 100, 60, 110, 70, 75, 65], fill='red')
+info = canvas.create_text(10, 20, anchor=tk.W, text="score: 0", fill="white")
+
+# change some things
+canv.coords(poly, [50, 50, 90, 60, 120, 80, 70, 60]) # change co-ordinates
+canv.itemconfig(poly, fill='blue')
+canv.itemconfig(info, text='score: 1')
+
+# delete from the canvas
+canv.delete(poly)
+
+# delete everything from canvas
+canv.delete(tk.ALL)
+
+# run the loop
+root.mainloop()
+#+END_SRC
+*** Checkbutton
+*** Entry
+The Entry widget is used to display a single-line text field for accepting values from a user.
+*** Frame
+The Frame widget is used as a container widget to organize other widgets.
+*** Label
+The Label widget is used to provide a single-line caption for other widgets. It can also contain images.
+*** Listbox
+The Listbox widget is used to provide a list of options to a user.
+*** Menubutton
+The Menubutton widget is used to display menus in your application.
+*** Menu
+The Menu widget is used to provide various commands to a user. These commands are contained inside Menubutton.
+*** Message
+The Message widget is used to display multiline text fields for accepting values from a user.
+*** Radiobutton
+The Radiobutton widget is used to display a number of options as radio buttons. The user can select only one option at a time.
+*** Scale
+The Scale widget is used to provide a slider widget.
+*** Scrollbar
+The Scrollbar widget is used to add scrolling capability to various widgets, such as list boxes.
+*** Text
+The Text widget is used to display text in multiple lines.
+*** Toplevel
+The Toplevel widget is used to provide a separate window container.
+*** Spinbox
+The Spinbox widget is a variant of the standard Tkinter Entry widget, which can be used to select from a fixed number of values.
+*** PanedWindow
+A PanedWindow is a container widget that may contain any number of panes, arranged horizontally or vertically.
+*** LabelFrame
+A labelframe is a simple container widget. Its primary purpose is to act as a spacer or container for complex window layouts.
+*** tkMessageBox
+This module is used to display message boxes in your applications.
+** widget common attributes
+** geometry management
+- pack
+- grid
+- place
+* UNIT TESTING
+** troubleshooting
+- tests MUST begin with the word 'test' e.g. test_upper or test_lower
+** example
+#+BEGIN_SRC python :classname example
+import unittest
+
+class TestStringMethods(unittest.TestCase):
+
+    def test_upper(self):
+        self.assertEqual('foo'.upper(), 'FOO')
+
+    def test_isupper(self):
+        self.assertTrue('FOO'.isupper())
+        self.assertFalse('Foo'.isupper())
+
+    def test_split(self):
+        s = 'hello world'
+        self.assertEqual(s.split(), ['hello', 'world'])
+        # check that s.split fails when the separator is not a string
+        with self.assertRaises(TypeError):
+            s.split(2)
+
+if __name__ == '__main__':
+    unittest.main()
+#+END_SRC
+** running the tests
+*** command line
+If the test file has a main method (as above) then just run the file:
+
+$ python tests.py
+
+
+At the repl:
+
+>>> unittest.main()
+* WRITING A PACKAGE
+** __init__.py
+This can be an empty file, or you can put imports in here.
+** setup.py
+Create a file called setup.py in your package root dir:
+
+#+BEGIN_SRC python :classname example
+from setuptools import setup, find_packages
+ 
+setup(name='pathology',
+      version='0.1',
+      url='https://github.com/the-gigi/pathology',
+      license='MIT',
+      author='Gigi Sayfan',
+      author_email='the.gigi@gmail.com',
+      description='Add static script_dir() method to Path',
+      packages=find_packages(exclude=['tests']),
+      long_description=open('README.md').read(),
+      zip_safe=False)
+#+END_SRC
+
+* LAMBDA (anonymous functions)
+a = lambda: print("hello")
+b = lambda x, y: x + y
+
+# running them
+a()
+b(1, 3)
+
+* PYGAME ZERO
+** Install via pip
+ $ sudo pip install pgzero
+
+** Run a program
+ $ pgzero path/to/file.py
+
+** General
+- save images in dir called 'images'
+* TURTLE
+Python has a builtin turtle graphics module!
+
+forward() | fd()
+backward() | bk() | back()
+right() | rt()
+left() | lt()
+
+pendown() | pd() | down()
+penup() | pu() | up()
+
+#+BEGIN_SRC python
+from turtle import *
+
+# get turtle status
+print("Position: x={}, y={}".format(xcor(), ycor()))
+print("Angle: {}".format(heading()))
+
+shape("arrow")
+shape("classic") # another kind of arrow
+shape("turtle")
+#+END_SRC
+
+* read and manipulate EXIF data
+Install exif module via pip:
+: pip3 install exif
+
+EXIF (Exchangeable Image File Format) is image metadata e.g. the settings that
+were applied on your digital camera when you took the photo, or maybe added by
+other software used to create the image.
+
+#+BEGIN_SRC python
+  import exif
+
+  # img = open("turtle.png", "rb")
+  # eximg = exif.Image(img)
+  # ValueError: 7133 is not a valid TiffByteOrder
+
+
+  # os.listdir()
+  # ['IMG_20220218_110318534.jpg', 'forzen02.png', 'forzen02.xcf']
+  img = open('IMG_20220218_110318534.jpg', "rb")
+  # <_io.BufferedReader name='IMG_20220218_110318534.jpg'>
+  eximg = exif.Image(img)
+  # <exif._image.Image object at 0x7f501d938a30>
+
+  eximg.has_exif # => True
+
+  # gets names of all EXIF tags present as a list of strings
+  eximg.list_all()
+
+  # access EXIF metadata tags using Python attribute notation:
+  # (read, write, delete or create new exif fields)
+  eximg.datetime # => '2022:02:18 11:03:18'
+  eximg.make # => 'Motorola'
+  eximg.make = 'Bananna Man'
+  del eximg.make
+  # add a new exif fields
+  eximg.favourite_colour = "pale teal"
+
+  # can also get tags by name in string form
+  eximg.get('datetime')
+  # that means we can iterate through all tags like this
+  for tagname in eximg.list_all():
+      print("{}: {}".format(tagname, eximg.get(tagname)))
+
+  # erase all tags
+  eximg.delete_all()
+
+  # writing/saving image with modified EXIF data
+
+  # Write the image with modified EXIF metadata to an image file using open() in
+  # binary write (i.e. 'wb') mode:
+  with open('modified_image.jpg', 'wb') as new_image_file:
+      new_image_file.write(eximg.get_file())
+#+END_SRC
+
+* PIL/PILLOW (working with images)
+PIL (Python Imaging Library)
+Pillow is the friendly PIL fork

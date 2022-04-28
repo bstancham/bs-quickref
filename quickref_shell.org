@@ -1,0 +1,1582 @@
+UNIX/LINUX SHELL QUICKSTART GUIDE - (using BASH)
+... also see: ComputerWork/System/
+* USING MANPAGES (ALSO SEE: LESS)
+$ man command # display manual page for a command
+$ man NUMBER command # use whatis to see all numbered pages available
+$ whatis command # displays short description for a command
+$ apropos KEYWORD # lists all manpages containing KEYWORD
+$ manpath #
+
+* INFO ()
+$ info # loads main directory node
+$ info -k STRING # apropos - prints list of matching info pages
+$ info --where dc # show location of info file for dc
+
+* FIND INFORMATION ABOUT COMMANDS/PROGRAMS
+$ which COMMAND # locate a command
+$ whereis COMMAND # locate the binary, source, and manual page files for a command
+$ type [COMMAND_NAME] # what type is the command e.g. bash builtin etc
+
+* SHELLS AND TERMINALS
+
+SHELLS:
+... bash
+... sh
+... zsh (see below)
+
+TERMINALS:
+... default terminal --> (gnome-terminal/mate-terminal/...)default terminal on ubuntu is pretty decent
+... xterm            --> more basic terminal (no anti-aliasing, and other limitations)
+... fbterm
+
+TERMINAL KEYBOARD SHORTCUTS/COMMANDS:
+Ctrl+C                # kill current foreground process
+Ctrl+Z                # suspend current foreground process (SEE jobs/fg/bg)
+# scroll terminal window up/down (these work in some terminal emulators)
+... by screen: Shift+PgUp/Shift+PgDown
+... by line:   Ctrl+Shift+Up/Ctrl+Shift+Down
+
+==== SHELL INVOCATION ====
+
+$ sh            # start new interactive shell
+$ sh -c COMMAND # run command in new non-interactive shell
+
+* MAAGING PACKAGES
+** manage packages via APT (Advanced Package Manager)
+
+$ apt-cache search spectrum
+
+$ apt-cache search spectrum | grep zx
+
+$ apt-cache show fbzx
+
+$ sudo apt-get install fbzx
+
+** install a package directly from .deb file
+
+$ sudo dpkg -i code_1.60.2-1632313585_amd64.deb
+
+* GET DIRECTORY OR FILE PATH FROM GUI
+
+Drag and drop directories or files from GUI into terminal window.
+
+Or, right-click --> open in terminal
+
+
+$ cd - # go back to last working dir
+
+* COPY AND PASTE
+
+Click and drag selection...
+
+COPY:  Ctrl+SHIFT+c
+
+PASTE: Ctrl+SHIFT+v
+
+(or use the mouse-menu)
+
+
+
+==== XCLIP ====
+
+$ sudo apt-get install xclip
+
+$ pwd | xclip   # which copy output of pwd to xclip
+$ xclip -o      # print clipboard contents to terminal
+$ cd `xclip -o` # use output in a command
+
+$ pwd | xclip -selection clipboard # copy to the "standard" clipboard (to avoid having to use xclip -o)
+
+... see manpage for more options...
+... maybe make some aliases to speed up usage
+
+* CURLY-BRACE EXPANSIONS
+
+When curly braces are encountered, the argument is expanded into as
+many separate arguments as there are comma separated values inside...
+
+$ mv path/to/file.{txt,xml}   # rename file.txt to file.xml
+
+$ sudo cp /etc/rc.conf{,-old} # make a backup copy with -old appended to filename
+$ sudo mv /etc/rc.conf{-old,} # replace rc.conf with rc.conf-old
+
+$ mkdir myfolder{1,2,3}       # make three numbered dirs at once
+
+* FINDING/SEARCHING FOR FILES/PROGRAMS
+
+$ locate "PATTERN" # locate files matching pattern (very easy to use)...
+... NOTE: if locate can't find something, do "sudo updatedb", then try again
+
+FIND EXAMPLES
+... SEE ALSO: "find_command_examples.txt"
+$ find -name "*.scala"         # find by filename - search current dir & all sub-dirs
+$ find -iname "*.scala"        # same, but case-insensitive
+$ find . -mmin -60             # file content modified in last 60 minutes
+$ find . -cmin -60             # file status modified in last 60 minutes
+$ find . -amin -60             # file accessed in last 60 minutes
+$ find . -type f -empty        # empty files
+$ find . -depth -empty -type d # empty dirs
+
+* XARGS/PARALLEL
+
+Use XARGS to build and execute command lines from standard input.
+
+Gnu PARALLEL is a modern replacement for XARGS with nearly identical syntax...
+... runs in parallel...
+... no problem with file names containing quotes or apostrophes...
+... install PARALLEL with apt
+
+
+
+EXAMPLES:
+
+Count number of files in an ls listing...
+... the output of the ls command is piped to wc
+$ ls -l | wc -l
+
+Count number of lines in all files listed...
+... xargs causes the output of ls to be treated as a list of files instead of just text
+$ ls | xargs wc -l
+
+* IF UBUNTU TOTALLY FREEZES
+
+Ctrl+Alt+F2     # suspend X and bring up tty
+... you will need to log in...
+... can now use ps and kill to deal with problem processes...
+... Ctrl+Alt+F7 # return to X session
+... if can't fix it, then:
+$ sudo reboot
+
+OR:
+
+Ctrl+Alt+BACKSPACE # restart X (will loose data unsaved data)
+
+* VIEWING FILES
+
+$ less # less is more than more
+some less commands:
+h          --- help screen
+=          --- print file info, including current position
+/<PATTERN> --- search: then 'n' & 'N' for next and previous matches
+&<PATTERN> --- show only lines matching <PATTERN>
+v          --- edit file in $EDITOR (used to default to vi, now it's nano)
+
+$ head FILENAME # show first 10 lines of file
+$ tail FILENAME # show last 10 lines of file
+$ tail -f FILENAME # -f = follow: output appended as file grows
+$ tail -f /var/log/syslog # watch system log update in real time (try plugging USB for example)
+
+$ cat FILENAME(S)... # concatenate (and display result)
+$ cat FILE1 FILE2 > FILE3 # concatenates 2 files and writes result to a 3rd file
+$ cat -n filename # add line numbers to beginning of each line
+
+* EDITING FILES
+** EDITING FILES: EMACS
+see quickstart-emacs
+
+** EDITING FILES: NANO
+
+(some emacs keybindings work e.g moving the cursor)
+C-g  OR  F1 ; help
+
+C-x ; Exit
+C-o ; Write Out (save file)
+
+Select text by holding shift and using cursor keys
+C-k ; Cut
+C-u ; Un-cut (paste)
+... when no text is selected C-k cuts the current line
+
+M-u ; Undo
+M-e ; Redo
+
+C-c ; display cursor position
+
+** EDITING FILES: VI/VIM
+
+NOTE: By default, vi in Ubuntu (as of 12.04) is “vim.tiny”, a very basic vi-like
+vim. Install full vim via apt-get.
+
+VITAL COMMANDS
+ESC           ; return to 'normal' mode (where you enter commands)
+:q            ; quit
+:q!            ; quit without saving
+:wq           ; write file, then quit
+:w            ; write/save file
+:w [FILENAME] ; save file as FILENAME
+:e ; refresh buffer
+
+BASIC EDITING
+i             ; insert mode (for inserting text)
+a ; insert mode (position AFTER the cursor)
+o ; insert mode - open a new line below the current one
+u ; undo
+Ctrl+r ; redo
+
+MOVEMENT
+k/j           ; prev/next line
+h/l           ; prev/next character
+b/w ; prev/next word
+Ctrl+b ; page up
+Ctrl+f ; page down
+0 ; beginning of line
+$ ; end of line
+:8 ; line 8
+:$ ; end of file
+
+DELETING
+x ; delete character under cursor
+8x ; delete 8 characters
+dw ; delete word
+8dw ; delete 8 words
+D ; delete from cursor to end of line
+dd ; delete whole line
+NOTE: when you delete words they are put on the clipboard automatically...
+
+COPY AND PASTE
+press 'v' at start of selection...
+... move cursor to end of selection, then press...
+... 'd' to cut
+... 'y' to copy
+yy ; copy current line
+3yy ; copy 3 lines
+p ; paste after cursor
+P ; paste before cursor
+
+SEARCH
+/aa ; search forward for text 'aa'
+n ; next occurence
+N ; previous occurence
+ * ; find next occurence of current word
+
+FIND AND REPLACE
+:s/aa/bb/g ; replace “aa” by “bb” in CURRENT LINE...
+... “g” (global) means do it for all occurrences.
+:%s/aa/bb/gc ; find and replace ALL “aa” by “bb” in whole file...
+... “c” means ask for confirmation before each replacement.
+:20,30s/aa/bb/gc ; find and replace “aa” by “bb” in line 20 to 30.
+
+
+
+How to comment/uncomment a text block?
+
+press 【Ctrl+v】 (called “visual block”), move cursor to select, then press 【I # Esc】 to insert # to all lines in the block.
+
+To uncomment a block, do the same except just press 【x】 to kill a char.
+
+
+Syntax Coloring
+Key	Meaning
+【:set syn=lang】	the “lang” can be perl, c, cpp, html, php, JavaScript, python etc.
+【:syntax on】	Turn on syntax coloring
+【:syntax off】	Turn off syntax coloring
+Line Numbers
+Key	Meaning
+【:set number】	Turn on line numbers
+【:set nonumber】	Turn off line numbers
+Advanced Topics
+【gg】	beginning of file
+【G】	end of file
+【dG】	delete from current line to end of file
+Opening File
+【:tab path】	opening file
+【gf】	open path under cursor
+
+* GUI COMMANDS
+
+$ xdg-open [FILE] # open file or dir using the default program (same as double-click)
+
+$ xprop # then click on window - for information on a GUI app
+... to find name of program, look at lines "WM_CLASS" and "_NET_WM_PID"...
+... OR: $ ps -ef | grep STRING # where STRING is something you think the name might contain...
+... OR: start `top`, then launch program, and watch it appear in top...
+
+$ xwininfo # then click on window - get information on a window...
+... use this to get the window ID for recordmydesktop
+
+SEE ALSO: gksu
+
+* ROOT PERMISSION / CHANGING USER
+
+$ su [USERNAME]  # login as a different user
+
+$ sudo [COMMAND] # execute command as root (superuser-do)
+
+$ gksu [COMMAND] # like sudo, but for graphical programs
+
+* FILE INFORMATION
+
+$ file FILENAME # type of file
+$ stat FILENAME # file or filesystem status
+$ wc FILENAME   # word count
+
+use stat with a format string to output exactly what you want - this displays the file size in bytes:
+$ stat --format="%s" $output_file
+
+* BASH LANGUAGE FEATURES
+
+VARIABLES
+$ echo $HOME # Use dollar sign to reference a variable
+... variables can be interpolated into strings...
+$ echo "My username is $USER and my home directory is $HOME"
+... use curly braces to embed without spaces
+$ echo "zzzzzzzzzzzzzzz${USER}zzzzzzzzzzzzzzzzzz"
+
+INTERPOLATE OUTPUT OF A COMMAND
+use either BACKTICKS, or PARENTHESIS EXPANSION...
+$ my_var=`locate "scala-swing.jar"`  # store output of command in a variable
+$ my_var=$(locate "scala-swing.jar") # same
+$ echo "Current dir is $(pwd), and I put my bash in `which bash` so I don't lose it"
+
+
+ | (PIPE)
+examples:
+$ ps aux | grep flash  # find the name of processes associated with Flashplayer
+$ cd /proc/44352/fd    # move to the directory of that process (sub-directory 'fd' = File Descriptor)
+$ ls -hal | grep Flash # list temporary video files in use by Flashplayer
+
+
+OUTPUT REDIRECTOR
+$ [CMD] > [FILE]  # write output of CMD to FILE
+$ [CMD] >> [FILE] # append output of CMD end of FILE (creates file if it doesn't exist)
+EXAMPLE:
+echo "I am a very small text file." > file.txt # write output to file
+echo "... and another line..." >> file.txt     # APPEND to end of file
+
+INPUT REDIRECTOR
+$ [CMD] < [FILE] # CMD treats contents of FILE as standard input
+
+USER INPUT (useful in scripts)
+read a  # read user input and store in variable named 'a'
+echo $a # show value
+
+
+EXIT CODES
+In bash exit status 0 for success, 1 if failed.
+$ echo $? # displays exit code of most recent foreground pipeline
+
+* GENERAL
+
+$ pwd       # print working directory
+
+$ cd [PATH] # change directory
+$ cd        # go to $HOME by default
+$ cd -      # go back to last working directory
+
+$ cp -p file1 file2 # preserve mode, ownership and timestamp
+$ cp -i file1 file2 # if file2 exists, prompt for confirmation before overwriting
+
+$ mv -i file1 file2 # if file2 exists, prompt for confirmation before overwriting
+$ mv -v file1 file2 # show details during rename...
+
+$ mkdir [DIR]             # make new empty dir
+$ mkdir -p dir/dir2/dir3/ # -p means make parent directories as needed...
+... if any of these directories doesn’t exist, they will be created
+
+$ clear # clears terminal window
+
+
+
+$ du -sh * # (disk usage) - show size of all files in dir (-h = human readable, -s = summary (otherwise dir contents shown individually)
+
+$ du -sh [DIR] # show size of directory
+
+$ ncdu . # open current dir in ncurses based disk usage analyser (AWESOME!) (install ncdu via apt-get)
+
+
+
+LISTING FILES AND DIRECTORIES
+$ ls            # list files in dir
+$ ls -hal       # h = human-readable, a = all files, l = long-listing
+$ tree [DIR]    # nice ascii-art tree diagram of sub-directories (install with apt-get)
+$ tree -d [DIR] # list directories only
+$ tree -I "*~" src/main/java # ignore backup files (NOTE: ignore pattern must be quoted)
+
+
+
+REMOVE (UNLINK) FILES
+$ rm [FILE]
+$ rm -i [FILE] # ask for confirmation before removing
+$ rm -i *.jpg  # show each filename and ask for confirmation
+$ rmdir [DIR]  # remove directory (only works for empty dir)
+$ rm -r [DIR]  # recursively removes directory and it's contents
+
+* COMMAND HISTORY
+
+$ man history
+$ history # show command history as numbered list
+$ !236    # execute no. 236 from the history list
+$ !236:p  # :p modifier means print without executing...
+... command is also added to history so you can now press UP, and edit the command
+$ !!      # last command
+$ sudo !! # last command as root
+$ !java   # execute last command beginning with 'java'
+$ !java:p # show last command beginning with 'java'
+
+USE ARGUMENTS FROM LAST COMMAND
+$ mkdir flipper/flopper
+$ cd !$ # cd to flipper/flopper
+
+CORRECT MISSPELLED COMMAND
+$ nanp /path/to/a/document/buried/deep/in/the/filesystem
+$ ^nanp^nano # runs same command but replaces first instance of 'nanp' with 'nano'
+
+REUSE A COMMAND YOU TYPED AGES AGO
+$ history | grep javac # find the last 'javac' I did
+$ !2334                # execute it again
+
+KEEP A COMMAND FROM ENTERING HISTORY
+... type a space as the first character on the command line
+
+* FTP (File Transfer Protocol) - transfer files over network
+
+WARNING! don't use ftp over the internet - it transfers everything as plain
+text, including your password and login credentials - only use it on trusted
+local network - for internet, use SFTP or SSH
+
+* BASH OPTIONS
+$ shopt            # shows status (on/off) of all options
+$ shopt extglob    # shows status of 'extglob' option
+$ shopt -s extglob # SET (enable) option
+$ shopt -u extglob # UNSET (disable) option
+
+* SYMBOLIC LINKS
+
+
+
+$ readlink /usr/share/java/vecmath.jar
+
+NOTE: hard links can only be to files...
+... for directories, must use symbolic links...
+$ ln -s /home/benopod/ComputerWork/PROJECTS/bsgeom2d /home/benopod/bsgeom2d
+
+$ cd -P [SYMLINK] # -P option --> got to physical directory, instead of symbolic dir
+
+
+
+LINKS FOR CONVENIENCE
+
+I've made symbolic links in my home to some commonly used directories:
+  bsgeom2d
+  bstpg
+  websites
+
+* IP: display & configure networking
+
+NOTE: ifconfig is now deprecated
+
+USES OF IP COMMAND:
+1: Find out which interfaces are configured on the system.
+2: Query the status of a IP interface.
+3: Configure the local loop-back, Ethernet and other IP interfaces.
+4: Mark the interface as up or down.
+5: Configure and modify default and static routing.
+6: Configure tunnel over IP.
+7: Configure ARP or NDISC cache entry.
+8: Assign IP address, routes, subnet and other IP information to IP interfaces.
+
+
+EXAMPLES:
+
+Get IP address of computer...
+... this lists all ip addresses associated on all network interfaces:
+
+  $ ip address
+
+.... 'address' can be abbreviated to 'addr' or 'a', so these are the same:
+
+  $ ip addr
+  $ ip a
+
+... show only IP v4 or v6 addresses:
+
+  $ ip -4 a
+  $ ip -6 a
+
+* MANAGING PROCESSES
+
+LISTING PROCESSES
+$ jobs -l             # show jobs running in current shell (-l for long listing, with PID etc)
+$ ps -e               # show every process on the system
+$ ps -ef              # every process with more detailed (full format) listing
+$ ps -eF              # even more details!
+$ ps -ef | grep gedit # get 'ps' listings containing 'gedit'
+
+
+BACKGROUND AND FOREGROUND
+$ emacs [FILE] & # '&' makes process run in background
+ctrl+z             # suspends foreground process & brings back command line
+$ bg %NUM          # restarts suspended processes in background (get NUM from `jobs -l`)
+$ fg %NUM          # puts background job into the foreground (get NUM from `jobs -l`)
+
+
+KILL A RUNNING PROCESS
+Find the process ID (PID) using jobs or ps, then...
+$ kill -9 [PID]
+... or...
+$ kill -s KILL [PID]
+
+... or use one of these...
+$ xkill # then click on the window which you want to kill
+$ sudo killall PROGRAM_NAME # kill (or send signal to) all processes running specified command
+
+KILL A PROCESS RUN BY ANOTHER USER
+(EXAMPLE: kill processes on a stuck shell in my Raspberry Pi via ssh)
+$ who                 # shows which users are logged in
+$ w                   # shows which users are logged in and what they're doing
+$ pgrep -u pi         # show what processes user 'pi' is runnning
+$ sudo pkill -9 -u pi # kill all processes run by user 'pi'
+
+
+DISPLAY TOP PROCESSES IN THE SYSTEM
+$ top
+Press 'h' for help.
+Press 'O' (capital o) to sort by a different parameter.
+SEE ALSO: Applications Menu--->System Tools--->System Monitor.
+
+HTOP - an improved version of top
+$ sudo apt-get install htop
+$ htop
+... press 'h' for help
+
+
+SHOW TREE OF SYSTEM PROCESSES
+$ pstree
+
+* VARIABLES
+$ my_variable=* # store all files in directory in variable
+$ echo $my_variable # print to terminal
+
+var=`locate "scala-swing.jar"` # store output of locate in variable
+echo $var # print value of variable
+
+read var # reads a line of keyboard input and stores in a variable named 'var'
+echo $var # print value of var
+
+ECHO OPTIONS: echo displays text or value of variable
+-n Do not output the trailing new line.
+-e Enable interpretation of the following backslash escaped characters in the strings:
+	\a alert (bell)
+	\b backspace
+	\c suppress trailing new line
+	\n new line
+	\r carriage return
+	\t horizontal tab
+	\\ backslash
+EXAMPLE: $ echo -e "\a" # sounds the bell
+
+
+SPECIAL SHELL VARIABLES (these are listed in the bash manpage under 'Special Variables')
+Positional parameters $1,$2,$3… and their corresponding array representation, count and IFS expansion $@, $#, and $*.
+$- current options set for the shell.
+$$ pid of the current shell (not subshell)
+$_ most recent parameter (or the abs path of the command to start the current shell immediately after startup)
+$IFS the (input) field separator
+$? most recent foreground pipeline exit status
+$! PID of the most recent background command
+$0 name of the shell or shell script
+
+
+ENVIRONMENT VARIABLES
+$ printenv # prints environment variables.
+
+* GREP (Global Regular Expression Print)
+
+Searches contents of files and prints any lines matching regex.
+NOTE: egrep and fgrep are deprecated --> use 'grep -E' or 'grep -F' instead.
+OPTIONS
+-E   - extended regular expression
+-F   - fixed-string grep (this is also faster)
+-P   - use perl-style regular expressions
+-i   - ignore case
+-v   - print lines NOT matching the pattern
+-r   - recursive
+--include'*.html'    - filename glob (useful for globbing all sub-dirs in recursive grep)
+--file=myPattern.txt - use regexp stored in a file
+
+BASIC REGULAR EXPRESSIONS
+^ # beginning of line
+$ # end of line
+dEXTENDED REGULAR EXPRESSIONS
+ *       # any string or group of characters
+?        # any single character
+[abc]    # any ONE of the enclosed characters
+[a-z]    # any ONE in range (NOTE: a-z and A-Z are case insensitive)
+[a-z0-9] # any ONE in multiple ranges
+[!a-z]   # OR [^a-z] --> NEGATION: ! and ^ after [ are both negation operators
+
+EXAMPLES:
+...
+
+* GLOB (GLOBal command)
+... path name pattern expansion...
+... filename matching with wildcard characters.
+===============================================
+? matches a single character
+ * matches a string of characters
+[] matches character classes
+
+EXTENDED GLOB:
+==============
+$ shopt extglob # show status of extglob option
+... extglob must be 'on'
+... If the extglob shell option is enabled using the shopt builtin, several extended pattern matching operators are recognized. In the following description, a pat‐ tern-list is a list of one or more patterns separated by a |. Composite patterns may be formed using one or more of the following sub-patterns:
+
+?(pattern-list) # Matches zero or one occurrence of the given patterns
+*(pattern-list) # Matches zero or more occurrences of the given patterns
++(pattern-list) # Matches one or more occurrences of the given patterns
+@(pattern-list) # Matches one of the given patterns
+!(pattern-list) # Matches anything except one of the given patterns
+
+$ ls somedir/!(*~) # list all files in 'somedir' EXCLUDING files ending in '~'
+
+* FILE PERMISSIONS AND OWNERSHIP
+
+FILE PERMISSION STRINGS (looks something like this: -rwxrw-r--)
+type | user | group | other
+d      rwx    r-x     ---    # directory - user may read/write/execute - group may read & execute - others have no permissions.
+-      rw     ---     ---    # normal file - user may read/write - group and others have no permissions.
+
+
+
+CHANGE PERMISSION MODIFIERS
+SYNTAX: chmod [ugoa...][+-=][rwxXst...]
+
+$ chmod a+x [FILE] # add executable permission to all groups
+
+NUMERIC (OCTAL) MODE
+ONE to FOUR octal digits derived by adding up the bits with values 4, 2 and 1...
+... omitted digits assumed to be trailing zeros...
+... first digit is rarely used - SetUID/SetGID/set sticky bit
+... last 3 digits set permissions for USER/GROUP/OTHER ---> (4) read + (2) write + (1) execute
+
+$ chmod 755 [FILE] # USER=rwx GROUP=r-x OTHER=r-x
+
+
+
+CHANGE OWNER OR GROUP
+$ chown root /u # Change the owner of /u to "root".
+$ chown root:staff /u # Likewise, but also change its group to "staff".
+$ chown -hR root /u # Change the owner of /u and subfiles to "root".
+-R = recursive
+-h = no dereference (affect symbolic links, rather than the item referenced)
+
+* MANAGING USERS
+
+ADD A USER WITH USERADD:
+... first check what defaults are set up...
+
+View currently set up defaults:
+$ useradd -D
+
+To change the defaults:
+
+... edit the defaults file...
+$ sudo nano /etc/default/useradd
+
+... or change one of the options like so...
+$ sudo -D -s bash
+
+
+
+... use adduser (it's very user friendly)...
+$ adduser -h # display help text
+$ sudo adduser LOGIN-NAME # add a new user --> follow prompts for password etc...
+
+$ useradd -D # display the default settings for new users
+$ sudo useradd -m LOGIN-NAME # creates a new user using the default settings
+$ sudo passwd LOGIN-NAME # change password for specified user
+
+DELETE A USER
+$ sudo deluser LOGIN-NAME
+
+CHANGE PASSWORD
+$ passwd # prompt to change password
+$ sudo passwd USERNAME # change password for specified user
+$ sudo passwd -d USERNAME # remove password for specified user
+
+GROUPS
+$ groups user_name # displays all groups user belongs to
+man $ sudo usermod -aG www test_user #
+
+GIVE A USER SUDO PERMISSION
+$ sudo usermod -aG sudo test_user # add test_user to sudo group
+NOTE: if user is already logged in, they will probably have to log out and in again for change to take effect.
+
+FINE TUNING SUDO PERMISSIONS
+$ sudo visudo # edit the sudoers file...
+$ man sudoers # detailed info on sudoers file format
+
+SWITCHING USER WITHIN TERMINAL SESSION
+$ su test-user # start sub-session as test-user
+$ whoami # display name of current user
+$ exit # end current terminal session (in sub-session, returns to previous session)
+
+
+
+SEE WHAT USERS ARE DOING
+$ w      # Show which users are logged in and what they are doing.
+$ who -a # list all users who have logged in recently
+$ uptime # show how long system has been running
+
+* COMPRESS AND DECOMPRESS FILES
+
+tar joins multiple files together into a single file
+
+... it doesn't compress files by default, but it will if you use the -z option
+
+$ tar -cf archive.tar foo bar # Create archive.tar from files foo and bar
+$ tar -tvf archive.tar        # List all files in archive.tar verbosely
+$ tar -xf archive.tar         # Extract all files from archive.tar
+$ tar -zxvf archive.tar       # Extract all files from archive.tar verbosely using gzip
+
+TAR OPTONS:
+-c --> create
+-x --> extract
+-f --> use archive file or device ARCHIVE
+-t --> list contents of an archive
+-v --> verbosely list files processed
+-z --> gzip
+
+* THE DIRECTORY STACK
+
+$ pushd path/to/dir # push a new dir onto front of stack
+$ popd # pop the top dir off the stack
+$ pushd # switch top two dirs
+$ pushd +N/-N # switch to the Nth dir on the stack...
+... NOTE: in zsh, the effect of + and - may be switched!
+$ dirs # list dirs on the stack
+$ dirs -v # same, with vertical listing
+
+* SSH
+
+REAL WORLD EXAMPLE:
+
+Logging into my website via ssh (must enable ssh before this will work - can do
+this via the vidahost cloud hosting platform website)
+
+  $ ssh bschambe@shell.gridhost.co.uk
+
+... terminal will prompt for password.
+
+* SOME MORE COOL BASH COMMANDS
+
+Displays system disk usage:
+$ df
+$ df -h # sizes in human readable format
+$ df -T # show type of file system
+
+$ fdisk -l # list all file system partitions
+
+
+## --- grep the output of 'ls' for any filenames beginning with a digit
+## --- (NOTE: this doesn't work unless we use the -E tag - for extended regex)
+$ ls | grep -E '^[0-9]+'
+
+## --- do the same grep
+## --- sort them into reverse order
+## --- open them all in gedit
+$ gedit $( ls | grep -E '^[0-9]+' | sort -r )
+
+## --- do the same grep
+## --- move all the files to ./another_dir
+$ mv $(ls | grep -E '^[0-9]+') ./another_dir
+
+## --- get the time, in seconds since epoch for each file
+## --- sort them numerically
+$ stat --format=%Y * | sort
+
+
+## --- list all directories begginning with 'attempt'.
+$ ls -d attempt*
+
+## --- list all directories NOT beginnning with 'attempt'.
+$ ls -d !(attempt*)
+
+## --- delete all directories NOT beginning with 'attempt' (along with their contents).
+$ rm -r !(attempt*)
+
+
+## Store all files from directory in a shell variable...
+## ... then loop through each file
+$ homefiles=*
+$ for f in $homefiles; do echo "Processing $f file..."; done
+
+
+
+# show directories of $PATH variable on separate lines...
+... tr --> transpose --> used to replace : with newline...
+$ echo $PATH | tr ":" "\b"
+
+
+
+$ stat FILE...   # show detailed status of file
+
+$ date           # displays current date and time
+
+$ cal            # show a simple calender for current month
+
+$ time [COMMAND] # show how much time a process takes
+
+$ sort FILE...   # Write sorted concatenation of all FILE(s) to standard output (see elsewhere for fancy examples)
+
+* IMAGEMAGICK
+a free software suite for the creation, modification and display of bitmap images.
+$ sudo apt-get-install imagemagick
+$ sudo apt-get-install graphicsmagick
+
+convert  - convert between image formats as well as resize an image, blur, crop, despeckle, dither, draw on, flip, join, re-sample, and much more.
+identify - describes the format and characteristics of one or more image files.
+mogrify  - resize an image, blur, crop, despeckle, dither, draw on, flip, join, re-sample, and much more. Mogrify overwrites the original image file, whereas, convert writes to a different image file.
+composite - overlaps one image over another.
+montage   - create a composite image by combining several separate images. The images are tiled on the composite image optionally adorned with a border, frame, image name, and more.
+compare   - mathematically and visually annotate the difference between an image and its reconstruction..
+stream    - is  a  lightweight  tool  to stream one or more pixel components of the image or portion of the image to your choice of storage formats. It writes the pixel components as they are read from the input image a row at a time making stream desirable when working with large images or when you require raw pixel components.
+display   - displays an image or image sequence on any X server.
+animate   - animates an image sequence on any X server.
+import    - saves any visible window on an X server and outputs it as an image file. You can capture a single window, the entire screen, or any rectangular portion of the screen.
+conjure   - interprets and executes scripts written in the Magick Scripting Language (MSL)
+
+
+
+EXAMPLES:
+
+IMAGE FORMAT CONVERSION
+NOTE: The destination format should support all the features of the format you are converting from, otherwise you may lose info. For example, converting from png to gif may lose colors because gif only support a max of 256 colors!
+- GIF format support max of 256 colors.
+- JPEG format is lossy. Each time you save to JPG, it loses some info.
+- PNG format is not lossy. All colors are preserved.
+$ convert p1.gif p2.png                           # convert gif to png
+$ convert -scale 50% -quality 80% old.png new.jpg # convert png to jpeg (& scale at same time)
+
+SCALE
+$ convert -scale 50% old.gif new.png
+
+CROP
+$ convert -trim cat.png cat.png              # autocrop border
+$ convert -crop 853x368+0+56 old.png new.png # width/height=853/368 - x/y offset is 0/56
+... To crop by specifying percentage of sides to cut, use “-shave”.
+
+BRIGHTNESS/SATURATION/HUE
+$ convert -modulate 150,100,100 old.png new.png # brightness to 150%
+
+$ convert -type Grayscale old.png new.png # change colour image to greyscale
+
+REDUCE BITS PER PIXEL
+$ convert -depth 8 old.png new.png # make it 8 bits
+... try -depth 2 for clean black and white art...
+
+REDUCE COLOURS
+$ convert -dither -colors 256 old.png new.png # 256 colours, with dithering...
+... +dither, for NO dithering
+... to reduce png file size, try -depth at same time {2,3,4,8}
+
+IMAGE FILTERING
+$ convert -sharpen 2 old.png new.png
+$ convert -blur 1 old.png new.png
+
+IMAGE EDITING
+$ convert -fill red -draw 'text 20 20 "© 2006 example.com"' old.png new.png # insert copyright notice
+... -gravity SouthEast : put text in south-east corner
+... -font helvetica    : change typeface
+$ convert -border 1 -bordercolor black cat.png cat2.png # add a border
+
+ROTATE AND FLIP
+$ convert -rotate 90 x.png x.png # rotate 90 counter-clockwise
+$ convert -flip x.png x.png      # up/down flip
+$ convert -flop x.png x.png      # left/right flip
+
+COMBINE IMAGES
+$ montage -mode concatenate -tile 1x cat1.jpg cat2.jpg out.jpg # combine 2 images
+$ convert x1.png x2.png x3.png -append out.png # join images vertically
+$ convert x1.png x2.png x3.png +append out.png # join images horizontally
+
+BATCH PROCESS
+Many ways to do it...
+... this example uses `find` and `xargs` to convert all files in a dir from png to jpg...
+$ find . -name "*png" | xargs -l -i basename "{}" ".png" | xargs -l -i  convert -quality 85% "{}.png" "{}.jpg"
+... -l makes it process one line at a time
+... -i makes the “{}” to stand for file name
+... basename strips the suffix.
+
+* VIEWING IMAGE METADATA
+... using EXIFTOOL and IMAGEMAGICK...
+... $ sudo apt-get install libimage-exiftool-perl
+
+$ identify -verbose FILENAMES # (SEE ImageMagick)
+
+$ exiftool [FILE]             # show metadata of file
+$ exiftool -ext jpg           # show for all .jpg files in current dir
+$ exiftool -r -ext jpg .      # show .jpg files in current dir AND sub-dirs
+$ exiftool -common [FILES]    # list common metadata.
+$ exiftool -T -common [FILES] # same, but in tab separated columns.
+$ exiftool -a [FILES]         # list ALL metadata.
+$ exiftool -a -u -g1 [FILES]  # list ALL metadata, inc unknown & duplicates, sorted by group (family 1 (there are 5(?) different families of groups)).
+$ exiftool '-*date*' [FILES]  # List all metadata tags containing the string 'date'.
+
+BATCH-CHANGING IMAGE METADATA: use exiftool...
+
+
+
+REMOVE METADATA
+$ exiftool -all= -overwrite_original photo.jpg     # remove all metadata from an image file
+$ exiftool -all= -overwrite_original -ext jpg .    # remove all metadata from all .jpg in current dir
+$ exiftool -all= -r -overwrite_original -ext jpg . # remove all metadata from .jpg in current dir and sub-dirs
+$ exiftool -gps:all= *.jpg                         # remove GPS data only
+
+* BATCH RENAMING FILES
+
+RENAME:
+Uses the perl expressions - generally the substitution operator (s///) or translation operator (tr///).
+
+SYNTAX: rename [options] [PERLEXPR] [FILES]
+OPTION -n = NO ACTION (shows what would be done without doing it)
+
+# Replace 'nork' with 'dooble' in all .png files.
+# NOTE: This will only replace the first instance of 'nork' within any filename.
+$ rename 's/nork/dooble/' *.png
+
+$ rename 's/nork/dooble/i' *.png # Same, but ignore case.
+
+# Replacing MULTIPLE instances within a filename (using the 'global' option, 'g').
+# This will replace all spaces ('\ ') with underscores in all files.
+$ rename 's/\ /_/g' *
+
+# Add 'DINGLE' to the beginning of all .jpeg files.
+$ rename 's/(.*)/DINGLE$1/' *.jpg
+ANALYSIS:
+.    --- matches any character
+ *   --- is a quantifier (any amount)
+(.*) --- enclosed in brackets means thing matched counts a GROUP...
+$1   --- stands for the first group matched
+
+
+
+USING EXIFTOOL TO RENAME BY METADATA:
+- EXIFTOOL is a command line interface to Perl Image::ExifTool.
+- View & modify exif metadata.
+- exiftool might not be installed by default ($ sudo apt-get install exiftool).
+
+# EXAMPLES:
+# Rename all images in current dir according to the "CreateDate" date and time, adding a copy number with leading '-' if the file already exists ("%-c"), and preserving the original file extension (%e).  Note the extra '%' necessary to escape the filename codes (%c and %e) in the date format string:
+$ exiftool '-FileName<CreateDate' -d %Y%m%d_%H%M%S%%-c.%%e
+# Same with more readable date format:
+$ exiftool '-FileName<CreateDate' -d %Y-%m-%d_%H:%M:%S%%-c.%%e
+# Rename photos by creation date:
+$ exiftool '-FileName<${createdate}.jpg' -d %Y%m%d%H%M%S -ext jpg .
+# Same, but fancier date formatting:
+$ exiftool '-FileName<${createdate}.jpg' -d %Y-%M-%D_%H:%M:%S -ext jpg .
+# Add year to beginning of existing filenames:
+$ exiftool '-FileName<${createdate}_${filename}' -d %Y -ext jpg .
+
+'-FileName<${createdate}.jpg' = Copy contents of 'createdate' into filename.
+
+$createdate = Contents of metadata tag 'createdate'.
+${createdate} = As in shell, sometimes curly braces required to interpolate variable into string.
+
+-d = date format (specifies the date format for this operation)
+%Y = year (long format e.g. 2015)
+%y = year (short format e.g. 15)
+%m = month
+%d = day
+%H = hour
+%M = minute
+%S = second
+%s = unix time (i.e. seconds since Jan 1970)
+
+other format codes (must be double-escaped if passing through the date-format parser):
+%-c = add copy number with leading '-' if file already exists
+%f  = filename
+%e  = filename extension
+
+
+-ext jpg = process only files with the jpg extension (SEE MANPAGE...)
+
+
+
+
+
+... TODO: RE-NUMBER FILES...
+... python script?
+... shell script?
+
+* COMPARING FILES
+
+$ diff FILEa FILEb # if files are the same, exit code 0, and no output...
+
+... also use diff to compare directories full of files, including recursively...
+
+* ALIASES AND STUFF
+
+$ alias l="ls -al --color" # create an alias
+$ alias ls                 # shows what alias currently stands for 'ls'
+
+* ENVIRONMENT VARIABLES
+$ env      ; show environment variables
+$ printenv ; show environment variables
+
+* SET
+$ set ; show massive list all shell variables, environmental variables, local variables, and shell functions...
+$ set -x ; print commands and their arguments as they are executed
+$ set +x ; unset the -x option
+$ echo $- ; show what options are currently set
+$ help set ; show usage info for set
+
+* MOUNT A FILESYSTEM (USB STICK/MOBILE PHONE ETC)
+
+# plug in device, then...
+# ... list disk partitions, so we can find out what it's called...
+$ sudo fdisk -l
+# ... looking for something like /dev/sdb1 (looking at SIZE and TYPE may help)
+
+# make folder to mount it in (can be mounted anywhere - just using /media as a convention)
+$ mkdir /media/usb
+
+# mount filesystem
+$ sudo mount /dev/sdb1 /media/usb
+
+# OPTIONAL: change ownership if you want to be able to do stuff easily
+$ sudo chown benopod:benopod -R /media/usb
+
+# unmount when finished
+# ... NOTE: can target either the device OR mount point, so both these do the same...
+$ sudo umount /dev/sdb1
+$ sudo umount /media/usb
+
+* INFO ABOUT A FILESYSTEM (USB STICK ETC)
+
+# list filesystems (can usually work out what is what by the sizes)
+$ sudo fdisk -l
+
+$ stat -f /dev/mmcblk0
+
+* INFORMATION ABOUT NETWORK CONNECTIONS
+
+Get wifi network currently connected to
+$ iwgetid
+... just the SSID...
+$ iwgetid -r
+
+
+SEE ALSO:
+iwlist
+
+
+
+SEE: Linux Network Administrators Guide (http://www.tldp.org/LDP/nag2) ...
+... start from http://www.tldp.org/LDP/nag2/x-087-2-intro.tcpip.html
+
+
+
+$ netstat
+
+options:
+-n
+-w
+-W
+-a   all
+-t   tcp
+-p   show program
+
+$ netstat -natp
+$ sudo netstat -natp # may give a little extra info...
+
+netstat -watp
+
+
+
+==== NETWORK ANALYSIS ====
+
+tcpdump
+
+$ sudo tcpdump -i any
+# listen on all channels...
+
+$ tcpdump -D
+# show list of available interfaces
+
+* GPG (GnuPG) CRYPTOGRAPHY TOOL
+
+info from here:
+https://www.devdungeon.com/content/gpg-tutorial
+
+https://www.masteringemacs.org/article/keeping-secrets-in-emacs-gnupg-auth-sources
+
+ $ gpg --help
+
+KEY MANAGEMENT
+
+List public keys you have stored (yours and other people's keys)
+
+ $ gpg --list-keys
+
+List private keys (generally only your own)
+
+ $ gpg --list-secret-keys
+
+
+
+CREATE A NEW PRIVATE KEY
+
+ $ gpg --gen-key
+
+... this will walk you through an interactive prompt to fill out various questions
+
+
+DECRYPT AN ENCRYPTED FILE
+
+ $ gpg --decrypt my_file
+
+... will prompt for password, then dump file contents to terminal
+
+* SHELL SCRIPTING
+** MORE HELP
+- The Linux Documentation Project: http://tldp.org/LDP/abs/html/index.html
+- info --> coreutils
+
+** TROUBLESHOOTING
+- spaces:
+  - no space in assignment
+  - spaces needed where not needed in some other languages
+
+** FUNDAMENTALS
+
+START FILE WITH SH-BANG:
+#!/bin/bash
+#!/usr/bin/python
+... etc
+
+ SPECIAL CHARACTERS:
+ $                       - parameter expansion, command substitution, or arithmetic expansion
+ ${...}                  - ... use curly brackets if neccessary
+ #                       - comment rest of line
+ ;                       - command separator (put multiple commands on one line)
+ 'full/hard quoted string'    -
+ "partial/soft quoted string" - special characters are interpolated
+ \                       - escape (a quoting mechanism for single characters)
+ `command`               - command substitution (makes available the output of command for assignment to a variable)
+ :                       - null command. This is the shell equivalent of a "NOP" (no op, a do-nothing operation). It may be considered a synonym for the shell builtin true. The ":" command is itself a Bash builtin, and its exit status is true (0).
+ *                       - wildcard for filename expansion in globbing
+
+** ARITHMETIC
+NOTE: bash only does integers - to do floating point calculations, use bc
+
+... use expr to have numbers treated as numbers (rather than commands)
+$ expr 1 + 2 # returns 3
+$ 1 + 2      # 1: command not found
+
+... or enclose inside double parentheses
+$ ding=30
+$ (( ding+=5 )) # value is now '35'
+$ ding+=5       # treated as a string operation - value is now '355'
+
+... or use let
+$ let a=5+4
+$ let "a = $1 * $2"
+$ let a++
+
+... or use bc
+... bc asks for file input, but can pipe in the output from echo
+echo "2 + 3" | bc
+... floating point calculations - use scale to specify the number of decimal places
+echo "scale=30; 66026 / 191943" | bc
+... variable assignment - note last expression outputs VAL to standard out
+echo "scale=30; val = 66026 / 191943; val" | bc
+
+** VARIABLES
+
+... names are case-sensitive
+... special characters not allowed e.g. *?-
+... always quote variables e.g. "$var"... often works unquoted, but considered unsafe!
+
+$ var=dongle # assign variable
+$ var=`pwd`  # assign variable to result of expression (using backticks)
+$ var=       # null variable
+$ var=""     # null variable
+
+$ echo "$var"   # reference variable
+$ echo "${var}" # reference variable
+
+DELETE/UNSET A VARIABLE
+... for example, a variable name may have been set in your environment...
+$ unset var
+
+** PARAMETER EXPANSION
+
+$ echo "${!var@}"   # echo name of variable
+
+SUBSTRING EXPANSION/ARRAY SLICING
+$ echo "${var:2}"   # skip first 2 characters of variable
+$ echo "${var:2:3}" # slice - skip first 2, then take slice of 3
+
+UPPERCASE/LOWERCASE (since bash 4)
+$ echo "${var,,}" # convert to lower case
+$ echo "${var^^}" # convert to upper case
+
+** SPECIAL SYMBOLS
+
+command line arguments
+$1, $2, $3... # first, second, third argument
+$0 # program command i.e. first thing on the command line
+$* # all arguments
+$- # flags set in script
+$? # exit status of previous command
+
+take first item off front of args before passing to a command (array slicing)
+command ${@:2}
+
+** COMPLEX COMMAND LINE OPTIONS
+
+use getopts...
+
+** DATA TYPES
+
+ARRAYS
+... variable length - if non-existing index is referenced, nothing is returned...
+diddle=(fing pong fang dang) # array declaration
+echo ${diddle[0]}            # reference first item in array
+echo ${diddle[1]}            # second item
+echo ${diddle[-1]}           # last item
+echo ${diddle[*]}            # all items
+diddle[4]=plop               # assign item in existing array
+diddle[10]=twix              # ... can leave empty indices in between items (computer won't complain)
+
+** TESTS
+... used in the following manner...
+if [ -z "$var" ]; ...
+
+INTEGER COMPARISON
+-eq  # is equal to
+-ne  # is not equal to
+-gt  # is greater than
+-ge  # is greater than or equal to
+-lt  # is less than
+-le  # is less than or equal to
+... also use these within double parentheses (( ... )) ...
+<, <=, >, >=
+
+STRING COMPARISON
+=  
+==
+!=
+<
+>
+UNARY OPERATORS
+-z   # True if zero or null value, or if variable is unset
+-n   # String not null
+
+** CONTROL STUCTURES
+
+IF/THEN/ELSE:
+# if 1st arg == "hello"
+if [ $1 == "hello" ]
+then echo "... hello to you too!"
+elif [ $1 == "bum" ]
+then echo "... how rude!"
+else echo; echo "Usage: run_tests [hello|bum]"; echo
+fi
+
+
+# IF, ELIF, FI EXAMPLE
+operator=$1
+if [ $operator == "-h" ]
+then
+    echo "USAGE: bwcompression -|+ INPUT_FILE OUTPUT_FILE"
+elif [ $operator == "-" ]
+then
+    echo "compression"
+elif [ $operator == "+" ]
+then
+    echo "expansion"
+fi
+
+
+CASE:
+case "$variable" in
+  abc) echo "\$variable = abc" ;; # double semicolon to terminate option
+  xyz) echo "\$variable = xyz" ;;
+esac  
+
+** LOOPING
+
+# for loop with an array variable
+for i in "${essential_files[@]}"; do
+    echo $i
+done
+
+** FUNCTIONS
+
+func1() {
+  echo "The name of this function is "$FUNCNAME" "
+}
+
+# function with a parameter
+func2() {
+  echo $1 # special variables $1..$9 access input args
+}
+
+func1      # invoke function with no args
+func2 arg1 # pass one argument to function
+
+
+RETURN VALUES
+
+$? special variable accesses most recent exit status...
+
+... one way to have a return value, like in C functions is to set a special variable e.g. ${_RET}...
+func3 () {
+    _RET=49
+}
+func3                # invoke function
+return_val="${_RET}" # store return value
+echo "$return_val"   # use return value
+
+** MISC
+
+$ date             # print time and date
+$ date +"%d_%m_%Y" # date in format DAY_MONTH_YEAR
+... see manpage for full format options
+
+
+get first word only of returned data using cut:
+$ du -hs ~/Pictures | cut -f 1
+
+
+convert number of bytes into human readable file size using numfmt:
+$ num=`du -bs ~/Documents | cut -f 1`         # get size in bytes
+$ human_num=`echo "$num" | numfmt --to=iec-i` # convert to human readable string
+$ echo "$human_num"
+
+** INPUT AND OUTPUT
+*** USER INPUT
+ $ read var      # read one line of standard input and save it in var
+ $ read -n 1 var # read only 1 char, instead of waiting till end of line
+
+*** OUTPUT
+
+ echo
+
+**** REDIRECTION
+
+ # FILE DESCRIPTORS (FD)
+ File Descriptor: A numeric index referring to one of a process's open files...
+ ... Each command has at least three basic descriptors: FD 0 is stdin, FD 1 is stdout and FD 2 is stderr.
+
+ # redirect to stderr
+ echo "something went wrong" >&2
+
+** REGULAR EXPRESSION SYNTAX
+
+ |   | SYMBOL   | MATCHES                                    |
+ |---+----------+--------------------------------------------|
+ | # | ^        | beginning of line                          |
+ | # | $        | end of line                                |
+ | # | .        | any single character                       |
+ | # | ?        | match preceding item 0 or 1 times          |
+ | # | *        | match preceding item 0 or more times       |
+ | # | +        | match preceding item 1 or more times       |
+ | # | {N}      | match preceding item N times               |
+ | # | {N,}     | match preceding item N or more times       |
+ | # | {N,M}    | match preceding item between N and M times |
+ | # | [a-Z]    | range a-z                                  |
+ | # | [a-zA-Z] | range a-z (case insensetive)               |
+ | # | \<       | beginning of word                          |
+ | # | \>       | end of word                                |
+
+ ... use parens () for grouping
+ ... | OR operator
+ ... 
+
+*** EXTENDED REGULAR EXPRESSIONS
+ ...
+
+** TEXT PROCESSING WITH SED AND AWK
+
+ SED is nice and easy for simple substitutions etc...
+ ... AWK is more complex and has more capabilities - expecially good for dealing with data in columns...
+
+*** SED - Stream EDitor
+ DOCUMENTATION:
+ http://www.grymoire.com/Unix/Sed.html#uh-0
+ https://www.gnu.org/software/sed/manual/sed.html
+
+ options:
+ -i   # edit in place (rather than print to stdout)
+ -n   # no printing
+
+ commands:
+ s    # substitution
+ p    # print (use in combination with -n option)
+ d    # delete
+ i    # insert line (before pattern)
+ a    # insert line (after pattern)
+ c    # replace (change) line
+ ... combine with ! to invert
+
+ input & output files:
+ <input_file
+ >output_file
+ ... e.g:
+ $ sed 's/ben/Ben/g' <in >out
+
+ # SUBSTITUTION s///
+ pattern flags...
+ .../g  = global - replace all occurences, not just the first instance on each line
+ .../i  = ignore case
+
+ $ sed 's/up/down/' file.txt  # for each line, replace first instance of 'up' with 'down'
+ $ sed 's/up/down/g' file.txt # (using global tag '/g') replace ALL instances
+
+ ...
+ &           --- the matched string
+ \1          --- to keep part of the pattern
+ /1, /2, etc --- specify which occurence
+ /w filename --- write to a file
+
+
+
+
+ # PATTERNS AND RANGES (operate only on certain lines)
+ PATTERN...
+ ... sed -n '/PATTERN/p' FILE does the same thing as grep!
+ $ sed -n '/^BS/ p' file.txt              # print every line which starts with 'BS'
+ $ sed -n '/^BS/ s/I/cripes/g p' file.txt # print every line which starts with 'BS' & replace every instance of 'I' with 'cripes'
+
+ RANGE USING PATTERNS...
+
+
+ RANGE BY LINE NUMBERS...
+ $ sed -n '1,10 p' file.txt # print first 10 lines of file
+
+
+
+
+ # MULTILINE PATTERN MATCHING
+ ... may want to use perl...
+ ... however, the range feature may come in handy e.g.
+
+
+
+**** SCRIPTS
+
+ SED IN SHELL SCRIPT EXAMPLE:
+
+ # using backslash for multiple lines
+ sed -e 's/a/A/g' \
+     -e 's/e/E/g' \
+     -e 's/i/I/g' \
+     -e 's/o/O/g' \
+     -e 's/u/U/g'  <old >new
+
+
+
+ SED INTERPRETER SCRIPT EXAMPLE:
+
+ #!/bin/sed -f
+ s/a/A/g
+ s/e/E/g
+ s/i/I/g
+ s/o/O/g
+ s/u/U/g
+
+ ... file is called CapVowel.sed...
+ ... use it like this:
+ $ CapVowel <old >new
+
+
+*** AWK
+ http://www.grymoire.com/Unix/Awk.html#uh-0
+
+ The essential organization of an AWK program follows the form:
+     pattern { action }
+
+ print a text file (NOTE: no pattern specified, so default pattern used, which matches the whole document):
+ $ awk '{ print }' FILENAME
+
+
+ PRE-DEFINED PATTERNS:
+ BEGIN --- before the first line
+ END   --- after the last line
+
+ PRE-DEFINED VARIABLES:
+ $0            --- the whole line being matched
+ $1, $2, $3... --- 1st, 2nd, 3rd field in the line
+
+ ... passing shell variables in to awk...
+ $ awk -v var="$SHELL_VARIABLE" 
+
+
+**** AWK EXAMPLES
+
+ Ignore the input file (though it is still required), and just print hello world once...
+ $ awk 'BEGIN { print "Hello World!" }' FILE
+
+ Print 2nd and 9th columns only from ls -l command...
+ $ ls -l | awk '{ print $2 "\t" $9 }'
+
+ Insert line before EACH instance of "flippo"...
+ $ awk '/flippo/ { print "insert before each match!" } { print }' .bsbackup
+
+ Insert line before the FIRST match only...
+ $ awk '!found && /flippo/ { print "insert before first match!"; found=1 } { print }' .bsbackup
+ ... after first find, variable 'flippo' is set, therefore conditions are not met for any subsequent matches...
+
+ Print lines between two patterns...
+ $ awk '/PATTERN1/ {flag=1;next} /PATTERN2/ {flag=0} flag' INPUT-FILE
+ ... /PATTERN1/ {flag=1;next} --- when PATTERN1 is matched, set variable 'flag' to 1, then skip to next line...
+ ... /PATTERN2/ [flag=0}      --- when PATTERN1 is matched, set variable 'flag' to 0
+ ... flag                     --- (default behaviour) print line when variable is non-zero...
+                                  ... same effect at { if (flag) print }
+
+**** AWK IN A SHELL SCRIPT
+
+ awk -v date="${date_str}" \
+     -v size="${backup_size_str}" \
+     -v time="${init_time}" \
+     '!found && /^BS_TIME/ \
+ { print "BS_TIME_INIT "date" "size" "time"_SECONDS"; found=1 } \
+ { print }' ~/.bsbackup
+
+
+ # use input variable in a regex...
+ # ... create the regex string with the variable, then use the matching operator (~)...
+ # ... this will print every line which starts with DIDDLE...
+ awk -v label="DIDDLE" \
+ { regex = "^"label; \
+ if ($0 ~ regex) { \
+ print $0; \
+ } \
+ } ~/INPUT_FILE
+** ANSI ESCAPE SEQUENCES
+
+ANSI_RESET TEXT STYLE = \u001b[0m
+
+ANSI_BLACK = \u001b[30m
+ANSI_RED = \u001b[31m
+ANSI_GREEN = \u001b[32m
+ANSI_YELLOW = \u001b[33m
+ANSI_BLUE = \u001b[34m
+ANSI_MAGENTA = \u001b[35m
+ANSI_CYAN = \u001b[36m
+ANSI_WHITE = \u001b[37m
+  
+ANSI_BG_BLACK = \u001b[40m
+ANSI_BG_RED = \u001b[41m
+ANSI_BG_GREEN = \u001b[42m
+ANSI_BG_YELLOW = \u001b[43m
+ANSI_BG_BLUE = \u001b[44m
+ANSI_BG_MAGENTA = \u001b[45m
+ANSI_BG_CYAN = \u001b[46m
+ANSI_BG_WHITE = \u001b[47m
+
+# text decorations
+ANSI_BOLD = \u001b[1m
+ANSI_UNDERLINE = \u001b[4m
+ANSI_REVERSED = \u001b[7m
+
+ANSI_CLEAR_SCREEN = "\u001b[2J"
+# can also clear line or clear beginning or end of line
+
+# set cursor position: \u001b[ROW;COLH
+# ... so row 4, col 12 would be...
+\u001b[4;12H

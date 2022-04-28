@@ -1,0 +1,26 @@
+
+
+
+V = voltage             --- in volts
+I = intensity (current) --- in amperes
+R = resistance          --- in ohms
+P = power               --- in watts
+
+
+OHM'S LAW
+
+V = IR
+
+
+
+
+
+JOULE'S LAW
+
+
+
+======================================================================
+LED
+
+Voltage sensitivity: LEDs must be supplied with a voltage above their THRESHOLD VOLTAGE and a current below their rating.
+Current and lifetime change greatly with a small change in applied voltage. They thus require a current-regulated supply (usually just a series resistor for indicator LEDs).[

@@ -1,0 +1,866 @@
+SCALA QUICKSTART GUIDE
+======================
+======================
+======================
+
+GENERAL NOTES:
+* File does not have to have same name as class!
+* Semi-colons are not mandatory!
+* Scala is static typed (although it can sometimes infer types during definitions)
+* Functions cannot be overloaded, but methods can...
+* ... however method overloading should be avoided - use default values instead!
+
+
+RUNNING PROGRAMS:
+$ scalac program_file.scala # to compile
+$ scala -classpath . ProgramName # run compiled class file
+$ scala program_file.scala # to run file in the interpreter
+
+
+REPL:
+* type :help (also :keybindings)
+* TAB completion works in the REPL, and is quite wide ranging...
+  ... methods of a class for example
+* Command history remembers previous sessions!
+* class files in current working directory are automatically accessible in the
+ REPL...
+* ... to access classes not in current dir, easiest way is to add directory of
+ class files to the path. Use :cp <path> from within the REPL, or include
+ classpath when starting the REPL ---> scala -cp <path>
+* res1.getClass --- see class of output from recent command
+
+
+
+SBT:
+scala build tool
+
+
+
+================================================================================
+
+FUNCTIONAL PROGRAMMING
+======================
+
+* No side effects
+* Output of any function depends purely on it's inputs (therefore it runs the same every time
+* No mutable variables
+* Define in opposition to IMPERATIVE PROGRAMMING (state machine)
+
+FUNCTIONAL PROGRAMMING AND OBJECT-ORIENTED PROGRAMMING
+======================================================
+* ...
+
+
+
+================================================================================
+================================================================================
+================================================================================
+
+HELLO WORLD EXAMPLES
+====================
+
+// HELLO WORLD: V1
+// 'object' denotes a singleton object
+object HelloWorld {
+  def main(args: Array[String]) {
+    println("Hello, World!")
+  }
+}
+
+// HELLO WORLD: V2
+// instead of having a main method, we can just extend App
+object HelloWorld extends App {
+    println("Hiya Folks - this is Ben's first Scala hello-world program!")
+}
+
+// PRINTS MESSAGE ONCE PER SECOND
+object PrintOncePerSecond {
+  def oncePerSecond(callback: () => Unit) {
+    while (true) { callback(); Thread sleep 1000 }
+  }
+  def main(args: Array[String]) {
+    oncePerSecond(() => println("hello!"))
+  }
+}
+
+// PRINTS COMMAND LINE ARGS IN ROTATION - ONE PER SECOND
+object PrintOncePerSecond {
+  def oncePerSecond(callback: () => Unit) {
+    while (true) { callback(); Thread sleep 1000 }
+  }
+  def main(args: Array[String]) {
+    if (args.length < 1) { println("NO ARGS PROVIDED!"); sys.exit() }
+    var index = 0
+    oncePerSecond(() => {
+      var message = args(index)
+      println(message)
+      index = (if (index + 1 >= args.length) 0 else index + 1)
+    }
+		)
+  }
+}
+
+
+
+================================================================================
+
+VARIABLES & VALUES
+==================
+
+var foo = "bar" // variable assignment
+val bar = "foo" // value assignment - equivalent to static variables in java
+
+
+
+================================================================================
+
+TESTING EQUALITY
+================
+
+COMPARE BY VALUE:
+== ---> NORMALLY USE THIS - compare values (it routes to 'equals' except it handles 'null' properly)
+equals ---> compare values (will throw an exception for 'null' values)
+
+COMPARE BY REFERENCE:
+eq ---> compare references - equivalent to '==' in java
+ne ---> negative of 'eq'
+NOTE: 
+
+
+SEE BELOW: for explanation of Any, AnyRef and AnyVal
+
+
+
+
+================================================================================
+
+STRINGS
+=======
+
+// FORMAT works same as java... (see java format string specification)
+"An Int: %d --- A Double: %.2f".format(12, 99.901)
+
+"/usr/bin/share".split('/') // split string into number of different parts
+
+Array("Hello", " ", "Dolly", "!").mkString // joins parts of array into a single string
+Array(1,2,3,4).mkString // works for all types of array, not just string!
+
+
+
+================================================================================
+
+ARRAYS (see also: COLLECTIONS
+=============================
+
+array.length // gets the length
+
+DEFINITION:
+var z:Array[String] = new Array[String](3)
+var z = new Array[String](3)
+var z = Array("Zara", "Nuha", "Ayan")
+
+PUT VALUE:
+z(0) = "Zara"; z(1) = "Nuha"; z(4/2) = "Ayan"
+
+RETRIEVE VALUE:
+args(0) // access first item in array
+
+JOIN:
+val newArray = array1 ++ array2
+
+SLICE:
+val newArray = array1.slice(0, 3)
+
+APPEND and PREPEND: (these also work for any ORDERED COLLECTION)
+// return a new array with item added...
+Array(1,2,3) :+ 4
+0 +: Array(1,2,3)
+
+
+
+================================================================================
+
+LISTS (see also: COLLECTIONS)
+=====
+
+// constructing a list
+val fruit:List[String) = List("apple", "pear", "orange")
+"apple" :: ("pear" :: ("orange" :: Nil)) // using the cons operator ::
+
+Nil // represents an empty List
+Nil.isEmpty // returns true
+
+fruit.head // returns first element of list
+fruit.tail // returns rest of list
+
+// concatenate lists
+fruit ::: List(1, 3, 4, 5) // NOTE: The type is now List[Any]
+List.concat(fruit, veg, meat, fish) // joins any number of lists together
+
+
+
+================================================================================
+
+TUPLES
+======
+* tuples are immutable
+* tuples may hold items of different types
+* tuples of different length are actually different types (Tuple1, Tuple2, Tuple3 etc...)
+
+val t = (32, 410.9, "bingo")
+val t = Tuple3(32, 410.9, "bingo") // same as previous
+
+t._1 // access first element
+t._2 // access second element
+
+
+ITERATE OVER A TUPLE
+t.productIterator.foreach { println }
+
+
+
+================================================================================
+
+FUNCTION DEFINITION:
+====================
+
+
+def printHello() = {
+    println("HELLO!")
+}
+
+// with return value
+def divideByTwo(n:Double):Double = return n / 2
+
+
+
+FUNCTION ARGUMENTS:
+
+def printMessage(text:String) = println(text)
+
+// with default values
+def printMessage(text:String = "Hello!") = println(text)
+// ... this can be invoked with OR without an argument...
+
+// multiple args
+def printMessage(name:String = "Person", msg:String = "Hello!") = println(name + ": This is a message for you --> " + msg)
+// ... usage:
+printMessage() // uses default args
+printMessage("Zippy", "Greetings!") // overrides both default values
+printMessage("Zippy") // overrides 1st default value
+printMessage(name = "Zippy") // overrides named variable
+printMessage(msg = "Greetings!") // overrides named variable
+
+
+
+
+VARARGS
+=======
+
+// how to treat a list as varargs
+val listOfThings = List("one", "two", "three")
+functionWhichRequiresVarargs(listOfThings:_*)
+
+
+
+FUNCTIONS WITHOUT ARGUMENTS:
+// ... these are both the same...
+def beep() = println("BEEP!")
+def beep = println("BEEP!")
+// ... can be invoked like this...
+beep
+
+
+
+MULTIPLE RETURN VALUES:
+... use a tuple...
+
+def halfAndThird(num:Double):(Double,Double) = return (num / 2, num / 3)
+
+val (half, third) = halfAndThird(15)
+
+println(half) // prints "7.5"
+println(third) // prints "5.0"
+
+
+
+... PATTERN MATCHING...
+
+
+
+================================================================================
+
+FUNCTIONS AS FUNCTION ARGUMENTS:
+
+... this is how you pass a function as an argument...
+NOTE: '=>' separates the args from the function body...
+
+def oncePerSecond(callback: () => Unit) {
+  while (true) { callback(); Thread sleep 1000 }
+}
+def printMsg() {
+  println("HELLO!")
+}
+
+oncePerSecond(printMsg)
+
+
+
+USING ANONYMOUS FUNCTIONS:
+oncePerSecond(() => println("This is inside an anonymous function!"))
+
+
+
+================================================================================
+
+IMPORTS:
+
+import java.text.DateFormat // same as java
+import java.text.DateFormat._ // use _ instead of *
+import java.util.{Date, Locale} // specify exact parts of a module to import
+
+
+
+
+
+
+================================================================================
+
+
+
+INFIX SYNTAX
+============
+
+Methods taking just one argument can be used with infix syntax, so these two are the same:
+
+df.format(now)
+df format now
+
+... also these two are the same:
+
+1 + 2 * 3 / x
+(1).+(((2).*(3))./(x))
+
+... NOTE the extra brackets:
+
+1.+(2) // wrong - '1.' is interpreted as '1.0'!
+(1).+(2) // this works
+
+
+
+================================================================================
+
+OBJECTS:
+========
+
+Everything is an object, including functions, and numbers (and all the other things that are primitive types in java).
+
+Any // super-type of all objects
+
+AnyVal // super-type of what java considers primitives (although in scala they are objects)
+
+AnyRef // super-type of what java considers objects (equivalent to java.lang.Object in java)
+
+
+
+NULL VALUES:
+============
+
+null ...
+
+Nothing ?
+
+Nil ?
+
+
+
+================================================================================
+
+CLASS DEFINITION:
+
+
+
+// A very simple class...
+class Beeper { def beep = println("BEEP!") }
+
+
+
+CONSTRUCTORS:
+* Think of the class body as being the constructor...
+* just add parameter list to the class definition...
+
+class Pt(var x:Int, var y:Int) // this is a full class definition!
+class Pt(var x:Int = 0, var y:Int = 0) // can use default values same as with functions
+
+* ... just put any initialization code inside the class body...
+
+import scala.util.Random
+class Pt(maxNum:Int) {
+      // init point to a random position
+      val rand = new Random
+      var x = rand.nextInt(maxNum)
+      var y = rand.nextInt(maxNum)
+}
+
+
+
+AUXILIARY CONSTRUCTORS:
+
+class Location(x:Int, y:Int) {
+      def this(pos:Pt) = this(pos.x, pos.y)
+}
+
+
+
+AUTOMATIC GETTER/SETTERS:
+
+class Pt(var x:Int, var y:Int) // this is a full class definition!
+
+val p1 = new Pt(31, 12)
+p1.x // returns 31
+p1.x = 4001
+p1.x // returns 4001
+
+
+
+EXTENDING CLASSES:
+
+class Donk
+class Donkey extends Donk
+
+// ... with parameters...
+
+class Thingy(val num:Int, val str:String)
+class ExtendedThingy(num:Int, str:String, val float:Double) extends Thingy(num, str)
+
+// ... comparing classes...
+
+val t = new Thingy(1, "foo")
+val et = new ExtendedThingy(2, "bar", 1.99)
+
+t.isInstanceOf[AnyRef] // true
+et.isInstanceOf[AnyRef] // true
+t.isInstanceOf[Thingy] // true
+et.isInstanceOf[Thingy] // true
+t.isInstanceOf[ExtendedThingy] // false
+et.isInstanceOf[ExtendedThingy] // false
+t.isInstanceOf[String] // false
+et.isInstanceOf[String] // false
+
+EXPLICIT TYPE CAST:
+
+var bar:Dog = foo.asInstanceOf[Dog]
+
+
+
+================================================================================
+
+GENERICS
+========
+
+// object represents a reference to private variable of type T
+class Reference[T] {
+  private var contents: T = _ // set initially to the default value (see below)
+  def set(value: T) { contents = value }
+  def get: T = contents
+}
+
+// DEFAULT VALUE: the example above uses _ to set default value to variable
+// ---> the default value is 0 for numeric types, false for Boolean types,
+// () for the Unit type and null for all object types
+
+
+
+================================================================================
+
+LOOPS
+=====
+
+for (index <- 0 to (array.length - 1)) {} // iterate array once
+for (index <- 0 until array.length) {} // iterate array once
+
+collection.foreach { println }
+collection.foreach { x => println("Collection item: " + x) }
+
+for (thingy <- collectionOfThingys) {
+    println(thingy)
+}
+
+
+
+FILTERING...
+FOR COMPREHENSION...
+
+
+
+================================================================================
+
+COLLECTIONS:
+
+imports needed here:
+scala.collection.generic.Growable
+scala.collection.mutable.ListBuffer
+scala.collection.mutable.ArrayBuffer
+
+
+collection.size // gets number of elements
+
+
+
+// for the most generic reference to Collections use 'Iterable' ('Collection' is deprecated)...
+// ... EXAMPLE:
+def printCollection(c:Iterable[String]) = { println("This is the collection: " + c ); c.foreach { println } }
+
+
+
+MUTABLE COLLECTIONS:
+Arrays and Lists by default are immutable...
+... if we need to add or take away from a list, try using something which implements 'Growable' e.g. ListBuffer or ArrayBuffer...
+
+EXAMPLES:
+val mutableList = new ListBuffer[String]
+mutableList += "Howdee" // add element - NOTE use of infix syntax
+mutableList += ("Doodee", "Dongle", "Dangle") // add multiple elements by putting them in a tuple
+
+
+
+// function using the Growable trait
+def addElem(g:Growable[String], s:String) = { g += s; println("This is the Growable: " + g) }
+
+
+
+================================================================================
+
+RANDOM NUMBERS:
+
+math.random() // random Double between 0.0 and 1.0
+
+scala.util.Random
+val rand = new Random
+rand.nextInt(256) // number between 0 and 255
+
+
+
+================================================================================
+
+ENUMERATION:
+
+object WeekDay extends Enumeration {
+  val Mon = Value("Mon")
+  val Tue = Value("Tue") 
+  val Wed = Value("Wed")
+  // etc... 
+}
+
+// USAGE:
+import WeekDay._
+def isWorkingDay(d: WeekDay) = ! (d == Sat || d == Sun)
+WeekDay.values filter isWorkingDay foreach println
+
+// ITERATE OVER ENUMERATION: use 'values' method to return values as a Set
+WeekDay.values.foreach { println }
+for (day <- WeekDay.values) { println("the day is " + day) }
+
+
+
+================================================================================
+
+IMPLICIT TYPE CONVERSION
+========================
+* Two classes:
+class Pt(var x:Int, var y:Int)
+class Ptd(var x:Double, var y:Double)
+
+* This method takes type Ptd:
+def showPtd(p:Ptd) = println("x=" + p.x + " y=" + p.y)
+
+showPtd(new Pt(4,5)) // THIS WILL NOT WORK!
+
+* ... to make it work, all we have to to is put an implicit conversion method into scope:
+implicit def ptToPtd(p:Pt):Ptd = new Ptd(p.x, p.y)
+
+
+
+================================================================================
+
+ITERATORS
+=========
+
+// extending Iterator
+class IntIter(min:Int, max:Int) extends Iterator[Int] {
+  var i:Int = min
+  def hasNext = i -1 < max
+  def next = {
+    i = i + 1
+    return i - 1
+  }
+}
+
+// extending Iterable
+class IntIter(min:Int, max:Int) extends Iterable[Int] {
+  def iterator = new Iterator[Int] {
+    var i:Int = min
+    def hasNext = i -1 < max
+    def next = {
+      i = i + 1
+      return i - 1
+    }
+  }
+}
+
+// USAGE... anything you can do with Iterable e.g:
+new IntIter(7,11).foreach { println }
+
+
+
+// with multiple return values in a tuple
+class Iter2(max:Int) extends Iterator[(Int, Int)] {
+  var i = 0
+  def hasNext = i <= max
+  def next:(Int, Int) = {
+    val out = (i, i * 2)
+    i = i + 1
+    return out
+  }
+}
+
+
+
+================================================================================
+
+CASE CLASSES AND PATTERN MATCHING
+=================================
+
+* Extremely simple usage...
+val num = 2
+val word = num match {
+    case 1 => "one"
+    case 2 => "two"
+    case _ => "some other number" // wildcard catches all other cases
+}
+
+* Item to be matched must be a case class...
+* ... pattern matching is performed on the case class constructor...
+case class Thing(num:Int, str:String, d:Double)
+val t1 = new Thing(10, "bing", 10.99)
+t1 match {
+   case Thing(_,"bing",_) => true
+   case _ => false
+}
+
+
+
+================================================================================
+
+PARTIAL FUNCTIONS
+=================
+
+
+
+
+
+
+
+================================================================================
+
+OPTIONS
+=======
+
+
+
+
+
+
+================================================================================
+
+LAZINESS
+========
+
+If a member is defined as lazy, it is not created until it is first accessed - this is useful sometimes, for example in GUI code, where the member relies on initialization of the window to get it's dimensions...
+
+
+
+
+================================================================================
+
+TRAITS
+======
+
+* Like java interfaces and abstract classes combined - a class may inherit from multiple traits (like interface), however, they also may include implementation code (like abstract classes)
+* use 'extends' keyword (same as extending a class).
+
+class Thing extends Useful {}
+
+
+MIXINS:
+* This just means that multiple Traits have been inherited... use the 'with' keyword.
+
+class Thing extends Useful with Fabulous with Groovy {}
+
+
+
+================================================================================
+
+VISIBILITY
+==========
+
+A class member marked private,
+
+private val x: Int = ...
+
+is visible to all instances of that class (but not their subclasses). In most cases, you want private[this].
+
+private[this] val: Int = ...
+
+which limits visibility to the particular instance. The Scala compiler is also able to translate private[this] into a simple field access (since access is limited to the statically defined class) which can sometimes aid performance optimizations.
+
+
+
+================================================================================
+
+EXCEPTION HANDLING
+==================
+
+// JAVA-STYLE TRY-CATCH BLOCKS:
+// ... (exceptions are case classes)
+
+try {
+    ...
+} catch {
+    // pattern matching on constructor args (SEE: case classes)
+    case ExceptionType1(msg) => print(msg)
+    case ExceptionType2(msg) => print(msg)
+    case ExceptionType3(msg) => print(msg)
+} finally { // optional
+    println("This code is always executed")
+}
+
+
+
+
+// ... since scala 2.9.3...
+// USING 'TRY' VALUES: A more functional approach to exception handling?
+// A Try object is similar to an Option...
+// ... Option[A] is a container for a value of type A which may or may not be present...
+// ... Try[A] represents a computation that may result in a value of type A, if it is successful, or in some Throwable if it fails.
+// ... ... 
+
+// EXAMPLE:
+import scala.util.Try
+import scala.util.Success
+import scala.util.Failure
+
+// function return type is Try...
+// ... this is a silly function which catches the exception thrown when we divide by zero...
+def intDivision(dividend:Int, divisor:Int):Try[Int] = Try(dividend / divisor)
+
+// pattern matching on result
+intDivision(5, 0) match {
+    case Success(result) => println("Result of division is " + result)
+    case Failure(ex) => prinln(s"Failed to get text: ${ex.getMessage}")
+}
+
+
+// OTHER METHODS OF TRY:
+isSuccess
+get
+getOrElse // can use to assign a default value...
+... val num = intDivision(n1, n2) getOrElse maxValue // if divide by zero, return max (SILLY EXAMPLE!)
+
+
+
+
+
+
+================================================================================
+
+MAP AND FILTER
+==============
+
+
+
+// MAP performs an operation on every item in a list and MAPS them on to a new list
+
+Array("one","two","three") map (x => x + "EXTENDED")
+Res: Array[java.lang.String] = Array(oneEXTENDED, twoEXTENDED, threeEXTENDED)
+
+
+
+// FILTER returns a new list, FILTERING out any items which evaluate to true in a given expression
+
+Array(2,5,36,2,8) filter ( x => x > 5 )
+Res: Array[Int] = Array(36, 8)
+
+
+
+================================================================================
+
+PACKAGES
+========
+* Enclose code within a package declaration...
+* ... classes in same file don't have to be same package
+
+* EXAMPLE: The two examples below are the same...
+
+package com.benchambers.test {
+  // class definitions etc...
+}
+
+package com {
+  package benchambers {
+    package test {
+      // class definitions etc...
+    }
+  }
+}
+
+
+
+================================================================================
+
+ACCESS MODIFIERS
+================
+
+'private' members are only accessible from inside the class or object which defined it.
+
+'protected' is accessible by subclasses.
+
+Any member not labelled 'private' or 'protected' is public and can be accessed anywhere!
+
+
+
+SCOPE QUALIFIERS:
+Access modifiers can be augmented with scope qualifers which designate a particular
+enclosing package, class, or object as the limit...
+
+EXAMPLES:
+private[package_name]
+private[ClassName]
+private[this] // accessible only to the instance object
+
+
+
+================================================================================
+
+SORTING COLLECTIONS
+===================
+
+// easiest way
+Array(4,2,5,6,7,12,0,4321,-3).sorted // default: ascending order
+Array("hello", "biz","bum", "zoo").sorted // default: alphabetical (case sensitive!)
+
+// sort by key or value
+
+case class Foo(val x:Int, val y:Int)
+val a = Array(new Foo(23,68), new Foo(1000043,-23), new Foo(-300,-7), new Foo(31,16))
+a sortBy(_.x)
+a sortBy(_.y)
+
+
+
+================================================================================
+
+TERNARY OPERATOR?
+=================
+
+if (1 < 2) "TRUE" else "FALSE"

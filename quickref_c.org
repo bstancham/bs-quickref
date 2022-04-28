@@ -1,0 +1,157 @@
+C PROGRAMMING QUICKSTART GUIDE
+
+* SOURCES
+http://www.buildyourownlisp.com/ --- Step by step build a small lisp system using C
+
+* ============================ HELLO WORLD =============================
+
+#include <stdio.h>
+
+/*
+ * all C programs start with a main function
+ *
+ * argc = 
+ * argv = 
+ */
+int main(int argc, char** argv) {
+  /* puts is short for put string */
+  puts("Hello, world!");
+  /* return value of 0 indicates no errors */
+  return 0;
+}
+
+* ============================ COMPILATION =============================
+
+$ cc -std=c99 -Wall hello_world.c -o hello_world
+
+cc             = the C compiler
+-Wall          = all warnings
+hello_world.c  = name of the file to compile
+-o hello_world = name of the object to output from the compiler
+
+Run it like this:
+$ ./hello_world
+ 
+
+
+LINKING
+$ cc -std=c99 -Wall prompt04.c mpc.c -ledit -lm -o prompt04
+
+-ledit = link editline
+-lm    = link mpc
+
+** MAKE/MAKEFILES
+... todo
+
+* ============================= DEBUGGING ==============================
+
+gdb:
+use -g flag when you compile
+$ gdb # to start the gdb interactive shell
+
+valgrind:
+ can be used to aid the debugging of memory leaks and other more nasty
+errors. Valgrind is a tool that can save you hours, or even days, of
+debugging. It does not take much to get proficient at it, so investigating it is
+highly recommended.
+
+* ============================ FUNDAMENTALS ============================
+
+Program starts in the main fuction
+
+** TYPES
+void --- empty type
+char
+int
+long
+float
+double
+** VARIABLES
+** FUNCTIONS
+
+DECLARATION
+int add_together(int x, int y) {
+    int result = x + y;
+    return result;
+}
+
+INVOCATION
+int added = add_together(10, 18);
+
+** STRUCTURES
+
+Used to declare more complex data types
+
+typedef struct {
+  float x;
+  float y;
+} point;
+
+Use it like this:
+
+point p;
+p.x = 0.1;
+p.y = 10.9;
+
+float length = sqrt(p.x * p.x + p.y * p.y);
+
+** POINTERS
+
+int* i   --- pointer to an integer
+char** c --- pointer to pointers to characters
+&i       --- address of i
+
+** STRINGS
+*** BASICS
+C doesn't exactly have strings...
+... instead we use a pointer to a character...
+... null-terminated
+
+char* name = "Hilda";
+
+MULI-LINE STRINGS:
+Use backslash before newline e.g.
+char* info = "bingo is the favourite game of kings.\
+Ludo is the game of princes.";
+*** STRING FUNCTIONS
+#include <string.h>
+atoi   --- converts char* to int
+strcmp --- compare two char* - return 0 if they are equal
+strstr --- takes two char* - return a pointer to the location of the second in the first, or 0 if the second is not a substring of the first.
+** PREPROCESSOR
+
+Any line beginning with an octothorpe # is a preprocessor command...
+
+** EXTERNAL LIBRARIES
+
+Use preprocessor command #include to import external libraries...
+
+... can use either angle brackets OR double quotes, these two commands are the same...
+#include <stdio.h>
+#include "stdio.h"
+
+** CONDITIONALS
+
+Any statement that is not 0 will evaluate to true!
+
+if (1) {
+  puts("The statement '1' is evaluated as true!")
+}
+
+if (x > 10 && x < 100) {
+  puts("x is greater than 10 and less than 100!");
+} else {
+  puts("x is less than 11 or greater than 99!");
+}
+
+** LOOPS
+
+int i = 10;
+while (i > 0) {
+  puts("while loop iteration");
+  i = i - 1;
+}
+
+for (int i = 0; i < 10; i++) {
+  puts("for loop iteration");
+}

@@ -1,0 +1,85 @@
+#+TITLE: openFrameworks Quickstart Guide
+
+* links
+
+openFrameworks site
+https://openframeworks.cc/
+
+for addons
+https://ofxaddons.com/categories
+
+* install & setup
+** download
+Go to the downloads page on the openFrameworks website and download the version
+for your desired build platform.
+
+If you want to be able to build for multiple platforms then you could grab
+the whole thing from the github repo.
+
+** linux install (Jan 2022)
+I downloaded the linux version from OF website and extracted it in ~/Software dir.
+
+Followed linux installation instructions on the website.
+
+First, run script to install dependencies (this took a pretty long time):
+
+ $ cd OF/scripts/linux/ubuntu
+ $ sudo ./install_dependencies.sh
+
+Then install codecs:
+
+ $ sudo ./install_codecs.sh
+
+Now, compile OF (also takes a long time):
+
+ $ cd OF/scripts/linux
+ $ ./compileOF.sh -j3
+
+NOTE: -j3 tells compiler to use 3 cores
+
+After this you should be able to go into any of the examples folders and compile
+and run the examples using make:
+
+ $ make
+ $ make run
+
+* project generator
+
+* troubleshooting
+** did you install codecs?
+Some codecs are not included by default for licensing reasons. For example mp3 codec.
+
+ $ sudo ./install_codecs.sh
+
+** audio playback fails (esp mp3) Jan 2022
+Did you install codecs (see above)
+** opencv computer vision example 24/02/2022
+App compiles with no errors and runs but doesn't work - error message in
+terminal on run:
+
+ofGstUtils: gstHandleMessage(): embedded video playback halted for plugin,
+module uridecodebin0 reported: Your GStreamer installation is missing a
+plug-in.startPipeline():
+
+Caused by missing codecs.
+
+Easily fixed:
+
+ $ sudo apt-get install ubuntu-restricted-extras
+
+This installs a bunch of proprietory codecs and fixes the problem.
+
+* MISC
+
+gradient background
+ ofBackgroundGradient(magenta * .6, magenta * .4);
+
+for wireframe graphics
+ ofNoFill();
+
+* Terminology
+VBO = vertex buffer object
+FBO = framebuffer object
+
+* using Maximilian synthesizer as an OF addon
+See Mick's instructions in video lecture

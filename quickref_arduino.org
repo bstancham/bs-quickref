@@ -1,0 +1,218 @@
+* TROUBLESHOOTING
+** linux arduino setup problems
+*** serial port permission denied
+Arduino IDE error message shows that it's trying to use /dev/ttyACM0 but permission is denied
+
+this is a problem of SERIAL PORT PERMISSIONS
+
+have a look at what group the port belongs to:
+
+ $ ls -l /dev/ttyACM0
+
+can see that the group is 'dialout'
+
+check what groups user belongs to:
+
+ $ groups
+
+if 'dialout' does not appear in the listing then we need to add user to that group:
+
+ $ sudo usermod -a -G dialout bst
+
+if you look at groups again for user you will see that nothing has changed...
+... need to logout and in again before groups are updated!
+
+* EDITING/COMPILING ETC
+** ARDUINO IDE
+*** install
+linux installation guide:
+https://www.arduino.cc/en/guide/linux
+*** lots of built-in examples
+File->Examples
+** ARDUINO CLI (Command Line Interface)
+*** info
+https://www.arduino.cc/pro/cli
+
+https://github.com/arduino/arduino-cli/releases
+
+https://blog.arduino.cc/2021/09/02/the-new-arduino-cli-0-19-0-is-out-and-better-than-ever/?queryID=undefined
+*** installation
+**** install via curl
+
+This script will install the latest version of Arduino CLI to $PWD/bin:
+
+: $ curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+
+Arduino CLI checks for new releases every 24 hours. If you don't like this
+behaviour you can disable it by setting the updater.enable_notification config
+or the env var ARDUINO_UPDATER_ENABLE_NOTIFICATION to false.
+
+**** TAB COMPLETION requires extra setup, but is very easy
+
+First, generate the completion file:
+
+: $ arduino-cli completion bash > arduino_cli_completion
+
+NOTES:
+- generating BASH completions - ZSH & some others also available
+- using '>' to redirect output to a file - otherwise just prints to terminal
+
+Now, move resulting file to the proper place:
+
+: $ sudo mv arduino_cli_completion /etc/bash_completion.d/
+
+It's done! Need to start a new shell before you can use completion
+
+*** help
+Show help message:
+
+: $ arduino-cli
+
+: $ arduino-cli -h
+
+Can also get help for any command or sub-command:
+
+: $ arduino-cli board --help
+
+: $ arduino-cli board attach --help
+
+*** getting started/setting up a board
+
+List all connected boards:
+
+: $ arduino-cli board list
+
+Shows lots of useful info about each board, in columns
+
+Note "FQBN" (Fully Qualified Board Name)
+
+Look under the "Core" column (different arduinos run on different cores)
+
+I am using Arduino Leonardo right now and core is arduino:avr
+
+Check which cores are installed:
+
+: $ arduino-cli core list
+
+If required core is not present then install it:
+
+: $ arduino-cli core install arduino:avr
+
+*** hello world
+
+Create a new sketch:
+
+: $ arduino-cli sketch new MySketchName
+
+Edit sketch in any text editor:
+
+#+BEGIN_SRC arduino
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(500);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
+}
+#+END_SRC
+Get fully qualified board name (FQBN) and PORT with `$ arduino-cli board list`
+
+Compile sketch (specify BOARD and OUTPUT-DIR):
+
+: $ arduino-cli compile -b arduino:avr:leonardo --output-dir .
+
+NOTE: Output dir was not required in the online tutorial I viewed, but for me
+the files go to /tmp if I don't
+
+Upload to board (specify BOARD and PORT):
+
+: $ arduino-cli upload -b arduino:avr:leonardo -p /dev/ttyACM0
+
+
+USE VERBOSE FLAG (-v) to help diagnose problems
+
+*** attach a sketch to a board (streamline compile/upload workflow)
+Get serial PORT with `$ arduino-cli board list` 
+
+: $ arduino-cli board attach serial:///dev/ttyACM0
+
+This will create a file called 'sketch.json'
+
+now just
+
+: $ arduino-cli compile
+: $ arduino-cli upload
+
+or better still
+
+: $ arduino-cli compile --upload
+
+NOTE: `compile --upload` didn't work for me but `compile` then `upload` did!?
+... error message says FQBN is not valid...
+... either of these alternatives for me:
+
+method 1: pass the FQBN in explicitly:
+
+: $ arduino-cli compile -b arduino:avr:leonardo --upload
+
+method 2: run compile and upload consecutively in separate statements:
+
+: $ arduino-cli compile; $ arduino-cli upload
+
+*** no builtin SERIAL MONITOR like Arduino IDE, but other utilities can be used
+**** using screen
+For bidirectional communication between Arduino and the host computer.
+
+Many other programs are available which can do the same thing, e.g:
+- picocom
+- minicom
+
+Install screen if not already present on system:
+
+: $ sudo apt-get install screen
+
+Plug in Arduino (if there the serial port is not active then screen will not be
+able to do anything)
+
+Run screen - syntax is: ~screen <serial_port> <baud_rate>~
+
+: $ screen /dev/ttyACM0 9600
+
+TO EXIT SCREEN:
+
+Press Ctrl+A, then type :quit
+
+(doesn't seem to do anything at first for me, but after going to another window
+and coming back I eventually got my terminal back!)
+
+ALSO, resetting the Arduino quits the screen session
+
+**** using cat
+If you only want to read what the Arduino sends, that can be done with cat:
+
+: $ cat /dev/ttyACM0
+
+Exit by pressing Ctrl+C
+
+The above simple method worked just fine for me, but if you want to be fancy you
+can change the terminal line settings using stty (as suggested by someone on the
+internet)
+#+BEGIN_SRC bash
+stty -F /dev/ttyACM0 raw 115200
+cat /dev/ttyACM0
+#+END_SRC
+
+** ARDUINO and EMACS
+arduino-mode
+arduino-cli-mode
+company-arduino
+** TINKERCAD
+*** readymade examples
+- go to CIRCUITS
+- CREATE CIRCUITS
+- in components dropdown --> STARTERS/ARDUINO
+
+Press the CODE button to show the code - can switch between BLOCKS view and C++ code.

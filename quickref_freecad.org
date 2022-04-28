@@ -1,0 +1,337 @@
+FREECAD QUICKSTART GUIDE
+
+KEY FOR ABBREVIATIONS:
+DDM: = drop-down menu
+TB: = tool bar
+
+* BASIC QUICKSTART (simple workflow)
+- open freecad
+- DDM:File-->New
+- DDM:View-->Workbench-->Part Design
+- [BUTTON]:create/edit sketch --- OR DDM:Part Design-->Create Sketch
+- draw shape (points & lines, etc)
+- add constraints
+- [BUTTON]:close sketch
+- make pad/pocket from sketch
+? linear or polar array from feature...
+...
+... PART-DESIGN to make single connected solid...
+... to assemble parts, use ASSEMBLY, PART or DRAFT workbenches...
+
+* MISC:
+
+CLIPPING PLANE: View-->Clipping Plane
+
+* MOVING VIEW ETC:
+
+move = Ctrl+RIGHT-MOUSE
+rotate = Hold Ctrl, Click RIGHT-MOUSE, then Drag LEFT-MOUSE
+
+* WORKBENCHES
+** PART DESIGN WORKBENCH:
+- make constrained sketch
+- - make pad/pocket from sketch
+- - revolve a sketch
+- - - linear or polar array from feature
+
+** SKETCHER:
+
+GRID:
+- under combo-view, select the Tasks tab
+- expand the section, Edit Controls
+- show/hide grid
+- set grid size
+- grid snap on/off
+
+CENTER A SHAPE:
+- select 2 points & the vertical axis, THEN TB:Constraints/Symmetry (><)
+- select 2 points & the horizontal axis, THEN TB:Constraints/Symmetry (><)
+
+CONSTRUCTION MODE:
+Used for drawing guide lines & shapes etc for construction of the drawing (ignored when sketch is made used to make 3D geometry)
+- select elements
+- TB:Geometries/Toggle-Construction-Mode
+
+JOIN TWO LINES:
+select the two end points to join
+TB:Constraints/Coincident-Points
+
+SKETCH OFFSET FROM PLANE
+- pad or pocket a small nubbin to the desired height and use it's face as surface for sketch
+
+** PART WORKBENCH:
+
+*** boolean operations
+
+*** loft (from one profile to another)
+
+*** sweep (a profile along a path)
+
+*** set appearance (e.g. colour/color) of parts
+In tree-view panel, right-click on part and select Appearance
+
+** DRAFT WORKBENCH
+- copy a part
+- scale a part (scale a copy of a part)
+- array of parts
+
+set working plane e.g. XY
+
+** DRAWING WORKBENCH
+
+create architectural drawings
+
+export to svg
+
+* TRADITIONAL 2D DRAFTING
+
+First Configure the grid and working plane, Text and Dimension settings to your
+liking in menu Edit → Preferences → Draft.
+
+One option might need your attention, though: the "Fill objects with faces
+whenever possible" option. If this is marked, closed objects like rectangles or
+circles will be filled with a face by default, which can make snapping to
+underlying objects difficult. You can either turn this option off now, or, later
+on, turn the "Make Face" property of each individual object off, to prevent them
+from creating a face.
+
+
+    Let's start by turning construction mode on, which will allow us to draw some guidelines on which we will draw our final geometry.
+
+    If you wish, set the working plane to XY. If you do this, the working plane won't change, no matter the current view. If not, the working plane will adapt automatically to the current view, and you should take care of staying in top view whenever you want to draw on the XY (ground) plane.
+
+    Then, select the Draft Rectangle.svg Rectangle tool and draw a rectangle, starting at point (0,0,0), of 2 meters by 2 meters (leave the Z at zero). Note that most of the Draft commands can be fully performed from the keyboard, without touching the mouse, using their two-letter shortcut. Our first 2x2m rectangle can be done like this: re 0 Enter 0 Enter 0 Enter 2m Enter 2m Enter 0 Enter.
+
+    Duplicate that rectangle by 15cm inside, using the Draft Offset.svg Offset tool, turning its Copy mode on, and giving it a distance of 15cm:
+
+etc
+
+https://wiki.freecadweb.org/Manual:Traditional_2D_drafting
+
+* DRAFT/SKETCHER
+The Draft Workbench in many ways is similar to the Sketcher Workbench, as both are intended to produce 2D shapes. The main difference is in the way each workbench handles coordinate systems, and how the objects are positioned. In Draft, objects are freely positioned in the global coordinates system, usually snapping their points to a grid, or to other objects. In Sketcher, a "sketch object" defines a local coordinate system which serves as the reference for all geometrical elements within that sketch. Moreover, the sketch relies on "constraints" to define the final position of its points.
+
+    The Draft Workbench is intended for 2D drawings which are suitable to be drawn on a grid. The Arch Workbench mostly builds on top of the tools defined in the Draft Workbench.
+
+    The Sketcher Workbench is intended for 2D drawings that require precise relationships between its points. It does not rely on a grid, but on rules of positioning (constraints) to determine where the points and edges will be placed. The Sketcher Workbench is mostly used together with the PartDesign Workbench for the creation of solid bodies.
+
+    It is possible to transform a Draft object into a Sketch, and the other way around, using the Draft Draft2Sketch.svg Draft Draft2Sketch tool.
+* DRAFT WORKBENCH
+** drawing basic shapes
+Shapes can be created either by typing in the parameters or by drawing with the
+mouse - generally by snapping points onto a grid or to features of other
+existing shapes.
+
+
+** DRAFT-SNAP TOOLBAR
+This controls the way which points will snap on to other points or lines.
+
+It can be useful to turn some of these off sometimes.
+
+If endpoints are not precisely aligned then a shape will not be closed and it
+cannot be upgraded to a closed wire or filled face.
+** UPGRADING/DOWNGRADING
+- upgrade a CLOSED SHAPE to a CLOSED WIRE. 
+- upgrade a CLOSED WIRE to a FILLED FACE.
+
+NOTE: a shape cannot be upgraded unless it is properly closed - you may have to
+use the draft-snap toolbar quite carefully to ensure that end points of lines
+are properly lined up.
+
+(in arch workbench) make one or more section planes
+- set the working plane where you want it
+- create section plane
+- resize section plane using the properties panel
+
+switch to the drawing workbench
+- set the sheet size
+- insert a draft view (into the currently active drawing)
+- select the view and adjust properties in properties panel (position, scaling, rotation, rendering style etc)
+
+** useful stuff
+
+To set the working plane (at the start it's set to 'auto')
+- select a face
+- click the working plane button
+
+- view-->panels-->property view - shows properties of things e.g. lines when you click on them
+
+poly-line (multiple point draft-wire - Dwire)
+- properties - fillet radius
+- properties - make face (for closed loops only)
+- (in face mode) opacity
+
+
+
+ARCH WORKBENCH
+
+** toolbars
+
+*** structure
+- create new part
+- create new group
+
+*** arch (architecture)
+- wall
+- site object
+- building object (building part?)
+- floor object
+- create section plane
+- space object
+- stairs object
+- equipment object (e.g. furniture)
+- cut with a line/plane
+- add/remove objects from component
+- start survey (hard hat button) - then click on line to get info e.g. length - adds a survey label to the tree
+
+*** draft
+- line
+- poly-line/draft-wire (DWire)
+- circle
+- arc
+- elipse
+- regular polygon
+- rectangle
+- annotation (text)
+- dimension
+- multi-point b-spline
+- point
+- facebinder object
+- bezier curve
+- label
+
+*** draft mod
+- move
+- rotate
+- offset
+- trim tool - trim or extend object
+- join objects into one
+- explode object into parts
+- scale object
+- create shape 2D views of objects
+- convert bidirectionality between sketch and draft objects
+- polar or rectangular array from selected object
+- clone
+
+*** draft snap
+- toggle draft grid on/off
+
+* PROCEDURES:
+
+** BOOLEAN OPERATIONS BETWEEN OBJECTS:
+
+OBJECTS IN SEPARATE PROJECTS (SEPARATE FILES):
+- Open Project 1 in PART workbench and select relevant thing
+- DDM:Part-->Convert to Solid
+- Select the solid
+- DDM:Part-->Export CAD (save object as STEP file)
+- Open Project 2 in PART workbench
+- DDM:Part-->Import CAD (select object we just exported)
+- Position first object (select it in Tree View - adjust position in Property View-->Data)
+- Select both objects
+- perform BOOLEAN OPERATION
+
+
+
+======================================================================
+EXPORT STL FILE:
+
+select the parts to be included
+- File-->Export File
+... give filename .stl extension...
+
+
+
+==== IMPORT STL FILE AND CONVERT TO SOLID ============================
+
+NEW FILE
+- File-->Import (choose stl file)
+switch to PART workbench
+- select mesh object
+- Part-->Convert to Solid
+- (OPTIONAL) Part-->Refine Shape (this unifies coplanar triangle facets)
+
+
+
+==== ROTATING A PART =================================================
+
+DDM:Edit-->Placement
+- in Tasks:
+- - under Rotation, select 'Euler angles' - now you can specify yaw/pitch/roll instead of 'rotation axis with angle' which is really hard for any but very simple rotation...
+
+
+
+
+
+
+
+ in the python console...
+
+# 1st param in App.Placement is position
+# 2nd param in App.Placement is yaw/pitch/roll
+App.ActiveDocument.console_large_vent.Placement = App.Placement(App.Vector(57,0,0),App.Rotation(90,0,90))
+App.ActiveDocument.console_large_vent.Placement = App.Placement(App.Vector(57,0,0),App.Rotation(-90,180,0))
+
+App.ActiveDocument.console_large_vent.Placement = App.Placement(App.Vector(-55,8,-190),App.Rotation(-90,180,0))
+
+** SCALE A PART
+
+Re: How to scale a solid object
+
+Postby NormandC » Wed Aug 06, 2014 10:13 pm
+Hello balden,
+
+FYI, in CAD as a rule you should not scale a solid, but model it to the desired dimensions. There are very, very few use cases where scaling an object is required: for injection mold tooling for example.
+
+There is no specific GUI tool for scaling as of now, you would need to do in in the python console. But, the Draft Clone tool produces a linked clone of your original shape, and the Clone can be scaled in XYZ separately.
+2016-01-10 Announcement: I have decided to step down from administrator and moderator duties on the FreeCAD forum.
+
+DRAFT WORKBENCH:
+select part to be cloned
+Draft--->Clone
+select cloned part
+Property View-->Data tab-->Scale
+... input new x/y/z scale
+
+** COPYING A PART
+
+Part-->Create Simple Copy:
+ creates a non-parametric copy of your part as it exists at the time it is copied. If the original part is changed, the copy does not update.
+
+Draft-->Clone:
+ creates a parametric part linked to the original, so that if the original is changed later , the clone(s) change too.
+
+** ARRAY OF PARTS
+
+in DRAFT WORKBENCH
+- select part
+- DDM: Draft-->Array
+- select the Array in the model-tree
+- go to data tab and alter parameters until satisfied
+- LINEAR ARRAY: (or rectangular/cuboid array)
+  - array type = ortho
+  - number x/number y/number z = number of copies in each direction
+- POLAR ARRAY:
+  - array type = polar
+  - ...
+* MAKE 2D DRAWINGS (PLAN/ELEVATION/ETC) FROM A MODEL
+** intro
+Use the TechDraw workbench. TechDraw is intended to replace the Drawing
+workbench. Drawing workbench remains as a legacy feature for the time being but
+is considered to be less good.
+
+** basic method/workflow
+- make a model
+- switch to TechDraw workbench
+- create a new Page
+- in Tree View pane, select the part which you want to project on the page
+- TB: Insert View in Page
+- Set parameters in Property View pane: scale, direction, 
+- Add some dimensions: select an edge, then click in toolbar. Can drag them out
+  and position them nicely. Change text size in Property View pane.
+- Add annotations: TB-->Insert Annotation. Click and drag to position on page. To
+  change the text use Property View pane.
+
+** troubleshooting
+- May have to RECOMPUTE MANUALLY. The view often doesn't update by itself -
+  especially after changing values in the Property View pane.

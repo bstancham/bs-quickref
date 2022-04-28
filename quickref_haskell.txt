@@ -1,0 +1,362 @@
+---- HASKELL QUICKSTART GUIDE ----------------------------------------
+
+-- using ghc (apt-get)
+-- using emacs haskell-mode (available in package repo)
+
+
+
+---- BASIC CONCEPTS --------------------------------------------------
+
+-- named after Haskell Curry
+-- Haskell is a PURELY FUNCTIONAL LANGUAGE
+-- no side effects (e.g. variable re-assignment)
+-- REFERENTIAL TRANPARENCY - if a function is called twice with same args, same result is guaranteed
+-- LAZY EVALUATION - won't calculate anything unless it has to
+-- STATICALLY TYPED
+-- TYPE INFERENCE - a lot of the time, types don't need to be specified explicitly
+-- PARENTHESES only required when neccesary
+-- PATTERN MATCHING
+
+
+
+---- USING GHCI (THE GHC REPL) ---------------------------------------
+-- GHC = Glasgow Haskell Compiler
+-- GHCI = GHC Interactive (REPL)
+
+$ ghci # to start the repl
+
+ghci> :l myfunctions.hs -- load the file myfunction.hs
+
+ghci> :r -- reloads current script
+
+ghci> :quit
+
+ghci> :set prompt "ghci: " -- change the prompt
+
+
+
+---- DOCUMENTATION ---------------------------------------------------
+
+-- in GHCI
+ghci> :i Eq -- info on something
+ghci> :k Int    -- info on type constructors
+ghci> :kind Int -- same
+ghci> :browse Data.List -- see which symbols an imported module offers
+
+-- ONLINE
+http://hackage.haskell.org/packages/
+https://www.haskell.org/hoogle/
+
+
+
+---- TYPES & TYPECLASSES ---------------------------------------------
+
+Int     = integer, bounded by size of machine word
+Integer = unbounded integer - can represent arbitrarily large number
+Float
+Double
+Bool
+Char
+
+-- This is a comment
+
+ghci> :t 'a'
+'a' :: Char
+ghci> :t True
+True :: Bool  
+ghci> :t "HELLO!"  
+"HELLO!" :: [Char]  
+ghci> :t (True, 'a')  
+(True, 'a') :: (Bool, Char)  
+ghci> :t 4 == 5  
+4 == 5 :: Bool 
+
+ghci> :t [1,2,3,7,8,9]
+[1,2,3,7,8,9] :: Num t => [t]
+ghci> :t 15
+15 :: Num a => a
+
+
+
+-- TYPE VARIABLES
+-- a bit like generics in other languages
+
+ghci> :t fst
+fst :: (a, b) -> a
+-- return type is same as first item of pair
+
+
+-- SOME TYPECLASSES
+-- typeclasses are a bit like interfaces...
+
+Eq      = support equality testing (implements == & /=)
+Ord     = support ordering
+Show    = can be represented as a String
+Read    = the read function takes a String and returns a type which is a member of Read
+Enum    = sequentially ordered types
+Bounded = have an upper and lower bound (implement minBound & maxBound)
+Num     =
+Integral = includes Int & Integral
+Floating = includes Float & Double
+
+
+
+-- TYPE ANNOTATIONS
+ghci> read "5" :: Int  
+ghci> read "5" :: Float  
+ghci> (read "5" :: Float) * 4  
+ghci> read "[1,2,3,4]" :: [Int]  
+ghci> read "(3, 'a')" :: (Int, Char)  
+
+
+
+
+
+
+
+
+
+
+
+-- STRINGS:
+"hello!"
+
+-- LISTS:
+[4,90,32,12]
+
+
+-- TUPLES:
+(32, "steve")
+
+-- GET FIRST VALUE FROM A TUPLE:
+fst (32,"steve")
+
+
+
+-- FUNCTIONS CAN BE USED ON LISTS OF ANY TYPE:
+sort [8,2,4,1,9]
+sort "hello!"
+
+
+
+---- BASIC FUNCTION USAGE --------------------------------------------
+-- parentheses only required where needed...
+
+> succ 6 -- returns the next value for anything which has a defined successor (7, in this case)
+> succ (5 * 100) -- 501
+> (succ 9) + (max 5 4) + 1
+
+-- any two argument function may be used as infix using the backticks notation
+> div 94 10
+> 94 `div` 10
+
+
+
+---- FUNCTION DEFINITION ---------------------------------------------
+
+hello = "Hello World!"
+
+doubleMe x = x + x
+
+doubleUs x y = doubleMe x + doubleMe y
+
+-- NOTE: functions don't have to appear in any particular order... doubleUs could have come before doubleUs!
+
+
+
+-- TYPE DECLARATIONS
+
+-- NOTE: [Char] is synonymous with String...
+removeNonUppercase :: [Char] -> [Char]  
+removeNonUppercase st = [ c | c <- st, c `elem` ['A'..'Z']]
+
+-- The first three are the parameters - the last is the return type
+addThree :: Int -> Int -> Int -> Int  
+addThree x y z = x + y + z
+
+
+
+-- PATTERN MATCHING
+
+lucky :: (Integral a) => a -> String  
+lucky 7 = "LUCKY NUMBER SEVEN!"  
+lucky x = "Sorry, you're out of luck, pal!"
+
+sayMe :: (Integral a) => a -> String  
+sayMe 1 = "One!"  
+sayMe 2 = "Two!"  
+sayMe 3 = "Three!"  
+sayMe 4 = "Four!"  
+sayMe 5 = "Five!"  
+sayMe x = "Not between 1 and 5"
+
+
+
+-- RECURSION
+
+factorial :: (Integral a) => a -> a  
+factorial 0 = 1  
+factorial n = n * factorial (n - 1)
+
+
+
+
+
+
+
+
+---- BINDING VARIABLES -----------------------------------------------
+
+let a = 10
+let lostNumbers = [4,8,15,16,23,42]
+
+-- let VAR = EXPRESSION in BODY
+let x = 4 in x * x -- gives us 16 --> x = 4 --> BODY: 4 * 4 = 16
+
+
+
+
+
+
+
+---- LISTS -----------------------------------------------------------
+-- lists can only contain a single type
+-- lists can be compared if the things inside them can (using ==, <, <=, > and =>)
+
+-- ':' = cons
+'a' : [] -- joins "a" and the empty list together in a NEW list
+
+-- [1,2,3] is actually just syntactic sugar for 1:2:3:[]. [] is an empty list.
+
+[1,2,3,4] ++ [9,10,11,12] -- join two lists
+
+-- indexing a list with !!
+[9.4,33.2,96.2,11.2,23.25] !! 1 -- 33.2  
+"Steve Buscemi" !! 6  -- 'B'
+
+-- LIST FUNCTIONS
+head -- first item
+tail -- all the rest
+last
+init -- all except last
+
+length
+null -- true, if list is empty
+reverse
+take 3 [5,4,3,2,1] -- take first 3 items
+drop 3 [5,4,3,2,1] -- drop the first 3 items
+maximum -- returns the biggest element
+minimum -- smallest element
+sum
+product
+4 `elem` [3,4,5,6] -- True - 4 is an element in the list
+
+-- RANGES
+[1..20]
+['a'..'z']
+['K'..'Z']
+[4,8..40] -- counting in steps of 4
+[20,19..1] -- counting backwards
+
+-- cycle and repeat produce and infinite list...
+take 10 (cycle [1,2,3])
+take 4 (repeat "dingo")
+replicate 4 "dingo" -- same as above
+
+-- LIST COMPREHESIONS
+-- [output expression | input lists and predicates]
+[x | x <- [1..10]] -- complicated way of doing [1..10]
+[x*2 | x <- [1..10]]
+[x*2 | x <- [1..10], x*2 >= 12] -- filter results by adding predicates after a comma
+[x | x <- [50..100], x `mod` 7 == 3] -- all numbers from 50 to 100 whose remainder when divided with the number 7 is 3
+-- multiple predicates
+[x | x <- [10..20], x /= 13, x /= 15, x /= 19] -- filter out numbers 13, 15 & 19
+[x*y | x <- [2,5,10], y <- [8,10,11]] -- two input lists - all possible combinations are multiplyed
+[x*y | x <- [2,5,10], y <- [8,10,11], x*y > 50] -- filter out values less than 50
+
+-- combine funny strings
+nouns = ["hobo","frog","pope"]
+adjectives = ["lazy","grouchy","scheming"]
+[a ++ " " ++ n | a <- adjectives, n <- nouns]
+
+-- _ acts as a placeholder for variables which are not going to be used...
+-- ... this function ignores each item of the list and adds 1 each time
+length' xs = sum [1 | _ <- xs]
+-- length times two...
+length'2 xs = sum [2 | _ <- xs]
+
+-- list comprehension on strings
+removeNonUppercase st = [ c | c <- st, c `elem` ['A'..'Z']]
+
+
+
+
+
+
+---- TUPLES ----------------------------------------------------------
+
+(1,2,3)
+
+-- tuples have fixed size and types of elements
+-- tuples don't have to be homogenous
+
+-- zip combines two lists into a list of pairs
+zip [1..4] ["one", "two", "three", "four"] -- [(1,"one"),(2,"two"),(3,"three"),(4,"four")]
+zip [1..6] "greening" -- [(1,'g'),(2,'r'),(3,'e'),(4,'e'),(5,'n'),(6,'i')]
+
+-- functional programming with tuples and list comprehensions... we take a set of starting solutions and then apply transformations and filters until we have what we want...
+-- ... sets of co-ordinates for triangles whoose sides are integers...
+let triangles = [ (a,b,c) | c <- [1..10], b <- [1..10], a <- [1..10]]
+-- ... filter: only right angle triangles
+let rightTriangles = [ (a,b,c) | c <- [1..10], b <- [1..c], a <- [1..b], a^2 + b^2 == c^2]
+-- ... filter: only those with perimeter of 24
+let rightTriangles' = [ (a,b,c) | c <- [1..10], b <- [1..c], a <- [1..b], a^2 + b^2 == c^2, a+b+c == 24]
+
+
+
+
+
+
+
+-- COMPARISON:
+'a' : 'b' : [] == ['a','b'] -- this will return True
+['a','b','c'] == "abc" -- this is also True!
+5 == 5 -- True
+5 /= 5 -- False (NOT EQUALS)
+
+
+-- PASSING FUNCTIONS:
+-- functions are enclosed in brackets... e.g. (+1)
+map (+1) [1..5]
+-- ... the function (+1) is passed to (map), which applies it to each number in the range [1..5]
+-- MORE EXAMPLES:
+map (*99) [1..10]
+map (/5) [13,24,52,42]
+filter (>5) [62,3,25,7,1,9]
+
+
+
+...
+let square x = x * x in square 3
+let square x = x * x in map square [1..10]
+let add1 x = x + 1 in map add1 [1,5,7]
+let take5s = filter (==5) in take5s [1,2,5,1,6,5,9,5]
+let take5s = filter (==5) in map take5s [[1,5],[5],[1,1]]
+
+-- UPPERCASE CHARACTERS
+toUpper 'a'
+map toUpper "chris"
+
+
+-- PATTERN MATCHING
+let (a,b) = (10,12) in a * 2 -- gives 20 - a & b match to 10 & 12, so a * 2 = 20
+let (a:b:c:[]) = "xyz" in a -- gives 'x'
+
+-- YOU CAN IGNORE VALUES YOU DON'T NEED...
+let (a:_:_:_) = "xyz" in a -- same result as previous
+-- in fact, (a:b:c:d) is short-hand for (a:(b:(c:d))), so you can just ignore the rest in one go:
+let (a:_) = "xyz" in a
+
+-- slightly more complicated matching:
+let (_,(x:_)) = (10,"abc") in x -- to get 'a'
+

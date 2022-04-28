@@ -1,0 +1,39 @@
+OPENGL QUICKSTART
+
+... I used JOGL mainly (Java OpenGL bindings)
+
+* LIGHTING AND MATERIALS
+
+Lighting works in conjunction with material properties, so for
+example, if material properties for ambient light reflection are set
+to zero, then you will see no ambient light, no matter how high you
+crank it up.
+
+** MATERIAL PROPERTIES
+
+gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT,   mat_ambient, 0);
+gl.glMaterialfv(GL.GL_FRONT, GL2.GL_DIFFUSE,   color, 0);
+gl.glMaterialfv(GL.GL_FRONT, GL2.GL_SPECULAR,  no_material, 0);
+gl.glMaterialfv(GL.GL_FRONT, GL2.GL_SHININESS, high_shininess, 0);
+gl.glMaterialfv(GL.GL_FRONT, GL2.GL_EMISSION,  no_material, 0);
+
+GL_FRONT --> applies to front faces of facets (also GL_BACK)
+
+** LIGHTING PROPERTIES
+
+ambient  = light coming from all directions applied evenly to every surface
+diffuse  = directional light
+specular = hilights on shiny materials
+
+GLfloat light_ambient[] =  { 0.0, 0.0, 0.0, 1.0 }; // default value: no ambient light
+GLfloat light_diffuse[] =  { 1.0, 1.0, 1.0, 1.0 };
+GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+
+glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
+glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
+glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+... the number of lights supported varies with implementation, but it
+will be at least 8...

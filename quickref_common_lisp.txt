@@ -1,0 +1,1325 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;; COMMON LISP QUICKREF ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; BASIC SETUP ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; using CCL (Clozure Common Lisp) (jul 2016)
+;; https://ccl.clozure.com/docs/ccl.html
+
+
+;; * install CCL (see instructions...)
+;; * install QUICKLISP
+;; * install SLIME (using quicklisp)
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;; COMMON LISP FUNDAMENTALS ;;;;;;;;;;;;;;;;;;;;;;
+
+;; save files with .lisp extension
+
+;; dynamically typed
+;; strongly typed
+;; lexical scope
+
+;; ON FUNCTION NAMES
+;; end in p --- e.g. listp     --- predicate (boolean return value)
+;; end in q --- e.g. setq      ---
+;; end in f --- e.g. rotatef
+;; start with n --- e.g. nconc --- destructive
+
+;; '  = quote
+;; #' = get function with name e.g #'1+
+;; :  = keyword
+;; &  = ...
+
+'(foo) ; is the same as (quote foo)
+
+'foo ; is the same as (quote . foo)
+
+(defun hello-world ()
+  (format t "Hiya!"))
+
+(documentation 'defun 'function) ; display documentation for given function
+
+(defvar x 11.34571) ; define a global variable
+(mod x 3) ; modulus
+(floor 5.3453)
+(floor x)
+
+
+
+;;;; NUMBERS
+123       ; the integer one hundred twenty-three
+3/7       ; the ratio three-sevenths
+1.0       ; the floating-point number one in default precision
+1.0e0     ; another way to write the same floating-point number
+1.0d0     ; the floating-point number one in "double" precision
+1.0e-4    ; the floating-point equivalent to one-ten-thousandth
++42       ; the integer forty-two
+-42       ; the integer negative forty-two
+-1/4      ; the ratio negative one-quarter
+-2/8      ; another way to write negative one-quarter
+246/2     ; another way to write the integer one hundred twenty-three
+
+
+;;;; BOOLEAN VALUES
+nil
+'()
+(eq nil '()) ; NIL & empty-list are equivalent
+t ; TRUE
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; LISTS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(list 1 2 3) ; a list of three elements
+'(1 2 3)     ; same
+
+;;;; SOME LIST FUNCTIONS ;;;;
+
+(car '(1 2 3 4)) ; return first item of list => 1
+(cdr '(1 2 3 4)) ; return rest of list => (2 3)
+
+(append '(1 2 3) '(5 6 7)) ; join lists together
+(append '(1 2 3) '(5 6 7) '(a b c))
+
+
+
+;; FUNCTIONS WITH SIDE-EFFECTS ;;
+
+(defvar x nil)
+(push 12 x) ; push item onto front of list
+(push 'ping x)
+(push 'pong x)
+(pop x) ; pop item off front of list
+
+(nconc '(1 2 3) '(5 6 7)) ; like append, but may damage the input lists
+
+
+
+
+(remove-if-not #'evenp '(1 2 3 4 5 6 7))
+
+(remove-if-not 
+ #'(lambda (str)
+     (search "we" str))
+ '("between" "underneath" "wendy" "ungwe" "david" "doorknob" "knotweed"))
+
+
+
+
+
+
+;;;; PLIST (property list)
+; colon ':' is the KEYWORD symbol
+(list :a 1 :b 2 :c 3) ; a PLIST (property-list) of three elements
+'(:a 1 :b 2 :c 3)     ; same
+(getf '(:a 'dingle :b 'dangle :c 'doo) :b) ; (getf PLIST KEYWORD) --- returns value of given keyword
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; STRINGS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(string "doodle")
+"doodle"
+'"doodle"
+
+;;;; STRING FUNCTIONS
+(search "han" "underhand") ; return index of substring
+(reverse "dingle")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SYMBOLS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Any string can be the print-name of a symbol, even a string containing lower-
+;; case letters or macro characters like parentheses. When a symbol’s name contains
+;; such oddities, it is printed within vertical bars, as above. In source code, such
+;; symbols should either be enclosed in vertical bars, or the offending characters
+;; preceded by backslashes:
+
+|plinkPLONK|
+
+|(A B)|
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; QUOTING ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(quote foo)
+'foo        ; same as above
+(quote (1 2 3))   ; quoting a list
+'(1 2 3)          ; same a above
+'(1 2 3 (+ 1 2 3)); NOTE: the enclosed expression is not evaluated
+`(1 2 3 ,(+ 1 2 3) (+ 10 15))   ; quasiquote/backquote - comma = unquote (the unquoted expression is evaluated)
+`(1 2 3 ,@(list 4 5 6))         ; ,@ splices list into containing list i.e. (1 2 3 4 5 6)
+`(10 9 ,(+ 1 2 3 4) ,@'(8 7 6)) ; unquote & splice in same list
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;; CONDITIONAL STATEMENTS ;;;;;;;;;;;;;;;;;;;;;;;
+
+; (if ...)
+; (when ...)
+; (unless ...)
+; (cond ...)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;; OTHER CONTROL STRUCTURES ;;;;;;;;;;;;;;;;;;;;;;
+
+; progn executes any number of expressions in sequence
+(progn (print "hello")
+       (print "my")
+       (print "name is Twinkle Toes"))
+
+
+
+;;;; LOOPING AND ITERATION
+
+;; just like foreach loop
+(dolist (x '("bill" "ben" "florence" "jenny"))
+  (format t "~10t~a~%" x))
+
+;; x will count from 0 to 9
+(dotimes (x 10)
+  (print x))
+
+
+
+; (do (variable-definition*)
+;    (end-test-form result-form*)
+;   statement*)
+
+; LOOP
+; (loop for ...)
+; (loop repeat ...)
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;; VARIABLES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; LEXICALLY SCOPED (LOCAL) VARIABLES
+(let ((x 10)
+      (y 20)
+      z) ; uninitialized variables are set to NIL
+  (list x y z))
+
+; let* allow you to reference earlier definitions in the same assignment block
+(let* ((x 10)
+       (y (+ x 2)))
+  (list x y))
+
+; another way to do the same thing
+(let ((x 10))
+  (let ((y (* x 3)))
+    (list x y)))
+
+
+
+;;;; CLOSURES ;;;;
+;; makes lexically scoped variable available outside of original scope...
+
+;; defines three functions, both of which refer to the lexically scoped variable 'count'
+(let ((count 0))
+  (defun count-up () (incf count))
+  (defun count-down () (decf count))
+  (defun reset-count () (setq count 0)))
+
+;; returns an anonymous function which refers to lexically scoped variable 'n'
+(defun make-adder (n)
+  #'(lambda (x) (+ x n)))
+;; create adder function and store in global variable
+(defvar add-three (make-adder 3))
+;; assign two at once
+(setq add12 (make-adder 12)
+      add-4 (make-adder -4))
+;; invoke functions
+(funcall add-three 50)
+(funcall add12 50)
+(funcall add-4 50)
+
+;; this version takes an optional arg, which changes the state of the variable caught in the closure
+(defun make-adderb (n)
+  #'(lambda (x &optional change)
+    (if change
+        (setq n x)
+        (+ x n))))
+;;
+(setq addx (make-adderb 1))
+;;
+(funcall addx 10)   ; returns 11
+(funcall addx 10 t) ; set add-amount to 10
+(funcall addx 10)   ; returns 20
+
+
+
+;;;; LABELS
+;; labels is similar to let... but it lets us define local functions and give them names, so that, unlike lambda, we can use them recursively
+(defun count-instances (obj lsts)
+  "Takes a list of lists and returns a list of the number of instances of obj in each list."
+  (labels ((instances-in (lst)
+             (if (consp lst)
+                 (+ (if (eq (car lst) obj) 1 0)
+                    (instances-in (cdr lst)))
+                 0)))
+    (mapcar #'instances-in lsts)))
+
+(count-instances 'a '((a b c) (d a a)))
+
+
+;;;; TAIL RECURSION
+
+;; Tail-recursion is desirable because many Common Lisp compilers can trans-
+;; form tail-recursive functions into loops. With such a compiler, you can have the
+;; elegance of recursion in your source code without the overhead of function calls
+;; at runtime. The gain in speed is usually great enough that programmers go out of
+;; their way to make functions tail-recursive.
+
+;; NOT tail recursive
+(defun our-length (lst)
+  (if (null lst)
+      0
+      (1+ (our-length (cdr lst)))))
+
+(our-length '(9 8 7 6))
+
+;; tail recursive
+(defun our-find-if (fn lst)
+  (if (funcall fn (car lst))
+      (car lst)
+      (our-find-if fn (cdr lst))))
+
+(our-find-if #'evenp '(1 3 27 4 17 10))
+
+;; A function which isn’t tail-recursive can often be transformed into one that is
+;; by embedding in it a local function which uses an accumulator. In this context, an
+;; accumulator is a parameter representing the value computed so far. For example,
+;; our-length could be transformed into
+
+(defun our-length (lst)
+  (labels ((rec (lst acc)
+             (if (null lst)
+                 acc
+                 (rec (cdr lst) (1+ acc)))))
+    (rec lst 0)))
+
+(our-length '(a b c d e f g h i j))
+
+
+;; Many Common Lisp compilers can do tail-recursion optimization, but not all
+;; of them do it by default. So after writing your functions to be tail-recursive, you
+;; may also want to put
+(proclaim ’(optimize speed))
+
+
+;; EXAMPLE: fast cl function for triangle numbers from Richard Gabriel
+(defun triangle (n)
+  (labels ((tri (c n)
+             (declare (type fixnum n c))
+             (if (zerop n)
+                 c
+                 (tri (the fixnum (+ n c))
+                      (the fixnum (- n 1))))))
+    (tri 0 n)))
+
+(triangle 1)
+(triangle 2)
+(triangle 3)
+(triangle 4)
+
+(defun list-n-triangles (n)
+  "Gets the first n triangle numbers and returns them in a list."
+  (let ((out '()))
+    (dotimes (i n)
+      (setq out (append
+                 out
+                 (list (triangle i)))))
+    out))
+
+(list-n-triangles 10)
+
+
+
+
+
+;;;; GLOBAL VARIABLES
+; *asterisks* is a naming convention for global variables
+; all forms may have an optional docstring
+
+(defvar *dingle* "dongle")
+
+(defvar *count* 0
+  "Count of widgets made so far.")
+
+(defparameter *gap-tolerance* 0.001
+  "Tolerance to be allowed in widget gaps.")
+
+(defconstant *bum* "underground"
+  "A totally pointless constant that nobody will ever use for anything.")
+
+
+;;;; ASSIGNING NEW VALUES
+
+; setf
+; setq
+; incf
+; decf
+; rotatef
+; shiftf
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;; FUNCTIONS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (defun NAME (ARGS) DOCSTRING BODY...)
+(defun foo (x y)
+  "Optional docstring:
+This function returns the sum of x and y."
+  (+ x y))
+
+
+
+(symbol-function 'foo) ; returns the function object associated with the symbol
+(function foo) ; same thing without quoting the symbol
+#'foo          ; same thing
+
+(foo 1 2) ; call function 'foo' with args 1 & 2
+(apply #'foo '(1 2)) ; applies the contents of a list as args for a function
+(funcall #'foo 1 2)  ; like apply, but args are not in a list
+(funcall (symbol-function 'foo) 1 2) ; same as above
+(funcall (lambda (x y) (+ x y)) 1 2) ; same effect, using an anonymous lambda function
+
+
+
+
+
+;;;; SPECIAL PARAMETER TYPES
+
+; optional arguments
+(defun donk (a b &optional c d) (list a b c d)) ; optional args c & d will be NIL if not specified
+(defun bonk (a b &optional (c 10) (d 15)) (list a b c d)) ; default values specified
+(defun make-rectangle (width &optional (height width)) (list width height)) ; make square by default
+
+; &rest
+(defun make-a-list (&rest items) items) ; items is a list containing all of the args after &rest
+
+; &key
+(defun key-test (&key a b c) (list a b c)) ; any unset keyword args will be NIL
+(defun key-test (&key (a 100) (b "gumbo") c) (list a b c)) ; a & b have default values, c is NIL unless specified
+
+; mixing parameter types
+; ...
+
+
+;;;; HIGHER ORDER FUNCTIONS (functions which take other functions as arguments)
+
+;; EXAMPLE
+
+(defun plot (fn min max step)
+  "Plots a simple ASCII-art histogram of the values returned by the argument function"
+  (loop for i from min to max by step do
+        (loop repeat (funcall fn i) do (format t "*"))
+        (format t "~%")))
+
+(plot #'exp 0 4 1/2) ; plot exponent
+
+
+(apply #'plot plot-data)
+(apply #'plot #'exp plot-data)
+
+
+;;;; MORE USEFUL HIGHER-ORDER FUNCTIONS
+
+;; MAPCAR repeatedly takes the first element (car) of a list and returns the
+;; results in a new list
+(mapcar '1+ '(1 2 3)) ; returns (2 3 4)
+
+;; + takes multiple arguments, so we can pass it multiple lists
+(mapcar '+
+        '(1 2 3)
+        '(10 100 1000)) ; returns (11 102 1003)
+
+(mapcar (lambda (x) (+ x 10))
+        '(1 2 3 4))
+
+;; MAPCAN (destructive)...
+;; ... maps function on to list
+;; ... function should be a function which returns a list
+;; ... results are all concatenated together desctructively (using nconc)
+(mapcan (lambda (x) (list x 'x)) '(1 2 3 5)) ; => (1 X 2 X 3 X 5 X)
+
+
+;; SORT - takes a list and a predicate
+(sort '(3 5 1 25 1 0 12 4) #'<)
+
+;; remove if predicte returns true
+(remove-if #'evenp '(3 5 1 25 1 0 12 4))
+(remove-if-not #'evenp '(3 5 1 25 1 0 12 4))
+
+
+
+;;;; ANONYMOUS FUNCTIONS
+
+((lambda (x y) (* x y)) 3 4) ; apply anonymous function to args 3 & 4
+
+(plot #'(lambda (x) (* x 2)) 0 10 1) ; anonymous function multiplies by 2
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;; MULTIPLE RETURN VALUES ;;;;;;;;;;;;;;;;;;;;;;;
+
+;; use 'values' to return multiple items
+
+(defun divQuarter (num)
+  "Split a number into it's first quarter, and the three quarters remaining and
+  return both values"
+  (let ((quarter (/ num 4)))
+    (values quarter
+            (- num quarter))))
+
+;; use multiple-value-bind to capture multiple return values...
+;; ... here, I just put them in a list and return it...
+(multiple-value-bind (1q 3q) (divQuarter 360)
+  (list 3q 1q))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;; SPECIAL OPERATORS ;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; MACROS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; A macro is code which generates code...
+; A macro is a function that takes s-expressions as arguments and returns a Lisp form that's then evaluated in place of the macro form.
+; The evaluation of a macro form proceeds in two phases:
+; --- First, the elements of the macro form are passed, unevaluated, to the macro function.
+; --- Second, the form returned by the macro function--called its expansion--is evaluated according to the normal evaluation rules.
+;
+; NOTE: macro-expansion-time & runtime ---> note the difference... & different environment...
+
+; (defmacro NAME (PARAMETERS*) "OPTIONAL-DOCSTRING" BODY-FORM*)
+
+(defmacro bs-when (condition &rest body)
+  "A new macro which does same as the existing 'when' macro."
+  `(if ,condition (progn ,@body)))
+
+(bs-when (= 3 3) (print "hello")) ; usage
+
+(macroexpand-1 '(bs-when t (print "hello"))) ; macroexpand-1 returns the expanded form - useful for debugging!
+
+
+(defun bs-when-func (condition procedure-if-true)
+  "bs-when macro written as a function instead."
+  (if condition
+      (eval procedure-if-true)))
+
+(bs-when-func (= 3 3) '(print "hello")) ; usage
+
+
+
+
+
+;;;; EXAMPLES
+
+; do-primes
+
+(defun primep (number)
+  "Predicate: true, if number is prime."
+  (when (> number 1)
+    (loop for fac from 2 to (isqrt number) never (zerop (mod number fac)))))
+  
+(defun next-prime (number)
+  "Returns next prime number, or number, if number is prime.
+Simple brute-force method."
+  (loop for n from number when (primep n) return n))
+
+; loop which generates a sequence of primes
+(do ((p (next-prime 0) (next-prime (1+ p))))
+    ((> p 19))
+  (format t "~d~%" p))
+
+
+
+
+(do-primes (p 0 19)
+  (format t "~a~%" p))
+
+
+
+;;;; MACRO-WRITING MACROS
+
+; ...
+
+
+
+;;;;;;;;;;;;;;;;;;;;;; PRINTING/DISPLAYING TEXT ;;;;;;;;;;;;;;;;;;;;;;
+
+(print "hello folks!")
+
+; (format STREAM CONTROL-STRING  &rest FORMAT-ARGS...)
+
+; ~a        --- aesthetic - renders strings without quotes etc...
+; ~10t      --- tabulation (~10t = 10th column)
+; ~%        --- newline
+; ~{ ... ~} --- apply ... to each item in a list
+
+(format t "~{~a~%~}" '("bananna" "apple" "kiwi" "pear")) ; prints each item in list on a new line
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; BASIC INPUT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(read-line *query-io*) ; reads a single line of text from the terminal
+
+(defun prompt-read (prompt)
+  "Prompts user to input a line of text.
+prompt = prompt-text to be displayed."
+  (format *query-io* "~a: " prompt)
+  (force-output *query-io*)
+  (read-line *query-io*))
+
+(defun greet ()
+  "Simple function making use of prompt-read."
+  (format t "~%Hello, ~a!~%" (prompt-read "PLEASE ENTER YOUR NAME")))
+
+
+;;;;
+(parse-integer "34")
+(parse-integer "34t") ; ERROR
+(parse-integer "34t" :junk-allowed t)   ; returns 34, 2
+(parse-integer "34 45" :junk-allowed t)   ; returns 34, 2 (first number found)
+(parse-integer "bingo" :junk-allowed t) ; returns NIL
+(or (parse-integer "bingo" :junk-allowed t) 0) ; returns 0 instead of NIL
+
+(y-or-n-p "Are you initiated:") ; prompts user to enter y or n at terminal
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;; FUNCTIONAL PROGRAMMING ;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Reverse function using a non-functional style (reverses list in place as a side effect)
+;; THIS DOESN'T WORK FOR ME!
+(defun bad-reverse (lst)
+  "Reverses list in place."
+  (let* ((len (length lst))
+         (ilimit (truncate (/ len 2))))
+    (do ((i 0 (1+ i))
+         (j (1- len) (1- j)))
+        ((>= ilimit))
+      (rotatef (nth i lst) (nth j lst)))))
+
+
+;;; Version in a more functional style (no side effects) using tail recursion
+(defun good-reverse (lst)
+  "Returns a reversed version of list without modifying it."
+  (labels ((rev (lst acc) ; define local recursive function 'rev'
+             (if (null lst) ; T if list is empty
+                 acc ; return accumulator
+                 ;; recusive call to rev on cdr/add car to accumulator
+                 (rev (cdr lst) (cons (car lst) acc)))))
+    ;; start process by passing whole list to rev with empty accumulator
+    (rev lst nil)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; FILE IO ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defun save-db (filename)
+  (with-open-file (out filename
+                   :direction :output
+                   :if-exists :supersede)
+    (with-standard-io-syntax
+      (print *db* out))))
+
+
+(defun load-db (filename)
+  (with-open-file (in filename)
+    (with-standard-io-syntax
+      (setf *db* (read in)))))
+
+
+
+;;;;;;;;;;;;;;;;;; CLOS (COMMON LISP OBJECT SYSTEM) ;;;;;;;;;;;;;;;;;;
+
+; T is the root of the class hierachy
+
+
+
+; generic function defines an abstract operation, with no implementation...
+(defgeneric draw (shape)
+  (:documentation "Draw the given shape on the screen."))
+
+;;;; CLASSES
+
+; (defclass name (direct-superclass-name*) (slot-specifier*))
+; ... slots = fields/attributes...
+
+(defclass bank-account ()
+  (customer-name
+   balance))
+
+(defparameter acc (make-instance 'bank-account)) ; use make-instance to instantialize class
+(slot-value acc 'customer-name) ; ERROR! slot is unbound
+(setf (slot-value acc 'customer-name) "Billy Whiz")
+(slot-value acc 'customer-name) ; return customer-name value
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; QUICKLISP
+; Quicklisp is a library manager for Common Lisp. It works with your existing Common Lisp implementation to download, install, and load any of over 900 libraries with a few simple commands.
+
+;    To load a system, use: (ql:quickload "system-name")
+
+;    To find systems, use: (ql:system-apropos "term")
+
+;    To load Quicklisp every time you start Lisp, use: (ql:add-to-init-file)
+
+;    For more information, see http://www.quicklisp.org/beta/
+
+;;;;
+
+;You only need to install Quicklisp with quicklisp.lisp once. To load Quicklisp into your Common Lisp session after the initial installation, load the file quicklisp/setup.lisp with the Common Lisp load function.
+
+;For example, if you installed Quicklisp in the default location in your home directory, the following command suffices to load Quicklisp into a running session:
+
+;    (load "~/quicklisp/setup.lisp")
+
+;The path must be adjusted if Quicklisp is loaded in a different location, or if your implementation does not support the ~ pathname syntax (i.e. CMUCL).
+
+;The function ql:add-to-init-file will add code to do this to your init file automatically, so Quicklisp will load whenever your Common Lisp session starts. 
+
+
+
+; (:QUICKLISP-SLIME-HELPER)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; SLIME (Superior LISP Interaction Mode for Emacs)
+
+; M-x slime : Opens the SLIME REPL.
+
+;;;; SLIME MODE KEYBINDINGS
+
+;C-UP : Scroll through command history.
+;C-DOWN : Scroll through command history.
+
+;;;; SLIME REPL additional keybindings
+
+;C-RETURN : Close any unmatched parens and send current line to lisp for evaluation.
+;C-c C-c : Interrupt the Lisp process with SIGINT (doesn't work reliably with multithreaded Lisps).
+;TAB : Lisp symbol completion.
+
+(load "filename.lisp") ; load file - eval file - loading functions etc...
+(load (compile-file "filename.lisp")) ; compile file, then load compiled file...
+
+
+
+;;;; SLIME DEBUGGER
+
+;The following commands invoke restarts:
+;0 .. 9 : Invoke a restart by number.
+;q : Throw to the top-level.
+;a : Invoke the ABORT restart.
+;c : Invoke the CONTINUE restart.
+
+;There are also commands for poking around in the frame at point:
+;v : Show the current frame's source expression in a buffer.
+;t : Toggle verbose display of the frame at point. The verbose version includes all local variables and CATCH tags.
+;l : Show local variables.
+;e : Evaluate an expression from inside a frame.
+;d : Evaluate an expression and display the result in an extra buffer.
+;i : Evaluate an expression and inspect the result.
+;: : Evaluate an expression (in the global environment).
+;D : Disassemble the code of the current frame.
+;r : Restart execution of the frame with the same arguments as it was called originally. (Not supported by all backends.)
+;R : Return a value from the current frame. (Not supported by all backends.)
+
+;Motion between frames:
+;n : Move to the next frame.
+;p : Move to the previous frame.
+;M-n : Detail-move to the next frame. This switches the current frame to a one-line summary, then moves to the next frame, displays it verbosely in the backtrace (as with t), and shows the corresponding source expression (as with v).
+;M-p : Detail-move to the previous frame.
+
+
+
+
+;;======================== EMACS WITHOUT SLIME =========================
+
+;; tell emacs which lisp program to run
+(setq inferior-lisp-program "ccl64")
+
+;; run lisp interpreter in an emacs buffer
+M-x run-lisp
+;; or
+M-x inferior-lisp
+
+;; in lisp-mode or common-lisp-mode you can eval code in a buffer using the
+;; usual commands, provided that you have started a lisp interpreter process
+;; (see above)
+
+;; files with .lisp extension open in lisp-mode
+
+
+
+
+
+;;;;;;;;;;;;;; SMALL UTILITY FUNCTIONS (FROM BOOK: On Lisp) ;;;;;;;;;;;;
+
+;;;; VERY SMALL LIST UTILITIES
+
+(proclaim '(inline last1 single append1 conc1 mklist))
+
+(defun last1 (lst)
+  "Returns the last item in the list lst (the builtin last function returns the last cons)."
+  (car (last lst)))
+
+(defun single (lst)
+  "Returns true if lst is a single item list."
+  (and (consp lst) (not (cdr lst))))
+
+(defun append1 (lst obj)
+  "Adds obj item to the end of lst."
+  (append lst (list obj)))
+
+(defun conc1 (lst obj)
+  "Add obj to end of lst (destructively)."
+  (nconc lst (list obj)))
+
+(defun mklist (obj)
+  "Makes obj into a list, or doesn't complain if it already is a list."
+  (if (listp obj) obj (list obj)))
+
+;;;; LARGER LIST UTILITIES
+
+(defun longer (x y)
+  "Returns T if x is longer than y.
+Compares lists efficiently in parallel, otherwise, uses (length )."
+  (labels ((compare (x y)
+             (and (consp x)
+                  (or (null y)
+                      (compare (cdr x) (cdr y))))))
+    (if (and (listp x) (listp y))
+        (compare x y)
+        (> (length x) (length y)))))
+
+(defun filter (fn lst)
+  "Returns a list containing only the values which return non-nil when applied to function fn."
+  (let ((acc nil))
+    (dolist (x lst)
+      (let ((val (funcall fn x)))
+        (if val (push val acc)))) ; if val is not nil, push it on to accumulator
+    (nreverse acc)))
+
+(defun group (source n)
+  "Returns a list of lists containing the contents of 'source' split into groups of n length. "
+  (if (zerop n) (error "zero length"))
+  (labels ((rec (source acc)
+             (let ((rest (nthcdr n source)))
+               (if (consp rest)
+                   (rec rest (cons (subseq source 0 n) acc))
+                   (nreverse (cons source acc))))))
+    (if source
+        (rec source nil)
+        nil)))
+
+;;;; DOUBLY-RECURSIVE LIST UTILITIES
+
+(defun flatten (x)
+  "Flattens any nested lists inside x.
+x = a list"
+  (labels ((rec (x acc)
+             (cond ((null x) acc)
+                   ((atom x) (cons x acc))
+                   (t (rec (car x) (rec (cdr x) acc))))))
+    (rec x nil)))
+
+(defun prune (test tree)
+  "Returns tree with every leaf pruned which returned non-nil to test."
+  (labels ((rec (tree acc)
+             (cond ((null tree) (nreverse acc)) ; return accumulator
+                   ;; if first element is a nested list
+                   ((consp (car tree))
+                    (rec (cdr tree)
+                         (cons (rec (car tree) nil) acc)))
+                   ;; else
+                   (t (rec (cdr tree)
+                           (if (funcall test (car tree))
+                               acc ; test passed - discard car
+                               (cons (car tree) acc)))))))
+    (rec tree nil)))
+
+;;;; SEARCHING LISTS
+
+(defun find2 (fn lst)
+  "Returns the first item in lst which returns non-nil to fn... and the value returned from fn."
+  (if (null lst)
+      nil
+      (let ((val (funcall fn (car lst))))
+        (if val
+            (values (car lst) val)
+            (find2 fn (cdr lst))))))
+
+(defun before (x y lst &key (test 'eql))
+  "Looks for x and y in list.
+If x is found before y, returns the cdr starting with x.
+If y is found before x, returns nil."
+  (and lst
+       (let ((first (car lst)))
+         (cond ((funcall test y first) nil)
+               ((funcall test x first) lst)
+               (t (before x y (cdr lst) :test test))))))
+
+(defun after (x y lst &key (test 'eql))
+  "Looks for x and y in a list.
+Returns non-nil if x and y are both members of the list, and x first appears AFTER y.
+The return value is the cdr starting with x."
+  (let ((rest (before y x lst :test test)))
+    (and rest (member x rest :test test))))
+
+(defun duplicate (obj lst &key (test 'eql))
+  "Returns non-nil if obj appears in the list more than once.
+Return value is the cdr starting wit the second instance of obj."
+  (member obj (cdr (member obj lst :test test))
+          :test test))
+
+(defun split-if (fn lst)
+  "Iterate through list and if any item returns non nil from (funcall fn item).
+If any item passes the test, split the list and return both parts (with the item as car of the second list).
+Otherwise return the whole list and NIL."
+  (let ((acc nil))
+    (do ((src lst (cdr src)))
+        ((or (null src)
+             (funcall fn (car src)))
+         (values (nreverse acc) src))
+      (push (car src) acc))))
+
+;;;; SEARCH FUNCTION WHICH COMPARE ELEMENTS AGAINST ONE ANOTHER
+
+(defun most (fn lst)
+  "fn = scoring function.
+lst = list.
+Look at each element one at a time and test it against the scoring function.
+Returns the winning element, and the winning score.
+If more than one element got the winning score, the first one is returned."
+  (if (null lst)
+      ;; if list is empty return nil nil
+      (values nil nil)
+      ;; else init variables
+      (let* ((wins (car lst))
+             (max (funcall fn wins)))
+        (dolist (obj (cdr lst))
+          (let ((score (funcall fn obj)))
+            (when (> score max)
+              (setq wins obj
+                    max score))))
+        (values wins max))))
+
+;; (most 'length '((a b) (1 2 3 4 (3 4)) (a b c d)))
+;; ... returns:
+;; (1 2 3 4 (3 4))
+;; 5
+
+(defun mostn (fn lst)
+  "Like 'most', but returns a LIST of all the elements which got the winning
+  score, along with the winning score."
+  (if (null lst)
+      (values nil nil)
+      (let ((result (list (car lst)))
+            (max (funcall fn (car lst))))
+        (dolist (obj (cdr lst))
+          (let ((score (funcall fn obj)))
+            (cond ((> score max)
+                   (setq max score
+                         result (list obj)))
+                  ((= score max)
+                   (push obj result)))))
+        (values (nreverse result) max))))
+
+(defun best (fn lst)
+  "Compares elements of list using fn and return the one which beats all others.
+
+EXAMPLE: (best '> '(1 2 9 7 6)) => 9.
+
+fn = a predicate which takes two arguments (x y).
+
+fn should be a predicate which defines a total order on the elements of the
+list, otherwise the order of the elements will influence the result."
+  (if (null lst)
+      nil
+      (let ((wins (car lst)))
+        (dolist (obj (cdr lst)) ; for obj in (cdr lst)
+          (if (funcall fn obj wins)
+              (setq wins obj)))
+        wins))) ; return wins
+
+
+      
+;;;; MAPPING FUNCTIONS
+
+(defun map0-n (fn n)
+  "Maps function fn on numbers from 0 to n inclusive."
+  (mapa-b fn 0 n))
+
+(defun map1-n (fn n)
+  "Maps function fn on numbers from 1 to n inclusive."
+  (mapa-b fn 1 n))
+
+(defun mapa-b (fn a b &optional (step 1))
+  "Maps function fn on numbers from a to b inclusive."
+  (do ((i a (+ i step))
+       (result nil))
+      ((> i b) (nreverse result))
+    (push (funcall fn i) result)))
+
+(defun map-> (fn start test-fn succ-fn)
+  "Maps function fn on sequence of objects.
+start = start object
+test-fn = exit when object in sequence applied to this returns non-nil
+succ-fn = get next object in sequence by applying previous object to this function."
+  (do ((i start (funcall succ-fn i))
+       (result nil))
+      ((funcall test-fn i) (nreverse result))
+    (push (fundall fn i) result)))
+
+(defun mappend (fn &rest lsts)
+  "Non-destructive version of mapcan."
+  (apply 'append (apply 'mapcar fn lsts)))
+
+(defun mapcars (fn &rest lsts)
+  "Like mapcar, but for a list of lists.
+Return all results in a single list."
+  (let ((result nil))
+    (dolist (lst lsts)
+      (dolist (obj lst)
+        (push (funcall fn obj) result)))
+    (nreverse result)))
+
+;; not working!
+(defun rmapcar (fn &rest args)
+  "Like mapcar, but for trees (rmapcar short for recursive mapcar)."
+  (if (some 'atom args) ; T if any of args is an atom
+      (apply fn args)
+      (apply 'mapcar
+             '(lambda (&rest args)
+               (apply 'rmapcar fn args))
+             args)))
+
+;;;; IO UTILITIES
+
+(defun readlist (&rest args)
+  "Reads a line of input and returns it as a list (wraps parentheses around it).
+args = args for read-line."
+  (values (read-from-string
+           (concatenate 'string "("
+                        (apply #'read-line args)
+                        ")"))))
+
+;; can use FORMAT arguments e.g.
+;; (prompt "enter a number between ~A and ~A: ~%>> " 1 10)
+(defun prompt (&rest args)
+  "Prtints a question, and reads the answer."
+  (apply 'format *query-io* args)
+  (read *query-io*))
+
+(defun break-loop (fn quit &rest args)
+  "Repeatedly prompts for input and applies it to function fn.
+Quits when function quit returns false for the input.
+
+args = format for the prompt
+
+EXAMPLE (simulates top level of lisp):
+(break-loop 'eval #'(lambda (x) (eq x :q)) \">> \")"
+  (format *query-io* "Entering break-loop. ~%")
+  (loop
+     (let ((in (apply 'prompt args)))
+       (if (funcall quit in)
+           (return)
+           (format *query-io* "~A~%" (funcall fn in))))))
+;; add 1 to every input...
+;; (break-loop '1+ #'(lambda (x) (eq x :q)) ">> ")
+
+
+
+;;;; SYMBOLS AND STRINGS
+
+(defun mkstr (&rest args)
+  "Returns args as a string."
+  (with-output-to-string (s)
+    (dolist (a args) (princ a s))))
+
+(defun symb (&rest args)
+  "Takes one or more arguments and returns the symbol (creating one if
+necessary) whose print- name is their concatenation. It can take as an argument
+any object which has a printable representation: symbols, strings, numbers, even
+lists.
+
+EXAMPLE:
+> (symb ’ar \"Madi\" #\L #\L 0)
+|ARMadiLL0|"
+  (values (intern (apply 'mkstr args))))
+
+(defun reread (&rest args)
+  (values (intern (apply 'mkstr args))))
+
+(defun explode (sym)
+  (map 'list #'(lambda (c)
+               (intern (make-string 1
+                        :initial-element c)))
+       (symbol-name sym)))
+
+
+
+;;;;;;;;;;;;;;;;;; ON LISP C5: RETURNING FUNCTIONS ;;;;;;;;;;;;;;;;;;;
+
+;; COMPLEMENT takes a predicate and returns a function which always returns the oposite value
+(funcall (complement 'evenp) 45) ; => T
+(remove-if (complement 'oddp) '(1 2 3 4 5)) ; => (1 3 5)
+
+
+
+;;;; DEFINING A HASH TABLE OF DESTRUCTIVE EQUIVALENT FUNCTIONS
+
+(defvar *!equivs* (make-hash-table))
+
+(defun ! (fn)
+  (or (gethash fn *!equivs*) fn))
+
+(defun def! (fn fn!)
+  (setf (gethash fn *!equivs*) fn!))
+
+(def! 'remove-if 'delete-if)
+(def! 'reverse 'nreverse)
+(def! 'append 'nconc)
+
+;; usage:
+(funcall (! 'remove-if) 'oddp '(1 2 3 4))
+
+
+;;;; 5.3 MEMOIZING
+
+;; If some function is expensive to compute, and we expect sometimes to make the
+;; same call more than once, then it pays to memoize: to cache the return values
+;; of all the previous calls, and each time the function is about to be called,
+;; to look first in the cache to see if the value is already known.
+
+(defun memoize (fn)
+  (let ((cache (make-hash-table :test #'equal)))
+    #'(lambda (&rest args)
+        (multiple-value-bind (val win) (gethash args cache)
+          (if win
+              val
+              (setf (gethash args cache)
+                    (apply fn args)))))))
+
+;; test it
+(setq slowid (memoize #'(lambda (x) (sleep 5) x)))
+(time (funcall slowid 1))
+(time (funcall slowid 1)) ; second time should be much faster!
+
+
+
+;;;; 5.4 COMPOSING FUNCTIONS
+
+(defun compose (&rest fns)
+  "Takes any number of functions and returns a function which is their
+composition.
+
+All the functions given as arguments to compose must be functions of one
+argument, except the last."
+  (if fns
+      (let ((fn1 (car (last fns)))
+            (fns (butlast fns)))
+        #'(lambda (&rest args)
+            (reduce #'funcall fns
+                    :from-end t
+                    :initial-value (apply fn1 args))))
+      #'identity)) ; identity just returns the thing given to it
+
+;; returns 4...
+;; ... aguments to composed func are #'oddp & '(2 3 4)
+;; ... these get passed to #'find-if & it finds '3' (the first odd number)
+;; ... '3' gets passed to #'1+ which returns 4
+(funcall (compose #'1+ #'find-if) #'oddp '(2 3 4))
+
+
+
+(defun fif (test then-fn &optional else-fn)
+  "Makes a function of the form:
+
+(if (test x)
+    (then-fn x)
+    (else-fn x))"
+  #'(lambda (x)
+      (if (funcall test x)
+          (funcall then-fn x)
+          (if else-fn (funcall else-fn x)))))
+
+;; for odd numbers, add one
+;; even numbers - keep it the same
+(mapcar (fif #'oddp #'1+ #'identity) '(1 2 3 4 5 6 7 8))
+
+
+
+(defun fint (fn &rest fns)
+  "Function-intersection..."
+  (if (null fns)
+      fn
+      (let ((chain (apply #'fint fns)))
+        #'(lambda (x)
+            (and (funcall fn x) (funcall chain x))))))
+
+(defun fun (fn &rest fns)
+  "Function-union..."
+  (if (null fns)
+      fn
+      (let ((chain (apply #'fun fns)))
+        #'(lambda (x)
+            (or (funcall fn x) (funcall chain x))))))
+
+
+
+;;;; 5.5 RECURSION ON CDRS
+
+(defun lrec (rec &optional base)
+  "lrec = 'list recurser'
+
+rec must be a function which takes two args...
+
+
+
+DOESN@T WORK FOR ME!"
+  (labels ((self (lst)
+             (if (null lst)
+                 (if (functionp base)
+                     (funcall base)
+                     base)
+                 (funcall rec (car lst)))))
+    #'self))
+
+;; length function using lrec
+(setf lrec-len (lrec #'(lambda (x f) (1+ (funcall f))) 0))
+
+(funcall #'lrec-len '(1 2 3 67) 0)
+
+
+;;;; 5.6 RECURSION ON SUBTREES
+
+;; ... visualizing lists as trees... each dot of a dotted pair is a node in the tree...
+
+;; here is a version of 'copy-tree' which illustrates a common pattern in functions which recurse on subtrees...
+(defun our-copy-tree (tree)
+  (if (atom tree) ; if tree is an atom
+      tree ; return tree (atom)
+      (cons (our-copy-tree (car tree)) ; else: recursively cons the car of tree with...
+            (if (cdr tree) ; if tree has cdr:
+                (our-copy-tree (cdr tree)))))) ; recursively, the cdr
+
+;; a somewhat inefficient version of 'flatten' in the same template
+(defun our-flatten (tree)
+  (if (atom tree)
+      (mklist tree)
+      (nconc (our-flatten (car tree))
+             (if (cdr tree) (our-flatten (cdr tree))))))
+
+;; PATTERN OF THE ARCHETYPE:
+;; 1. In the base case it returns its argument.
+;; 2. In the recursive case, it applies cons to the recursions down the left (car)...
+;; ... and right (cdr) subtrees.
+;; Should be able to express it as a call to a builder with two arguments:
+;; (ttrav #’cons #’identity)
+;; A definition of ttrav (“tree traverser”) is shown in Figure 5.8. Instead of
+;; passing one value in the recursive case, we pass two, one for the left subtree and
+;; one for the right. If the base argument is a function it will be called on the current
+;; leaf. In flat list recursion, the base case is always nil, but in tree recursion the
+;; base case could be an interesting value, and we might want to use it.
+
+(defun ttrav (rec &optional (base #'identity))
+  "DOESN'T WORK FOR ME!
+
+REC is the function to be applied recursively.
+BASE is an optional function to apply to the base-case."
+  ;; labels returns functions...
+  (labels ((self (tree) ; func called SELF takes arg TREE
+             (if (atom tree) ; if tree is atom:
+                 (if (functionp base) ; if BASE is a function
+                     (funcall base tree) ; call BASE with TREE as argument
+                     base) ; else return BASE
+                 (funcall rec (self (car tree)) ; TREE is not atom: call REC on car of TREE
+                          (if (cdr tree) ; if cdr of TREE exists:
+                              (self (cdr tree))))))) ; call SELF on cdr of TREE
+    #'self)) ; return function SELF
+
+
+;;;;;;;;;;;;;;;;;;; 6: FUNCTIONS AS REPRESENTATION ;;;;;;;;;;;;;;;;;;;
+
+;;; CLOSURES
+
+;; 20 questions game as a network of nodes (implemented as closures)
+
+(defstruct node contents yes no)
+
+(defvar *nodes* (make-hash-table))
+
+(defun defnode (name conts &optional yes no)
+  (setf (gethash name *nodes*)
+        (make-node :contents conts
+                   :yes yes
+                   :no no)))
+
+(defun run-node (name)
+  (let ((n (gethash name *nodes*)))
+    (cond ((node-yes n)
+           (format t "~A~%>> " (node-contents n))
+           (case (read)
+             (yes (run-node (node-yes n)))
+             (t (run-node (node-no n)))))
+          (t (node-contents n)))))
+
+;; make the network...
+
+(defnode 'people "Is the person a man?" 'male 'female)
+(defnode 'male "Is he living?" 'liveman 'deadman)
+(defnode 'deadman "Was he American?" 'us-man 'non-us-man)
+(defnode 'us-man "Is he on a coin?" 'coin 'not-coin)
+(defnode 'coin "Is the coin a penny?" 'penny 'not-penny)
+(defnode 'penny "Lincoln")
+
+
+;;;; VERSION USING CLOSURES
+
+;; ...
+
+
+
+;;;; VERSION (COMPILED NETWORK)
+
+;; ...
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; MACROS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; sets var to NIL
+(defmacro nil! (var)
+  (list 'setq var nil))
+;; ... makes a list (setq var nil)...
+;; ... which is then evaluated as an expression
+
+;; use quasi-quoting to make the same macro clearer
+(defmacro nil2! (var)
+  `(setq ,var nil))

@@ -1,0 +1,311 @@
+GIMP (Gnu Image Manipulation Program)
+
+* basic paint tools
+- shift-click to draw a straight line
+- ctrl-click to pick a colour from the screen
+* LAYERS
+** MAKING NEW LAYERS
+
+Cut & Paste for new layer:
+paste thing into image...
+... (in layers toolbox) right-click --> add new layer (or something like that)
+
+Insert image from file in new layer:
+File-->Open as layers
+
+** TROUBLESHOOTING
+
+*** can't move layer
+the move tool may be in 'move selection' mode...
+... change it to 'move layer' in the bottom part of the toolbox window
+
+** LAYER MASK
+
+WHITE = opaque
+BLACK = transparent
+
+(in layer toolbox)
+... right-click --> add layer mask
+
+*** paint alpha channel
+
+Layer-->Mask-->Add Layer Mask (choose alpha channel)
+
+* gradient
+
+TOOLS->Paint Tools->Gradient
+
+* PATH
+** The Path Tool (B)
+- ctrl+click to finish path
+- left-click & drag on lines to edit path
+** Fill Path
+in path toolbox:
+- right-click --> path to selection
+- use bucket tool to fill selection
+** Stroke Path
+NOTE: make sure that the layer which you want to draw the stroke to is hilighted in the Layers dialog
+* TRANSPARENCY
+** image format transparency support
+YES
+- png
+- gif (limited)
+- xfc
+NO
+- jpeg
+** adding alpha channel to image
+Layer-->Transparency-->Add Alpha Channel
+** enlarging canvas to have transparent edges
+- Add alpha channel BEFORE resizing
+- Image-->Canvas Size
+  - Resize Layers = All Layers
+* SCRIPT-FU
+
+;;;; TODO:
+ * TODO batch-levels-adjust
+ * batch-crop
+ * website image maker (outputs 3 files: _web/_big/_thumb)
+
+
+
+ * Scheme
+ * TinyScheme?
+
+GENERAL
+ * Scripts should be saved in ~/.gimp-2.6/scripts ...
+... this is a bit annoying - I wanted to save my script in another folder because it is a very particular script relating to a particular project - so far I've found no easy way to do this.
+ * Include the regisration functions if you want to be able to get at your script from the menus inside GIMP.
+ * For running in batch mode, it is not necessary to include the registration functions.
+ * IMPORTANT: All Gimp functions return a list, therefore even if the function returns a single value, we still need to car to take the head to the list!
+
+
+
+HANDLING UNDO PROPERLY
+gimp-undo-push-group-start
+gimp-undo-push-group-end
+... around the code...
+
+
+
+RUNNING SCRIPTS IN BATCH MODE
+ * Current version of batch-levels function is batch-levels-test04 - this will shift the low-input value to the specified value and then save the file under a new filename.
+
+EXAMPLE
+gimp -i -d -f -b '(batch-levels-test04 "*.JPG" 12)' -b '(gimp-quit 0)'
+
+COMMAND LINE ARGUMENTS USED
+-b --batch=<commands> === batch mode
+-i --no-interface     === run without user interface
+-d --no-data          === don't load brushes, garadients etc (makes execution faster)
+-f --no-fonts         === don't load fonts
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+SCRIPT-FU CONSOLE WINDOW
+ * Start Gimp
+ * Filters-->Script-Fu-->Console
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+REGISTERING THE SCRIPT-FU FUNCTION:
+
+ To register our script with GIMP, we call the function script-fu-register, fill in the seven required parameters and add our script's own parameters, along with a description and default value for each parameter.
+
+THE REQUIRED PARAMETERS:
+
+    The name of the function we defined. This is the function called when our script is invoked (the entry-point into our script). This is necessary because we may define additional functions within the same file, and GIMP needs to know which of these functions to call. In our example, we only defined one function, text-box, which we registered.
+
+    The location in the menu where the script will be inserted. The exact location of the script is specified like a path in Unix, with the root of the path being image menu as <Image>.[6]
+
+    If your script does not operate on an existing image (and thus creates a new image, like our Text Box script will), you'll want to insert it in the image window menu, which you can access through the image menu bar, by right-clicking the image window, by clicking the menu button icon at the left-top corner of the image window, or by pressing F10.
+
+    If your script is intended to work on an image being edited, you'll want to insert it in the image window menu. The rest of the path points to the menu lists, menus and sub-menus. Thus, we registered our Text Box script in the Text menu of the Create menu of the File menu.[7] (File → Create → Text → Text Box).
+
+    If you notice, the Text sub-menu in the File/Create menu wasn't there when we began — GIMP automatically creates any menus not already existing.
+
+    A description of your script, to be displayed in the Procedure Browser.
+
+    Your name (the author of the script).
+
+    Copyright information.
+
+    The date the script was made, or the last revision of the script.
+
+    The types of images the script works on. This may be any of the following: RGB, RGBA, GRAY, GRAYA, INDEXED, INDEXEDA. Or it may be none at all — in our case, we're creating an image, and thus don't need to define the type of image on which we work.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+3.4.7. Registering The Script's Parameters
+
+Once we have listed the required parameters, we then need to list the parameters that correspond to the parameters our script needs. When we list these params, we give hints as to what their types are. This is for the dialog which pops up when the user selects our script. We also provide a default value.
+
+THE SCRIPT-FU PARAMETER API
+
+SF-IMAGE
+example: 3
+--- If your script operates on an open image, this should be the first parameter after the required parameters. GIMP will pass in a reference to the image in this parameter.
+
+SF-DRAWABLE
+example: 17
+--- If your script operates on an open image, this should be the second parameter after the SF-IMAGE param. It refers to the active layer. GIMP will pass in a reference to the active layer in this parameter.
+
+SF-VALUE
+example: 42
+--- Accepts numbers and strings. Note that quotes must be escaped for default text, so better use SF-STRING.
+
+SF-STRING
+example: "Some text"
+--- Accepts strings.
+
+SF-COLOR
+example: '(0 102 255)
+--- Indicates that a color is requested in this parameter.
+
+SF-TOGGLE
+example: TRUE or FALSE
+--- A checkbox is displayed, to get a Boolean value.
+
+	
+Beside the above parameter types there are more types for the interactive mode, each of them will create a widget in the control dialog. You will find a list of these parameters with descriptions and examples in the test script plug-ins/script-fu/scripts/test-sphere.scm shipped with the GIMP source code.
+
+SF-ADJUSTMENT
+
+Creates an adjustment widget in the dialog.
+
+SF-ADJUSTMENT "label" '(value lower upper step_inc page_inc digits type)
+Widget arguments list
+Element	Description
+"label"	Text printed before the widget.
+value	Value print at the start.
+lower / upper	The lower / upper values (range of choice).
+step_inc	Increment/decrement value.
+page_inc	Increment/decrement value using page key.
+digits	Digits after the point (decimal part).
+type	One of: SF-SLIDER or 0, SF-SPINNER or 1
+
+
+SF-COLOR
+
+Creates a color button in the dialog.
+
+SF-COLOR "label" '(red green blue)
+
+or
+
+SF-COLOR "label" "color"
+Widget arguments list
+Element	Description
+"label"	Text printed before the widget.
+'(red green blue)	List of three values for the red, green and blue components.
+"color"	Color name in CSS notatation.
+
+
+SF-FONT
+
+Creates a font-selection widget in the dialog. It returns a fontname as a string. There are two new gimp-text procedures to ease the use of this return parameter:
+
+(gimp-text-fontname image drawable x-pos y-pos text border antialias size unit font)
+
+(gimp-text-get-extents-fontname text size unit font)
+
+where font is the fontname you get. The size specified in the fontname is silently ignored. It is only used in the font-selector. So you are asked to set it to a useful value (24 pixels is a good choice).
+
+SF-FONT "label" "fontname"
+Widget arguments list
+Element	Description
+"label"	Text printed before the widget.
+"fontname"	Name of the default font.
+
+
+SF-BRUSH
+
+It will create a widget in the control dialog. The widget consists of a preview area (which when pressed will produce a popup preview ) and a button with the "..." label. The button will popup a dialog where brushes can be selected and each of the characteristics of the brush can be modified.
+
+SF-BRUSH "Brush" '("Circle (03)" 100 44 0)
+
+Here the brush dialog will be popped up with a default brush of Circle (03) opacity 100 spacing 44 and paint mode of Normal (value 0).
+
+If this selection was unchanged the value passed to the function as a parameter would be '("Circle (03)" 100 44 0).
+
+
+SF-PATTERN
+
+It will create a widget in the control dialog. The widget consists of a preview area (which when pressed will produce a popup preview ) and a button with the "..." label. The button will popup a dialog where patterns can be selected.
+
+SF-PATTERN "Pattern" "Maple Leaves"
+
+The value returned when the script is invoked is a string containing the pattern name. If the above selection was not altered the string would contain "Maple Leaves".
+
+
+SF-GRADIENT
+
+It will create a widget in the control dialog. The widget consists of a button containing a preview of the selected gradient.
+
+If the button is pressed a gradient selection dialog will popup.
+
+SF-GRADIENT "Gradient" "Deep Sea"
+
+The value returned when the script is invoked is a string containing the gradient name. If the above selection was not altered the string would contain "Deep Sea".
+
+
+SF-PALETTE
+
+It will create a widget in the control dialog. The widget consists of a button containing the name of the selected palette.
+
+If the button is pressed a palette selection dialog will popup.
+
+SF-PALETTE "Palette" "Named Colors"
+
+The value returned when the script is invoked is a string containing the palette name. If the above selection was not altered the string would contain "Named Colors".
+
+
+SF-FILENAME
+
+It will create a widget in the control dialog. The widget consists of a button containing the name of a file.
+
+If the button is pressed a file selection dialog will popup.
+
+SF-FILENAME "label" (string-append "" gimp-data-directory "/scripts/beavis.jpg")
+
+The value returned when the script is invoked is a string containing the filename.
+
+
+SF-DIRNAME
+
+Only useful in interactive mode. Very similar to SF-FILENAME, but the created widget allows to choose a directory instead of a file.
+
+SF-DIRNAME "label" "/var/tmp/images"
+
+The value returned when the script is invoked is a string containing the dirname.
+
+
+SF-OPTION
+
+It will create a widget in the control dialog. The widget is a combo-box showing the options that are passed as a list.
+
+The first option is the default choice.
+
+SF-OPTION "label" '("option1" "option2")
+
+The value returned when the script is invoked is the number of the chosen option, where the option first is counted as 0.
+
+
+SF-ENUM
+
+It will create a widget in the control dialog. The widget is a combo-box showing all enum values for the given enum type. This has to be the name of a registered enum, without the "Gimp" prefix. The second parameter speficies the default value, using the enum value's nick.
+
+SF-ENUM "Interpolation" '("InterpolationType" "linear")
+
+The value returned when the script is invoked corresponds to chosen enum value. 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; DRAWABLE
+
+What is a drawable is when compared to a layer. The difference between the two is that a drawable is anything that can be drawn into, including layers but also channels, layer masks, the selection, etc; a layer is a more specific version of a drawable. In most cases, the distinction is not important. 

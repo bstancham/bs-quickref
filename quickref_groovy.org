@@ -1,0 +1,77 @@
+GROOVY
+
+A multi-faceted language for the Java platform:
+- optionally typed
+- dynamic language
+- with static-typing and static compilation capabilities
+- aimed at improving developer productivity thanks to a concise, familiar and easy to learn syntax
+- integrates smoothly with Java programs
+... and immediately delivers to your application powerful features, including scripting capabilities, Domain-Specific Language authoring, runtime and compile-time meta-programming and functional programming. 
+
+
+* REPL
+** basics
+$ groovysh
+
+> :help
+
+> :exit
+
+> println "hello"
+
+Multi-line expressions can be used (the end of the expression will be detected when you close the brackets)
+
+> :show classes
+> :show variables
+> :show all
+
+> :history
+
+> :doc java.util.List
+
+
+
+VARIABLES
+
+Shell variables are all untyped (i.e. no def or other type information).
+
+This will set a shell variable:
+
+foo = "bar"
+
+But, this will evaluate a local variable and will not be saved to the shell’s environment:
+
+def foo = "bar"
+
+This behavior can be changed by activating interpreter mode.
+
+
+
+
+DEFINING A FUNCTION IS EASY:
+
+groovy:000> def hello(name) {
+groovy:001> println("Hello $name")
+groovy:002> }
+
+** troubleshooting
+*** groovysh: JAVA_HOME is not defined correctly, can not execute: /usr/lib/jvm/default-java/bin/java
+
+* OBJECTS & CLASSES
+
+Simple class definition:
+
+class Foo {
+    def bar() {
+        println "baz"
+    }
+}
+
+foo = new Foo()
+foo.bar()
+
+* METHODS
+
+* DATA TYPES
+
+[1, 2, 3] // array literal?

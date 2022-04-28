@@ -1,0 +1,8 @@
+========================== QUICKSTART GUILE ==========================
+
+* ============================ FUNDAMENTALS ============================
+
+- guile is the gnu extension language
+- scheme implementation with with modularised extensions for...
+- ... controversial attempt to (replace/merge) elisp in emacs...
+

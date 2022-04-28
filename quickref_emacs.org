@@ -1,0 +1,3124 @@
+EMACS QUICKSTART GUIDE
+* STUFF TODO
+
+remove global-hl-line-mode...
+... check each time buffer opens & activate hl-line-mode if NOT in terminal
+
+For elisp development...
+  ert (testing)
+  apropos
+  macroexpand
+  macrostep
+  paredit
+  redshank - refactoring tool
+  elp - profiling elisp
+  edebug
+  elint
+  eldoc
+  ielm - multiline mode
+  workgroups
+  info-lookmore
+  magit
+  compare windows - quicker and simpler than ediff
+
+Other packages/features to investigate...
+  phi-search
+  which-key (instead of guide-key)
+  golden-ratio ; resizes current window
+  info+ ; info with nice colours
+  mark-multiple
+  zen-mode
+  restclient-mode
+  engine-mode ; search the web
+  swank-js ; javascript REPL
+  demo_it ; for recording demos
+  scala-mode
+  jedi ; python completion
+  pip ; python package manager
+  xwidgets... emacs must be compiled with xwidget support...
+  xwidget-webkit-browse-url
+  mpc : interface to MPD (Music Player Daemon)... or helm-rhythmbox
+
+  emacs live - synth/supercollider music
+
+  prelude --- starter emacs setup
+
+* EXITING EMACS
+
+C-x c : Exit emacs
+
+C-x C-c ; kill emacs and prompt to save unsaved buffers
+
+C-z
+... (text terminal) suspend emacs
+... (graphical display) iconify
+
+FORCE-QUIT IF EMACS HANGS
+C-z C-z ; in normal operation emacs will respond to the first C-z before you can type the second one
+
+* FUNDAMENTALS
+
+M-x ; MENU-KEY ; execute-extended-command ; Execute commands type commands
+... Tab completion
+... M-p/M-n to browse minibuffer history
+
+C-g ; Cancel minibuffer command
+
+C-x z   ; repeat ; repeat last command... then press z to continue repeating...
+C-x M-: ; C-x <ESC> <ESC> ;repeat-complex-command ; ... can browse command history and edit command before executing
+
+NUMERIC PREFIX TO A COMMAND:
+C-u ; universal-argument ; USAGE: Ctrl-u ... then type a number... then type command
+C-M-<DIGITS> ;
+
+* UNDO/REDO
+
+USING UNDO-TREE
+C-_   ; undo
+M-_   ; redo
+C-x u ; undo-tree-visualize
+
+IN THE UNDO-TREE VISUALISER
+... move up/down/left/right
+q ; exit
+t ; toggle timestamps
+s ; undo-tree-visualiser-selection-mode ; how is it used?
+
+in standard emacs setup all these do the same thing:
+C-/ ; C-_ ; C-x u ; Undo last command
+
+* HELP
+
+C-h   : INBUILT HELP.
+C-h ? : Full list of help commands.
+C-h m : Documentation on currently active major and minor modes.
+C-h o : describe-symbol : Works for functions, variables, faces, etc.
+C-h c : Describe a key command (short description)
+C-h k : Describe a key command (full documentation)
+C-h a ; apropos-command ; List all commands whoose name contains a given string
+C-h d PATTERN : List of things which match PATTERN (string OR regexp) including documentation. EXAMPLE: I did 'C-h d rectangle' to get documentation on rectangle editing functions ('C-h rectangle editing' didn't get any results).
+q : get rid of help buffer
+
+M-x info
+INFO COMMANDS:
+? ; command summary
+l ; back in history
+r ; forwards in history
+I ; index-search (display results in and index buffer)
+M-x info-apropos PATTERN : List info pages which match PATTERN...
+TAB / S-TAB ; jump to next/previous menu item
+b ; beggining (top) of current node
+c ; copy current info node-name (useful for making org-mode link, see: quickstart-org-mode)
+M-x info-emacs-manual   ; opens the emacs manual
+M-x info-display-manual ; prompts for manual (use TAB completion)
+
+INFO FILES NOT INSTALLED?
+...
+get the debian package:
+$ sudo apt-get install emacs25-common-non-dfsg
+...
+Or download files manually and put them in /usr/share/info/emacs-??/
+... emacs.info.gz ; emacs manual
+... elisp.info.gz ; elisp manual
+... eintr.info.gz ; elisp introduction
+I couldn't find these ones:
+... calc
+... eieio
+... eshell
+
+GO TO AN OUTSIDE INFO FILE:
+g ; (Info-goto-node) ; ... use the following format: (FILENAME)nodename
+
+M-x man ; view manpages...
+
+C-h l ; M-x view-lossage ; view list of recent keystrokes (about 150 by default)
+
+* MINIBUFFER COMMAND COMPLETION
+
+Press <TAB> for command completion
+
+Tab completion can expand words separately...
+... i-ti  matches insert-time
+... i-sep matches insert-separator-comment
+
+* GENERAL
+
+MOVING WITHIN A BUFFER
+M-g g         : goto-line
+C-n           : Next line.
+C-p           : Previous line.
+C-f           : Forward-char.
+C-b           : Backwards-char.
+C-DOWN OR M-} : Next paragraph.
+C-UP   OR M-{ : Previous paragraph.
+M-<           : Go to beginning of buffer.
+M->           : Go to end of buffer.
+C-a           : beginning of line
+C-e           : end of line
+C-M-<home>    : beginning of defun
+C-M-<end>     : end of defun
+C-M-[         : goto matching parentheses backwards
+C-M-]         : goto matching parentheses forwards
+
+C-l ; Centre current line in window (toggle centre/top/bottom)
+M-r ; Toggle cursor position, mid/top/bottom of window
+
+SELECTION / COPY & PASTE
+
+C-x h : Select all.
+LEFT_MOUSE : Position cursor (and set mark)
+RIGHT_MOUSE : Select region between mark and click-point
+C-w : Cut (wipe).
+M-w : Copy
+C-y : Yank (paste).
+M-y : (use immediately after yanking) Cycle throught the kill-ring.
+C-= ; expand-region ; ... then use =/- to thurther expand/contract region... 0 to reset
+C-x C-x ; exchange-point-and-mark (activate mark/make selection if inactive)
+
+TRANSPOSE
+C-t     : transpose-letter - swap the order of two letters
+M-t     : transpose-words - swap the order of two words
+C-x C-t : transpose-line - swap the order of two lines
+C-M-t   ; transpose-sexp - especially useful for swapping order of args for a function etc
+... also, sentence/paragraph... maybe set up a keybinding or alias for sentence/paragraph...
+
+SWITCH BETWEEN BUFFERS
+C-x-f                  : Find-file
+C-x C-b                : Select from open buffers (bound to ibuffer instead of default list-buffers)
+C-LEFTMOUSE (OR C-f10) : Pop-up buffers menu
+C-x k                  : Kill-buffer
+C-x b                  : Back to previous buffer (last buffer visited (global))
+C-x LEFT/RIGHT         : back/forward in pane's history (doesn't effect result of C-x b)
+
+INFORMATION ABOUT TEXT AND POSITION
+M-= ; count-words-region ; gives number of lines/words/characters
+C-x l ; count-lines-page
+M-x count-words ; count lines, words and characters for buffer
+C-x = ;  what-cursor-position ; info about cursor position and character under cursor
+
+* LOADING AND SAVING
+
+C-x C-f ; find-file ; to load a file
+C-x C-M-f ; counsel-find-file ; search for files starting from ./
+
+C-x-s ; Save current buffer to it's file
+
+C-x s ; save-some-buffers ; interactively offers to save each modified buffer...
+... there are a number of different options available, including...
+- y = save the buffer
+- n = don't save the buffer
+- ! = save all remaining buffers without prompting any more
+- d = show a diff of the buffer against the file saved on disk
+- C-r = view the file (when you exit view mode save-some-buffers continues)
+- C-h = display help about these options
+
+AUTOSAVE AND BACKUP FILES
+By default, auto-save files are stored in the current directory with a file name on the form #file#.
+
+* COMPLETION FRAMEWORKS (IVY VS HELM)
+
+TODO:
+  add keybindings...
+  ... counsel-M-x
+  ... swiper
+  ... counsel-yank-pop
+  ...
+
+Install both from repo...
+
+... ivy is said to be faster and more streamlined...
+... helm has been around a long time, and still has few features not duplicated by ivy...
+
+... COUNSEL and SWIPER are built on top of ivy to provide a lot of the extended funtionality of helm...
+
+
+
+IVY COMMANDS:
+C-c C-r ; ivy-resume
+COMMANDS IN AN IVY SESSION:
+C-c C-o ; ivy-occur ; put candidates into a grep buffer like occur
+M-o ... for other...
+M-o o ; default
+M-o i ; insert current candidate into buffer
+M-o w ; copy current candidate to kill ring
+M-o d ; go to source code definition
+M-o h ; go to help
+
+
+COMMANDS IN IVY OCCUR:
+M-g n/M-g p ; next/prev item
+g ; refresh the search
+C-d ; remove item from list
+q ; quit
+j ; next line
+k ; prev line
+RET ; jump to position in buffer
+f ; show position in buffer, but don't put cursor there
+
+
+COMMANDS IN COUNSEL
+M-RET ; show preview of file (without selecting it)
+
+
+HELM AND IVY EQUIVALENTS:
+| helm-resume           | ivy-resume                  | resume last session with last pattern                 |
+| helm-M-x 	     | counsel-M-x                 | enhanced M-x command                                  |
+| helm-swoop            | swiper                      | search string interactively in current buffer         |
+| helm-show-kill-ring   | counsel-yank-pop            | 	search copy-paste history                     |
+| helm-descbinds        | counsel-descbinds           | 	describe keybindings and associated functions |
+| helm-mini 	    | ivy-switch-buffer           | 	search for currently opened buffers           |
+| helm-recentf 	 | counsel-recentf 	    | search for recently edited files                      |
+| helm-find-files       | counsel-find-file           | search files starting from ./                         |
+| helm-ag 	      | counsel-ag                  | search regexp occurence in current project            |
+| helm-grep-do-git-grep | counsel-git-grep 	   | search regexp in current project                      |
+| helm-projectile       | counsel-projectile 	 | search project and file in it                         |
+| helm-ls-git-ls        | counsel-git                 | search file in current git project                    |
+| helm-themes 	  | counsel-Load-theme          | 	switch themes                                 |
+
+USE HELM FOR:
+helm-google : search google
+helm-ucs : another way to insert unicode characters
+helm-register : view/edit & insert contents of registers
+helm-top : helm interface to the top program
+helm-occur : interactively update occur
+helm-regexp :
+helm-surfraw :
+helm-color :
+
+MAKING EXTENSIONS WITH IVY:
+... basic usage of ivy-read (execute it to see...)
+(ivy-read "Pick:" '("A" "B" "C"))
+
+IVY DOCUMENTATION:
+http://oremacs.com/swiper/
+
+
+
+SUGGESTED READING:
+https://writequit.org/denver-emacs/presentations/2017-04-11-ivy.html
+https://sam217pa.github.io/2016/09/13/from-helm-to-ivy/
+https://oremacs.com/2015/04/16/ivy-mode/
+http://oremacs.com/swiper/
+https://oremacs.com/2017/04/09/ivy-0.9.0/
+
+
+
+ALSO:
+- ido  : (Interactively DO things)
+- smex : M-x enhancement built on top of IDO...
+... convenient interface to recent and most frequent commands, and to all other commands too
+
+* HYDRA (keybindings & hinting)
+
+Two ways to use it:
+
+(defhydra hydra-zoom (global-map "<f2>")
+       "zoom"
+       ("g" text-scale-increase "in")
+       ("l" text-scale-decrease "out"))
+
+
+Second way:
+
+(defhydra hydra-toggle (:color blue)
+       "toggle"
+       ("a" abbrev-mode "abbrev")
+       ("d" toggle-debug-on-error "debug")
+       ("f" auto-fill-mode "fill")
+       ("t" toggle-truncate-lines "truncate")
+       ("w" whitespace-mode "whitespace")
+       ("q" nil "cancel"))
+
+This binds nothing so far, but if you follow up with:
+
+(global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
+
+you will have bound "C-c C-v a", C-c C-v d etc.
+
+
+HYDRA COLOR MEANINGS:
+
+red      = repeatable command
+blue     = quit after command
+pink     = hydra won't quit when you press non-hydra keys
+amaranth = ...
+
+
+
+SEE ALSO: guide-key... package to provide hints for different prefix keys...
+
+* EMACS FOR WRITING/WORD PROCESSING
+** WORD-WRAPPING (see also: fill-paragraph)
+
+visual-line-mode
+truncate-lines
+
+** SPELLING
+
+M-$ ; ispell-word ; spell-check a single word
+M-x ispell ; spell-check buffer, or region if active
+
+flyspell - for on-the-go spell checking...
+
+** TEXT FORMATTING
+
+Works in fundamental mode - not in any mode with font-lock enabled...
+
+M-o ; set-face prefix command
+
+** ALSO
+
+cosider using org-mode...
+... can export to html or latex etc
+... org-present for slideshow instead of powerpoint
+
+* PROJECTILE (PROJECT MANAGEMENT)
+
+To add a project to projectile, navigate to project dir and do:
+M-x projectile-discover-projects-in-directory
+
+... automatically recognises some types of project (e.g. git)...
+... to start a project in an arbitrary directory simply create a .projectile directory...
+... where are known projects listed?
+... ... M-x describe-variable projectile-known-projects-file
+
+
+
+PROJECTILE KEYMAP PREFIX: C-x p
+... added prefix to guide-key
+C-x p p   ; switch to a known project
+C-x p f   ; find file within project
+C-x p k   ; kill all project buffers
+C-x p s s ; search within project (using ag)
+C-x p R   ; regenerate tags
+
+IGNORE CERTAIN FILES:
+... make .projectile file in project root
+... add line with minus sign at beginning
+... path is relative to root dir
+EXAMPLE:
+-/.meghanada
+-*~
+-*#
+
+BETTER SEARCHING: USE AG INSTEAD OF GREP
+... must have ag installed on system:
+$ sudo apt-get install silversearcher-ag
+... ag is much faster than grep
+... automatically ignores files on .gitignore (can be configured much further also)
+... can now do C-x p s s
+
+REGENERATE TAGS
+C-x p R ; projectile-regenerate-tags
+... need to install exuberant-ctags on the system
+$ sudo apt-get install exuberant-ctags
+... regenerate tags, then jump to definition should work nicely
+M-. ; xref-find-definitions
+M-, ; xref-pop-marker-stack - (jump back)
+
+EXTENSIONS:
+counsel-projectile
+projectile-ibuffer
+
+* REGISTERS
+Save text, rectangles, positions etc for later use... alternative to copy & paste...
+... registers are saved for current session only...
+... for persistent storage, look at bookmarks etc...
+
+C-x r   ; prefix for register commands
+C-x r i ; insert from register (text/number/rectangle)
+C-x r j ; jump to register (point/window configuration)
+
+saving different things in register 'a'
+C-x r <SPC> a ; POINT/POSITION
+C-x r s a     ; TEXT/STRINGS
+C-x r r a     ; RECTANGLE
+C-x r w a     ; WINDOW CONFIGURATION
+
+numbers
+C-u [NUMBER] C-x r n a ; store NUMBER in register 'a'
+C-u [NUMBER] C-x r + a ; increment number in register 'a' by NUMBER
+
+* SEARCH AND REPLACE TEXT
+NOTE: case-insensitive by default. Capital letters in search terms makes search case-sensitive ---> M-c to toggle during search.
+
+C-s   : Search forward.
+C-r   : Search in reverse.
+C-M-s : search-forward-regexp
+C-M-r : search-backward-regexp
+M-%   : Query replace.
+C-M-% : Regular-Expression Query replace.
+M-x replace-string
+M-x replace-regexp
+
+M-s s ; swiper ; enhanced isearch (see IVY)
+
+M-s o ; occur ; show occurences in compilation buffer (use "M-g n" to jump to next)
+
+C-s C-w ; search for word under cursor (repeat C-w to expand...)
+
+
+
+SEARCH/REPLACE NON-PRINTING/CONTROL CHARACTERS:
+use C-q (quoted-insert) then type the character e.g. TAB or RET
+
+
+CHARACTER FOLDING (since emacs 25)
+- enables matching with range of unicode characters when searching e.g. ascii letter 'a' will match all sorts of unicode a's with funny accents etc...
+(setq search-default-mode #'char-fold-to-regexp)
+- enable in query-replace command...
+(setq replace-char-fold t)
+
+* KILL/DELETE TEXT
+... DELETE means the text is discarded...
+... KILL means text is put on the KILL-RING
+
+C-d             ; delete-char
+M-d             ; kill-word
+C-k             ; kill-line ; kill from point to end of line
+C-S-<BACKSPACE> ; kill-whole-line
+M-k             ; kill-sentence
+M-K             ; kill-paragraph (personal binding)
+
+M-z ; zap-to-char ; Kill all text up to first appearance of char...
+... I've replaced this binding with avy-zap-to-char (much more useful)
+
+* DELETE OR REPLACE LINES
+; The following functions are all defined in replace.el
+
+M-x flush-lines REGEXP     ; deleta all lines matching REGEXP
+M-x flush-lines ^ANSWER:   ; delete all lines starting with "ANSWER:"
+M-x keep-lines REGEXP      ; opposite of flush-lines
+
+M-x how-many REGEXP        ; how many occurences of REGEXP after the point
+
+M-x occur                  ; open a buffer showing all lines containing a match for REGEXP...
+... click or press enter on a line to jump to position in original buffer
+
+M-x map-query-replace-regexp ; ...
+
+* SEARCH ACROSS MULTIPLE FILES
+
+M-x rgrep : recursive grep
+
+... and follow the prompts...
+... this will find all instances recursively from the specified root directory...
+... and it is presented in a compilation buffer with clickable links!
+
+g = recompile
+
+
+
+ALSO:
+
+M-x grep
+... runs unix grep command and displays results in compilation buffer
+
+
+M-x find-grep
+M-x grep-find ; same thing
+... runs 'find -f -exec grep...' and displays results in compilation buffer
+
+
+M-x find-name-dired ; makes a dired buffer with all the files...
+... can then 't' to toggle all selected and do 'A' or 'Q'
+... A = dired-do-find-regexp
+... Q = dired-do-query-replace
+
+* REPLACE WORDS ACROSS MULTIPLE FILES
+
+M-x find-name-dired --> follow prompts to specify root dir and regex for filenames
+t     --> dired-toggle-marks (if NO files were marked, now they are ALL marked)
+Q     --> dired-do-query-replace (y/n/q/!)
+C-x s --> Save all modified buffers (y/n/q/!)
+
+* TEXT TRANSFORMATION
+
+M-u : UPPERCASE NEXT WORD M-- M-u ; UPPERCASE LAST WORD
+M-l : lowercase next word. M-- M-l ; lowercase last word
+M-c : Capitalize Next Word. M-- M-c ; Capitalize Last Word
+M-o M-s : Center a line position determined by value of the variable fill-column
+
+
+C-M-\ : indent-region
+
+
+
+LINE WRAPPING & TRUNCATION:
+M-x toggle-truncate-lines ---> Either truncate long lines, or wrap them using continuation lines.
+M-x visual-line-mode      ---> minor mode Wraps lines the way a word processor does. Breaks long logical lines into separate lines, so that for example, kill-line will kill only the text of that screen line.
+
+
+FILL-COLUMN / FILL COMMANDS:
+M-q ; fill-paragraph ; Re-shapes paragraph, setting line breaks so that max line length is value of the variable fill-column.
+C-M-q ; bsc-unfill-paragraph ; Takes newlines out of a paragraph.
+C-x f : set-fill-column Set the fill column.
+M-x fill-region : fill-region Fill each paragraph in the region.
+M-x fill-region-as-paragraph : Fill the region, considering it as one paragraph.
+M-x auto-fill-mode
+
+FILL-COLUMN INDICATOR
+fci-mode ; install fill-column-indicator from repository
+
+JUSTIFICATION: These commands do same as fill-paragraph, but align text differently.
+M-x set-justification-left
+M-x set-justification-center
+M-x set-justification-right
+M-x set-justification-full
+M-x set-justification-none
+
+NOTE: ON PARAGRAPH BOUNDARIES IN COLUMN FILLING
+By default, empty lines separate paragraphs. This can be changed by modifying the value of the variable paragraph-start.
+SEE ALSO: variable paragraph-separate.
+
+EXAMPLE:
+
+  try to make a regex which will work in my quotations fortune file
+  - paragraph starts with a line indented by a single space
+  - lines with a single % separate entries
+  - ...
+  !!!! This doesn't do it ---> setq paragraph-start \f\\| \t*%?$
+
+* ALIGNING TEXT IN COLUMNS
+
+C-u M-x align ; align all columns in region using whitespace separator
+
+
+
+ADVANCED ALIGNMENT:
+
+M-x align-regexp PATTERN ; align PATTERN on lines in region
+EXAMPLE: M-x align-regexp = ; to align the equals signs...
+tom   = 5
+jenny = 8
+mary  = 7
+
+C-u M-x align-regexp ; prompts for advanced options
+EXAMPLE: C-u M-x align-regexp .* 0-9,+.* -1 1 n
+... .* 0-9,+.* ; regexp matching number part of line
+... -1               ; specify first matched parenthesis group to be aligned negative means right-align
+... 1                ; amount of spacing
+... n                ; do not repeat throughout the line
+California             423,970 km²
+Taiwan                  36,008 km²
+Japan                  377,944 km²
+Germany                357,021 km²
+Iraq                   438,317 km²
+Iran                 1,648,195 km²
+Korea North+South    219,140 km²
+Mexico               1,964,375 km²
+
+* SORTING LINES
+
+M-x sort-lines     ; sort lines in region
+M-x reverse-region ; reverse order of lines in region
+
+
+SORT LINES BY A SPECIFIC COLUMN OR FIELD
+
+... fields are separated by spaces or tabs
+... numeric prefix to specify which column starts from 1, not 0
+M-x sort-fields         ; compare alphabetically
+M-x sort-numeric-fields ; compare numerically
+
+M-x sort-regexp-fields ; sort by part of each line matching the regexp
+
+M-x sort-columns ; specify column by position of mark & cursor
+... column will have to be aligned nicely already
+
+* DISPLAY SETTINGS
+
+SET TEXT SIZE in local buffer
+C-x C-= : Increase text size.
+C-x C-- : Decrease text size.
+
+SET TEXT SIZE GLOBALLY
+;; eval this... can do it in the scratch buffer easy to tweak & redo
+set-face-attribute 'default nil :height 110
+
+NOTE: Text height is given in 1/10ths of a point, so 100 = 10pt
+
+* THEMES
+** USING THEMES
+WARNING: load-theme could execute any lisp code...
+... e.g. some themes seem to enable ido... etc
+
+M-x customize-themes
+
+M-x load-theme
+M-x enable-theme
+M-x disable-theme
+
+M-x describe-theme
+
+theme doesn't change background or other parameters?
+... comment out or delete whole custom-set-faces section .emacs and restart...
+
+** THEME REVIEWS (top of lists are current favourites):
+*** DARK:
+cyberpunk ; black bg, cool colours, comments italic yellow or grey, completions great
+alect-black ; black bg, tasteful colours
+grandshell ; black bg, nice slightly less bright colours
+manoj-dark ; black bg, high contrast, italic comments
+cherry-blossom ;
+flatland-black ;
+wheatgrass ; black bg, text in green/cyanish range
+*** MID-DARK:
+toxi ; dark bg, high contrast
+soothe ; greyish-navy, relaxing, but good contrast, selection not very visible with my hl-line-mode
+deeper-blue ; greyish-navy bg, low contrast, everything in lovely blueish-green tones
+*** MID:
+paganini-theme ; mid-grey, nice contrast syntax hilighting, dusty red comments & selection
+moe-dark
+alect-dark
+monokai ; mid-grey with lovely text colours
+monokai-alt ; slightly darker than monokai
+flatland
+*** MID-LIGHT:
+dracula ; nice mid-to-bright colours, but comments look messed-up
+ample ; mid-grey bg, lovely colours, selection not visible enough
+ample-flat ; like ample, but less contrast
+*** LIGHT
+dichromacy (FAVOURITE)
+alect-light ; pale grey bg, nice subtle colours...
+light-blue ; light blue bg, low contrast but bright red cursor
+moe-light ; very pale and cute
+anti-zenburn ; low contrast, light grey bg
+ample-light ; pale grey bg, low contrast colours
+*** INTERESTING, BUT...
+wombat ; darkish grey bg, medium contrast text in nice colours, current line in underline style...
+... fun effect, but messes up syntax hilighting!
+*** MORE THEMES TO TRY:
+sanity-inc-tomorrow- blue/black etc
+aalto-dark --- cool blue look
+blue-mood
+. boron
+. exotica --- dark with vibrant colours
+. farmhouse-light
+. farmhouse-dark
+gray1 --- light/mid grey bg with cool vibrant colours
+gray30
+heroku --- another nice grey one
+. hydandata --- attractive light off-white bg
+kingsajz --- green
+mac classic --- white bg - high contrast
+marine --- light minty green bg
+meaculpa --- nice light oatmeal grey bg
+melancholy --- dark bg, nice vibrant colours
+mistyday --- light pinkish bg
+montz --- pale grey
+niflheim --- cool mid grey
+organic-green
+pastelmac --- light with nice pastel colours
+radiance --- light
+ramangalahy --- light grey bg, good contrast nice colors
+renegade --- cool vibrant looking - black bg
+reverse --- black bg - nice
+seoul256 --- cool colours mid-tone low constrast
+Sitaramv NT --- white bg - good contrast
+subatomic --- cool mid/dark greyish
+taming-mr-arneson --- dark bg, cool vibrant colours
+. termbright --- zx spectrum-esque
+tomorrow night paradise --- dark
+tty-dark
+word-perfect --- blue bg, high contrast
+xemacs --- nice pale grey bg
+afternoon
+
+** PERSONAL ADDITIONS TO A THEME
+
+==== CUSTOMIZING FACES
+
+M-x list-faces-display ; shows all currently loaded faces in a buffer
+
+(face-spec-set
+ 'minibuffer-line
+ '((t :foreground "pink")))
+
+** MAKING A CUSTOM THEME
+
+customize cyberpunk theme --> strings orange, comments green/darker green
+
+based on 'cyberpunk'
+things to change:
+  org-mode
+    checkboxes
+  comments green
+
+* FRAMES AND WINDOWS
+
+EMACS TERMINOLOGY
+frame  --> the entire graphical object i.e. new GUI window.
+window --> separate sections of a frame. Including the mode lines.
+buffer --> where you do the actual text editing.
+
+
+SPLIT WINDOW
+C-x 0   : Close current window
+C-x 1   : Close all windows EXCEPT current window.
+C-x 2   : Split window vertical.
+C-x 3   : Split window horizontal.
+
+RESIZE WINDOW
+C-x  ; narrower
+C-x  ; wider
+C-x ^ ; taller
+C-x - ; shrink window to size of buffer text if it's smaller
+C-x + ; make windows the same size
+C-c m ; hydra window splitter
+
+NEW WINDOWS
+C-x 4 0 ; close current window AND buffer
+C-x 4 f ; visit file in new frame
+
+NEW FRAMES
+C-x 5 0 ; close current frame doesn't kill buffer
+C-x 5 2 ; open new frame
+C-x 5 f ; visit file in new frame
+
+
+C-x o   ; Switch to other window
+
+
+
+SWITCH QUICKLY BETWEEN WINDOWS
+
+M-x windmove-default-keybindings : ... OR put windmove-default-keybindings in .emacs...
+... now you can use following keys to switch quickly:
+S-<left> S-<right> S-<up> S-<down>
+
+C-c w ; ace-window
+
+
+
+MOVE BUFFER TO ANOTHER WINDOW
+
+C-u C-c w ; ace-window with universal prefix, switches selected window with current one
+
+buffer-move : package for swapping buffer from one window to another...
+
+* EMACS SERVER AND MULTI-TTY SUPPORT
+
+M-x server-start          ; inside running emacs instance
+$ emacsclient -t FILENAME # -t option to open emacs in terminal window, without GUI
+$ emacsclient FILENAME    # without -t, it opens the file inside the already running emacs instance
+
+
+
+To use multi-TTY, run M-x server-start in a running instance of Emacs. Then set your $EDITOR to emacsclient -t. When a program invokes the editor, emacsclient contacts your existing instance of Emacs which opens up a new frame on the TTY you were using. It looks as if you had just run emacs, except that you can access all the state of your other instance: all your buffers, kill ring entries, etc. are there. And it starts up pretty much instantly. When you are done, press C-x # to finish and close that frame.
+
+I use emacsclient to invoke Emacs in all sorts of other places. For example, instead of reading man pages using man, I read them in Emacs. Here's a snippet of my .bashrc:
+pps_man() {
+    /usr/bin/emacsclient -t -e "(woman \"$1\")"
+}
+alias man=pps_man
+
+* COMMANDS FOR PROGRAMMING
+
+M-; : Comment/uncomment region (doesn't work in python-mode).
+
+C-M-n : (forward-list) - Goes to end of next parens.
+C-M-p : (backward-list) - Goes to beginning of previous parens.
+
+LEFT-MOUSE ---> double-click on parens : Goes to matching parens (if expression is well balanced) and selects the whole region.
+
+C-M-f : (forward-sexp) - Goes to end of next expression (parens, word, etc).
+C-M-b : (backward-sexp) - Goes to beginning of previous expression.
+
+C-M-k : kill contents of (balanced) brackets forwards.
+
+* COMPILATION-MODE AND FRIENDS
+
+<f5>     ; recompile ; Compile using default command...
+C-u <f5>             ; ... shows compilation command for editing before running it
+
+M-x compile ; by default, runs 'make -k' ---> the first time, you must shift into the dir which contains the makefile. After that, emacs will remember. You can use any custom compilation command you like.
+
+in *compilation* buffer:
+C-x ` ; M-x next-error ; jump directly to the line in your source code which caused the first error; press C-x ` repeatedly to jump to successive errors.
+
+in other buffer than *compilation*:
+(NOTE: these also work for going through output of other commands e.g. M-x grep OR M-x occur)
+M-g n ; next-error     ;
+M-g p ; previous-error ;
+
+
+
+GET COMPILATION-MODE FEATURES FOR OUTPUT OF OTHER SHELL COMMANDS
+
+M-! ; shell-command
+... go to buffer *Shell Command Output*...
+M-x compilation-mode ; ... activate compilation mode
+
+
+
+CREATING YOUR OWN COMPILATION ERROR REGEXP
+
+https://www.emacswiki.org/emacs/CreatingYourOwnCompileErrorRegexp
+
+(pushnew )
+
+		   compilation-error-regexp-alist
+		   compilation-error-regexp-alist-alist
+
+* WEB PROGRAMMING
+
+M-x web-mode ; for mixed documents (html/php/javascript... etc)
+
+C-c C-n ; jump to matching tag/element
+C-c C-f ; toggle folding on tag/block
+C-c C-m ; mark and expand
+C-c C-i ; indent entire buffer
+C-c C-s ; insert snippet
+C-c C-w ; toggle whitespace display
+
+HTML ELEMENTS (C-c C-e)
+C-c C-e i ; insert
+C-c C-e w ; wrap
+C-c C-e s ; select
+C-c C-e k ; kill
+C-c C-e v ; vanish (leaving nested elements in place)
+
+C-c C-e u ; parent element (up)
+C-c C-e d ; child element (down)
+
+HTML TAGS (C-c C-t)
+C-c C-t s ; select
+
+HTML ATTRIBUTE (C-c C-t)
+
+DOM (C-c C-d)
+
+BLOCK (C-c C-d)
+
+==== EMMET (formerly known as zencoding-mode) ====
+
+Minor mode providing support for Zen Coding by producing HTML from CSS-like
+selectors.
+
+EXAMPLES:
+
+  a.x>b       ---> <a class="x"><b></b></a>
+  a#q.x>b     ---> <a id="q" class="x"><b></b></a>
+  a#q.x.y.z>b ---> <a id="q" class="x y z"><b></b></a>
+
+* CUSTOMIZING SETTINGS/CUSTOMIZING MODES
+
+M-x customize ; interactivly customize all sorts of settings and variables
+
+
+
+MANUALLY SET A VARIABLE
+
+(setq ...
+(setq-default ...
+
+(setq web-mode-markup-indent-offset 2)
+
+M-x describe-variable : Show current value of a variable...
+... e.g. 'load-path' or 'kill-ring'... Tab completion works here...
+
+* ARTIST MODE
+
+M-x artist-mode ; Draw ascii art with the mouse and keyboard
+
+C-c C-c ; M-x artist-mode-off ; Return to the mode you were in before
+
+
+SWITCH DRAWING OPERATION:
+... middle mouse button
+... click on mode line on name of current drawing operation
+... menu bar
+... M-x artist-select-op-... e.g. artist-select-op-square
+
+TIPS:
+... Remember that every drawing operation has 'shifted' mode for the mouse
+button, e.g. with the spray can shift and left-mouse = set spray can size OR
+left-mouse = erase character - shift-left-mouse = erase rectangle.
+
+* OTHER NEAT MODES
+
+M-x follow-mode ; a minor mode that combines windows into one tall virtual window...
+... the buffer continues from the bottom of one window to the top of the next...
+
+* COOL/SILLY/FUN/GAMES
+
+M-x zone ; CAUTION! You may have to undo afterwards...
+... some of the zone-programs can mess up the text in a buffer!
+... DON'T PRESS SAVE!
+M-x revert-buffer
+
+... for a specific zone program...
+M-: (zone-pgm...) ; use TAB to see list of completions
+
+
+
+M-x life ; Conway's game of life
+
+M-: (animate-string "STRING" LINE-NUMBER) ; Animated text!
+
+M-x morse-region ; CAUTION! Converts region to morse code.
+
+M-x decipher ; interactively decipher simple character-replacement codes
+
+M-x tetris
+
+TYPING PRACTICE
+
+M-x typit ; type as many words as you can in a minute
+
+M-x typing-of-emacs ; type each word withing time limit (you have 3 lives)
+
+M-x typing-game ; type the letters which fall from the top of the screen
+C-c C-c ; stop game and see score
+... PROBLEM: some keybindings have not been overridden, so cannot for example type digits 0-9, q or h...
+
+
+
+NEED INSTALLATION:
+
+erobots.el ; Emacs Robots - Crobots like programming game of battling robots
+
+deldo ; Emacs interface for teledildonics
+
+* BROWSING DIRECTORIES
+
+dired (see below)
+
+M-x speedbar (<f8>)
+
+M-x ztree-dir    ; interactive tree for specified directory root (install ztree from repo)
+SPC/RET (on dir) ; expand/contract dir
+SPC on file ; visit file in THIS window
+RET on file ; visit file in OTHER window
+x ; toggle expand-subtree
+H ; toggle show hidden (filtered) files
+< ; widen to parent dir
+> ; narrow to dir at point
+d ; open dir in dired
+
+* DIRED
+
+C-x d ; start dired (prompt for directory)
+... or just navigate to a directory.
+
+C-x C-j ; (in buffer) jump to buffer's file-listing in dired buffer
+
+
+g ; update dired buffer
+a ; press 'a' instead of ENTER to select file (closes dired buffer instead of leaving it open when you move visit ner file)
+
+R ; rename/move file under point
+m ; mark
+% m REGEXP ; mark all files matching REGEXP
+u ; un-mark
+t ; (dired-toggle-marks) - inverts selection
+D ; delete all marked files (or file under point)
+d ; mark for deletion
+x ; execute (e.g. delete all marked for deletion)
+~ ; mark all backup files
++ ; dired-create-directory
+^ ; parent directory
+
+A : dired-do-find-regexp
+Q ; dired-do-find-regexp-and-replace : query-replace (y/n/q/!)
+... then save all modified buffers with C-x s
+
+Z : dired-do-compress    : compress and decompress files and (since emacs25) dirs (zip/tar/etc)
+c : direc-do-compress-to : compress all marked files into a named archive
+
+L : dired-do-load : load an elisp file
+
+WDIRED (editable dired)
+C-x C-q (OR M-x wdired-change-to-wdired-mode) ; to switch to editable mode...
+... can now use editing commands on filenames e.g. search & replace for batch rename...
+... C-x C-s to save changes.
+
+! ; dired-do-shell-command : execute shell command with selected file as argument
+... maybe do 'g' after to update directory listing
+
+
+SHOWING SUB-DIRECTORIES
+i ; dired-maybe-insert-subdir ; inserts subdir listing into same dired buffer
+
+
+
+MORE USEFUL DIRED STUFF:
+
+k ; dired-do-kill-lines ; hides all marked lines (l or g to show hidden lines again))
+
+Filter files:
+METHOD 1: C-x d ~/*.tpg ; filename glob (show only .tpg files in home dir)
+METHOD 2: % m \.tpg     ; then toggle selection and pre k to kill lines
+
+Copy names of files so you can paste them into a file:
+w       copies names of marked files to kill ring.
+C-0 w   copies absolute file name
+C-u     copies names relative to Dired’s current directory
+
+
+
+Hide backup and autosave files:
+
+C-x M-o ; dired-omit-mode ; hide backup and autosave files
+
+OR
+
+C-u s ; edit the ls switches used
+... remove 'a' to hide the dot (hidden) files
+... add 'B' to ignore backup files
+
+
+
+==============================
+DIRED+ (enhanced dired)
+more syntax colouring
+
+( ; hide/show details
+L ; load file
+
+* CODE FOLDING
+** different text-folding modes
+- origami
+- yafolding
+- vimish-fold
+- hideshow (M-x hs-minor-mode) see documentation (hide & show code blocks, OR set hs-block-level for whole buffer...
+- folding.el
+
+** ORIGAMI-MODE
+origami seems pretty good
+
+TODO:
+- add origami to my setup
+- make a keymap
+- add hydra to keymap to make less frequent commands disagreeable
+
+** USE OUTLINE MINOR MODE:
+Activate using my toggle-hydra (C-c t o)
+M-x outline-minor-mode
+<f9> ; M-x outline-toggle-children
+M-x outlind-show-subtree
+M-x outlind-hide-subtree
+
+** SELECTIVE DISPLAY
+C-x $ ; (set-selective-display ARG) ; If ARG is a number > 0, hides all lines whoose indentation is >= ARG
+EXAMPLES (using prefix-argument to pass in value):
+M-1 C-x $ : ARG = 0 (show only lines with NO indentation)
+M-2 4 C-x $ : ARG = 24
+C-x $ : NO ARGUMENT - value set to nil - effectively turns selective-display off
+
+** ALTERNATIVELY:
+- Just do a search for the function, then C-x C-x to return to where you were...
+- M-x imenu ; jump to function def by choosing from list (consider binding to a mouse button...)
+
+** NARROWING
+keymap with prefix C-x n
+C-x n w ; widen           ; make entire buffer accessible again
+C-x n d ; narrow-to-defun ; narrow to current defun
+C-x n n ; narrow-to-region
+
+* EVALUATING LISP EXPRESSIONS
+
+M-: ; (eval-expression) ; Read a single Lisp expression in the minibuffer, evaluate it, and print the value in the echo area.
+C-u M-: ; ... with prefix-arg, eval-expression inserts the result in buffer
+C-x C-e (eval-last-sexp) ; Evaluate the Lisp expression before point, and print the value in the echo area.
+C-M-x (eval-defun) ;  Evaluate the defun containing or after point, and print the value in the echo area.
+M-x eval-region ; Evaluate all the Lisp expressions in the region.
+M-x eval-buffer ; Evaluate all the Lisp expressions in the buffer.
+
+IN DEBUGGER BUFFER press 'q' to close buffer and return to previous.
+
+FOR DETAILED DESCRIPTIONS of usage, see the Emacs manual (31.9 Evaluating Emacs Lisp Expressions).
+
+LISP MODES
+M-x lisp-mode       ; For non-emacs lisp
+M-x scheme-mode     ;
+M-x emacs-lisp-mode ; for elisp
+M-x lisp-interaction-mode ; basically the same as emacs-lisp-mode, only C-j is bound to (eval-print-last-sexp) ---- Default mode of the *scratch* buffer.
+lispy ; lisp editing minor mode
+
+
+==== IELM ====
+M-x ielm ; elisp REPL (Interactively Evaluate Lisp Mode)
+C-c C-b ; ielm-change-working-buffer ; have sexps evaluate in a different buffer
+
+multiline sexp input: set variable ielm-dynamic-return to nil...
+... will then have to do C-j to eval
+
+
+
+======================= RUNNING NON-ELISP LISP =======================
+
+;; tell emacs which lisp program to use
+(setq inferior-lisp-program "ccl64")
+
+;; run lisp interpreter
+M-x run-lisp
+M-x inferior-lisp ; does the same thing
+
+
+
+EVALUATING LISP CODE IN A BUFFER
+
+;; start up an inferior lisp process
+M-x inferior-lisp
+
+;; open a lisp-mode buffer (file with .lisp extension go to lisp-mode automatically)
+M-x M-e or other eval commands will show output in the inferior-lisp-buffer...
+
+
+
+SLIME (Superior Lisp Interaction Mode for Emacs)
+
+* PARENTHESES EDITING
+
+ELECTRIC-PAIR-MODE:
+For basic insertion and deleting of parentheses.
+
+
+PAREDIT:
+
+
+
+==== SMARTPARENS ====
+https://github.com/Fuco1/smartparens/wiki
+
+... key-bindings... sp-use-smartparens-bindings messed up a lot of other key bindings...
+... must make some custom bindings...
+
+M-x sp-cheat-sheet
+
+
+
+SP NAVIGATION:
+
+C-M-f ; sp-forward-sexp
+C-M-b ; sp-backward-sexp
+
+C-M-k ; sp-kill-sexp ; kills NEXT sexp (or current if there's no next sub-expression)
+sp-backward-kill-sexp
+
+C-M-n ; sp-next-sexp     ; beginning of next sexp i.e. nested at same level
+C-M-p ; sp-previous-sexp ; end of previous sexp at same level
+C-M-d ; sp-down-sexp
+C-M-e ; sp-up-sexp
+C-M-a ; sp-backward-down-sexp
+C-M-u ; sp-backward-up-sexp
+
+sp-slurp-... forwards/backwards
+
+SP PREFIX COMMANDS
+e.g. M-p for pairs...
+     ... symbols
+     ...
+
+C-u ;  do as many times as possible e.g. go down to lowest level
+C-u C-u ; operate on the enclosing list
+
+SELECT EXPRESSION?
+sp-select-next-thing
+
+
+
+
+
+SP CUSTOMIZATION:
+
+add a pair globally...
+(sp-pair "$" "$")
+
+add pair for certain mode only...
+(sp-local-pair 'markdown-mode "`" "`")
+
+... from old video... see wiki for up to date...
+"<" is the trigger key, sp-match-sgml-tags is the transformation function...
+(sp-add-tag-pair "<" "<_>" "</_>" 'sp-match-sgml-tags '(html-mode sgml-mode))
+
+here, the transformation function is nil...
+(sp-add-tag-pair "2" "**" "**" nil '(markdown-mode))
+
+* COMPARE TWO FILES (Ediff)
+
+Compare two buffers:
+- DROP-DOWN MENUS: Tools--->Compare--->Two Buffers
+- M-x ediff-buffers
+OR
+Compare two files:
+- DROP-DOWN MENUS: Tools--->Compare--->Two Files
+- M-x ediff
+
+...
+
+Two things happen:
+- The different parts of the 2 buffers are color highlighted.
+- A small window pops up in which I can Navigate the differences.
+
+EDIFF COMMANDS:
+n / p : step to the next/previous difference between the buffers.
+! : Recompute the diff.
+q : close the compare setup (it makes you type "yes" in full to escape).
+
+* COMPARE DIRECTORIES
+
+ediff-directories
+
+dired-compare-directories
+
+ediff-trees ; simple frontend to ediff
+
+
+M-x ztree-diff ; install 'ztree' from package archive
+? ; show help
+TAB ; swap sides
+SPACE ; expand/collapse node
+h ; hide/show all equal files and directories
+C ; copy differences
+D ; delete differences
+
+* KEYBOARD MACROS
+
+NEW SIMPLE KEYS:
+<F3> ; start defining keyboard macro OR insert counter if already defining macro
+<F4> ; finish definition OR execute most recently defined macro
+C-u <F3> ; re-execute last macro, then append keys to it's definition
+C-u C-u <F3> ; Append keys to last macro without re-executing it
+
+
+OLD KEYS:
+C-x ( : (start-kbd-macro)
+C-x ) : (end-kbd-macro)
+C-x e : (call-last-kbd-macro)
+e : ... repeat last macro...
+
+C-u 37 C-x e : Execute macro 37 times (use ‘C-u’ to provide the 37).
+
+C-x C-k r (apply-macro-to-region-lines) : Apply last-defined keyboard macro to each of the lines of a region.
+
+COUNTER: (SEE ALSO: registers (numbers))
+numeric prefix before start of macro sets start value of counter
+numeric prefix before insert-counter sets increment value
+M-x kmacro-insert-counter
+M-x kmacro-set-counter
+EXAMPLES:
+M-3 <F3> <F3> <F4> ; counter starts at 3, increments by 1 each time
+<F3> M-3 <F3> <F4> ; counter starts at 0, increments by 3 each time
+M-1 <F3> M-2 <F3> M-3 <F3> <F4> ; starts at 1, inserts counter val twice, once increment 2, once increment 3
+
+NAMED KEYBOARD MACROS:
+M-x name-last-kbd-macro [macro-name] : Name the last-defined keyboard macro...
+... now we can have multiple macros defined at once.
+M-x macro-name : Execute named macro just like any emacs command.
+M-x insert-kbd-macro : Insert a named macro into .emacs file (now it's saved for future sessions).
+... if you want to edit the macro in future sessions, you need to let the kmacro library know that the symbol is indeed a macro by putting the kmacro property on the symbol (in .emacs):
+(put 'my-macro 'kmacro t)
+... SEE ALSO global-set-key (to add key binding)
+
+EXTENDING A KEYBOARD MACRO:
+C-u F3 : Extend last macro - replays macro and leaves it open so you can add to end (F4 or 'C-x )' to end).
+C-u C-u F3 : Extend last macro without replaying it.
+
+EDITING A KEYBOARD MACRO:
+C-x C-k C-e : (kmacro-edit-macro-repeat) You get a buffer like the following, and you can remove keystrokes or add new ones:
+
+    ;; Keyboard Macro Editor.
+    ;; Press C-c C-c to finish; press C-x k RET to cancel.
+    ;; Original keys: ESC c ESC f ESC f ESC f C-d RET<
+
+    Command: last-kbd-macro
+    Key: none
+
+    Macro:
+
+    ESC c   ;; capitalize-word
+    ESC f   ;; forward-word
+    ESC f   ;; forward-word
+    ESC f   ;; forward-word
+    C-d     ;; delete-char
+    RET     ;; newline
+
+CREATE MACRO FROM KEYBOARD HISTORY:
+C-x C-k l : (kmacro-edit-lossage) Brings up a buffer (like the edit buffer above) containing your most recent 300 keystrokes, which you can pare down to create a new macro.
+
+* RECTANGLE EDITING
+
+M-x Copy-rectangle-as-kill
+M-x yank-rectangle
+M-x clear-rectangle
+... etc
+
+C-x r k        ; Kill rectangle
+C-x r y        ; yank last killed rectangle
+C-x r c        ; Clear rectangle
+C-x r o        ; open rectangle and shift text right
+C-x r t spoons ; fill rectangle with spoons
+C-x r r q      ; Copy rectangle to register q
+C-x r i q      ; Insert rectangle from register q
+
+
+RECTANGLE-MARK-MODE
+... shows rectangular region on screen
+... cut & paste automatically operates as rectangular
+M-1 r ; rectangle-mark-mode
+C-x C-x : cycle point through the four corners.
+
+* SAVING YOUR PLACE
+
+** THE MARK RING
+Whenever you take a diversion (e.g. by searching, or pressing M-< or M->), Emacs
+uses the mark to save your previous position...
+
+C-x C-x     ; Jump to last mark.
+C-u C-SPC   ; Cycle through the mark ring (last 16 saved).
+C-SPC C-SPC ; Set mark explicitly (useful for marking regions).
+
+** BOOKMARKS (SEE ALSO: resisters)
+bookmark file is defined by option 'bookmark-default-file', which defaults to ~/.emacs.d/bookmarks
+C-x r m ; bookmark-set   ; set a bookmark at point
+C-x r b ; bookmark-jump  ; jump to a bookmark
+C-x r l ; list-bookmarks
+M-x bookmark-delete      ; delete a bookmark by name
+
+TIP FROM: http://tonyballantyne.com/tech/finding-my-place/
+As I write on multiple machines, I keep my bookmarks file on Dropbox so that I
+have a consistent set of bookmarks wherever I happen to be working. I’ve added
+the following command to my .emacs file to let Emacs know where my bookmarks
+are.
+
+(setq bookmark-default-file "~/Dropbox/common/emacs/bookmarks.bmk" bookmark-save-flag 1)
+
+** SAVE PLACE IN EACH FILE BETWEEN SESSIONS
+(save-place-mode 1)
+
+** STORING A MULTI-WINDOW CONFIGURATION
+
+USING IVY:
+  install ivy
+  ivy-push-view ; store the current view...
+  ... it will now appear in the buffer list when you do ivy-switch-buffer...
+  ... may need to set option: (setq ivy-use-virtual-buffers t)
+
+SAVE WINDOW CONFIGURATION IN A REGISTER:
+C-x r w a ; window-configuration-to-register ; store in register 'a'
+C-x r j a ; to restore ('j' for jump, same as for a position register)
+
+UNDO/REDO WINDOW CONFIGURATION
+M-x winner-mode ; remember history of window configurations...
+... undo/redo with C-c <left>/C-c <right
+
+ALSO:
+save-desktop
+desktop-save-mode
+
+* VERSION CONTROL
+
+package: vc
+C-x v = ; show a diff of the current file...
+... inside diff buffer...
+C-x v v ; prepare a commit (press C-c C-c to finish)
+
+
+FROM: http://tonyballantyne.com/tech/simple-version-control/
+
+I use Git for all my personal projects, and occasionally CVS and SVN for
+projects that I interact with. Emacs provides a package called VC which lets me
+perform many version control operations from within Emacs. It provides a layer
+of uniformity: the commands are all the same regardless of what version control
+system I am using for any particular project. This is great because it means
+that when bzr or hg or whatever comes into vogue, I can get quite a bit of work
+done before I have to learn yet another VCS.
+
+Typical workflow for me: open a file. Make and test some changes. C-x v = to
+show a diff. If I like it, C-x v v to prepare a commit. Emacs pops up a new
+window in which to type a commit message. C-c C-c there to make the commit.
+
+VC includes many other useful features, like showing annotated versions of
+files, showing change logs for particular files, and helping you review
+historical versions and diffs.
+
+* VERSION CONTROL: MAGIT (FOR GIT)
+
+git integration for emacs...
+... install from melpa
+
+SEE visual walkthrough: https://magit.vc/screenshots/
+
+C-x g ; magit-status ; open magit buffer for current repository
+
+q   ; quit
+?   ; list actions
+s/u ; stage/unstage item
+TAB ; see changes to see changes in unstaged file
+RET ; visit point in file
+k   ; WARNING! deletes file
+
+c ; COMMIT MENU:
+c ; commit (type message then C-c C-c to commit or C-c C-k to cancel)
+e ; extend (add staged changes to most recent commit)
+a ; ammend (add changes and ammend message)
+
+t ; TAGGING MENU:
+
+$ ; opens another buffer which shows what git commands are being run for each key you press
+: ; run raw git command
+
+i ; add gitignore rule globally
+I ; add gitignore rule locally
+
+
+
+l     ; LOGGING MENU:
+l     ; short log
+L     ; long log (doesn't work for me!)
+h     ; toggle log margin
+SPACE ; to view details of commit
+
+COMPARE COMMITS (DIFF)
+... in short log...
+press '.' on first commit, then move to second commit and press '='
+
+
+
+MORE
+R                    ; rename (move) file and any buffer associated to it
+: ls-files           ; list all tracked files
+
+
+
+==== INIT NEW GIT REPOSITORY IN CURRENT DIR
+M-x magit-init
+
+
+
+==== WORKING WITH A REMOTE REPOSITORY ====
+
+==== SETUP
+
+Adding the github repo, or other remote source...
+
+M-x magit-remote-add ; add github account
+M-x magit-add-remote ; add github account
+
+... you will be prompted for the name you want to give the remote source, then
+the internet address of the repository...
+- make the name something short and meaningful: e.g. github
+- use the ssh version of the address: e.g. git@github:bschambers/elisp-insanity-code.git
+
+==== USAGE
+
+P ; push local commits up to github
+
+
+
+
+
+BRANCHING (basic walkthrough):
+b c <development> ; create and checkout a new branch called 'development'
+... do work on the new branch (and commit changes)...
+m m <master>      ; merge MASTER into branch (optional - to check there are no conflicts)
+b b <master>      ; checkout (switch to) MASTER branch
+m m <development> ; merge DEVELOPMENT branch into MASTER
+b k <development> ; (optional) delete DEVELOPMENT branch if it's no longer needed
+
+
+MAKING A NEW BRANCH FROM CHANGES NOT YET COMMITTED
+z z ; create stash and leave working dir clean
+b c ; create and checkout a new branch
+z p ; pop stash, apply it to current branch and (if successful) get rid of it
+
+* KEY BINDINGS/CUSTOM KEY BINDINGS
+
+C-h b ; show all keybindings
+
+
+
+GLOBAL KEY BINDINGS:
+
+(global-set-key "\C-cs" 'shell) ; bind C-c s to shell globally:
+... users may bind C-c [any letter] for their own use, and all major and minor modes are supposed to respect that.
+
+
+
+ADD KEYBINDING TO AN EXISTING MODE
+
+(define-key css-mode-map (kbd "C-c C-c") 'comment-region)
+;; NOTE: this won't work unless css-mode is already loaded (css-mode-map doesn't exist till the mode is loaded).
+
+(eval-after-load 'css-mode
+  '(define-key css-mode-map (kbd "C-c C-c") 'comment-region)) ; This will work in .emacs
+
+
+
+KEYMAPS
+
+;; define a new prefix-key map
+(define-prefix-command 'bsc-map)
+(global-set-key (kbd "C-<f1>") 'bsc-map)
+
+;; add a key command
+(define-key 'bsc-map (kbd "s") 'insert-separator-comment)
+... SEE my .emacs
+
+
+
+INTUITIVE KEYMAPS
+
+... define a prefix keymap with intuitive letters for commands...
+... as described here:
+http://endlessparentheses.com/the-toggle-map-and-wizardry.html
+
+
+
+RECLAIM C- AND M- DIGIT KEYS...
+... then we can use all these for other functions...
+... can still use C-M-<DIGIT> for numeric prefix...
+
+;; unset C- and M- digit keys
+(dotimes (n 10)
+  (global-unset-key (kbd (format "C-%d" n)))
+  (global-unset-key (kbd (format "M-%d" n))))
+
+
+
+MY PERSONAL KEYMAP: bsc-map ---> prefix key: M-1
+M-1 a ; align-regexp
+M-1 r ; rectangle-mark-mode
+M-1 j ; bsc-javadoc-format
+M-1 s ; insert-separator-comment
+
+* INSTALLING MORE PACKAGES
+
+USING MELPA: (Milkypostman’s Emacs Lisp Package Archive)
+M-x package-list-packages ; get buffer with list of packages from repos...
+M-x package-refresh-contents ; update package list
+f ; filter package list
+i ; select a package for installation
+u ; unselect a package
+x ; install the selected packages
+? ; view package documentation
+NOTE: May need to restart emacs if you have added a (require) to .emacs file...
+
+
+
+MANUALLY LOADING PACKAGE xyz.el:
+M-x load-file ~/Downloads/xyz.el
+... LOAD IT AT STARTUP:
+... put file in ~/.emacs.d/lisp/
+... add the following to .emacs...
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+(load "xyz") ;; best not to include the ending “.el” or “.elc”
+
+
+
+AUTOMATICALLY LOADING A PACKAGE AT STARTUP:
+... save file somewhere on emacs load-path e.g. ~/.emacs.d/lisp/
+... add this to .emacs file:
+(require 'super-cool-package) ; emacs will load it if the .el file can be found on the load path
+... you can add a dir to the load-path like so:
+(add-to-list 'load-path "~/.emacs.d/lisp")
+TROUBLESHOOTING:
+- lisp file will not be found if it's in a sub-directory (put .el files directly into ~/.emacs.d/lisp/)
+
+* EASIER PACKAGE MANAGEMENT WITH USE-PACKAGE
+
+A declarative way of expressing package configurations
+
+NOTE: make sure that (package-initialize) is called first or it won't work!
+
+EXAMPLE:
+(use-package smex
+  :ensure t
+  :bind (("M-x" . smex))
+  :config
+  (smex-initialize))
+
+
+:disabled ---> disable a package
+:ensure t ---> load package (install from repo if neccesary)
+:bind     ---> add a key-binding
+:init     ---> Code to run before PACKAGE-NAME has been loaded.
+:config   ---> Code to run after PACKAGE-NAME has been loaded.
+:mode     ---> Form to be added to ‘auto-mode-alist’.
+
+SEE HELP for other options
+
+* REGULAR EXPRESSIONS
+
+M-x regexp-builder ; interactively build regex... C-c C-q to quit...
+
+M-s h l REGEXP ; highlight each line matching REGEXP...
+... prompts for colour (use M-n & M-p to choose)...
+... M-x hi-lock-mode to turn off...
+
+==== REGULAR EXPRESSION RULES ========================================
+
+MATCHING CHARACTERS:
+.        any character (but newline)
+[...]    any character between brackets
+[^..]    any character not in the brackets
+[a-z]    any character between a and z
+
+QUANTIFIERS: (*?, +? and ?? are NON-GREEDY versions)
+ *        previous character or group, repeated 0 or more time
++        previous character or group, repeated 1 or more time
+?        previous character or group, repeated 0 or 1 time
+
+POSITION IN LINE:
+^        start of line
+$        end of line
+
+  \        prevents interpretation of following special char
+  \|       or
+  \w       word constituent
+  \b       word boundary
+  \sc      character with c syntax (e.g. \s- for whitespace char)
+  \( \)    start\end of group
+  \< \>    start\end of word
+  \_< \_>  start\end of symbol
+  \` \'    start\end of buffer\string
+  \1       string matched by the first group
+  \n       string matched by the nth group
+  \{3\}    previous character or group, repeated 3 times
+  \{3,\}   previous character or group, repeated 3 or more times
+  \{3,6\}  previous character or group, repeated 3 to 6 times
+  \=       match succeeds if it is located at point
+
+
+
+BACKSLASH ESCAPES
+... escape characters usually need to be double escaped...
+"^.*\\(error\\)"    --> 'error' is in a group
+"\\(\\w+\\) \\1"    --> a sequence of letters repeated after a space
+"\\b\\(\\w+\\) \\1" --> two identical words in a row
+
+
+
+... SEE DOCUMENTATION:
+
+* ORG MODE
+** NEW COMMANDS
+
+maybe useful:
+- org-transpose-element
+- org-delete-indentation
+- org-mark-element
+- pcomplete
+- org-table-toggle-formula-debugger
+
+
+
+C-c @ ; org-mark-subtree ; select whole subtree
+
+C-c ^ ; org-sort ; sort same level entries
+
+C-x n s ; org-narrow-to-subtree
+C-x n s ; org-narrow-to-block
+C-x n w ; org-widen
+
+** introduction
+SEE FILE: quickstart-org-mode.org
+
+M-x org-mode
+;; A variant of outline-mode for using Emacs as an organizer and/or authoring system.
+;; Files with names ending in the extension `.org' are opened in Org mode.
+
+M-x orgstruct-mode
+;; minor mode - enables org-mode lists and headlines in other modes.
+
+M-x orgtbl-mode
+;; minor mode - enables org-mode table behaviour in other modes.
+;; NOTE: Advanced spreadsheet functions seem to only work in full org-mode...
+;; ... if orgtbl-mode command not recognized, try activating full org-mode, then
+;; switching back to previous mode - it seems like orgtbl-mode isn't loaded until
+;; after org-mode has been invoked
+
+FEATURES:
+document structure
+tables
+hyperlinks
+todo items
+tags
+properties and columns
+dates and times
+capture-refile-archive
+agenda views
+markup
+exporting/publishing
+working with source code (babel etc)
+
+** BASICS
+
+USEFUL TO REMEMBER:
+C-C C-j ; org-goto ; quickly navigate org tree and jump to point
+C-c .   ; org-time-stamp (also creates add an agenda entry)
+C-c !   ; same (without creating an agenda entry)
+C-c C-q ; add tags to headline (with autocompletion)
+C-c /   ; sparse tree... M-g n/M-g p = next/prev sparse tree entry
+C-c a m ; org-tags-view ; create global list of tags from all agenda files
+C-c C-s ; schedule task (add a deadline)
+
+MOVING AROUND THE BUFFER:
+C-c C-n / C-c C-p ; next/previous heading
+C-c C-f / C-c C-b ; next/previous heading on same level
+C-c C-j ; org-goto ; find places fast by multiple means...
+
+** DOCUMENT STRUCTURE (and structure editing)
+*, **, ***, etc ; headings 1st, 2nd, 3rd level etc
+# comment
+TAB   ; (on heading line) cycle visibility states of subtree
+S-TAB ; cycle visibility states of whole outline structure
+
+STRUCTURE EDITING
+while on a heading...
+M-UP/M-DOWN    ; move entire entry up or down
+M-LEFT/M-RIGHT ; promote or demote
+C-c C-<        ; (org-promote-subtree) promote whole sub-tree
+C-c C->        ; (org-demote-subtree) demote whole sub-tree
+
+C-c C-w ; org-refile ; move the current subtree to elsewhere (making it a subtree of another heading)
+By default, targets offered are the top level headlines in the current file.
+If you want to be able to refile items as a top level headline, you can set the following variable.
+(setq org-refile-use-outline-path 'file)
+If you want to be able to select other targets, set the variable org-refile-targets (see documentation).
+(setq org-refile-targets '((org-agenda-files :level . 1)))
+(setq org-refile-targets '((nil . (:maxlevel . 10))))
+
+C-c C-x C-w ; org-cut-subtree
+C-c C-x M-w ; org-copy-subtree
+C-c C-x C-y ; org-paste-subtree
+... cut and paste subtree can move one subtree to another level while maintaining it's structure
+
+** LISTS:
+- OR +   ; start an unordered list item
+1) OR 1. ; start an ordered list items
+M-RET    ; insert new list item
+S-LEFT / S-RIGHT ; cycle through list types/bullet styles
+M-UP/M-DOWN ; move list item up/down
+M-LEFT/M-RIGHT ; change indentation of list item
+M-S-LEFT/M-S-RIGHT ; change indentation of list item AND all sub-lists
+C-c ^ : sort
+
+CHECKBOX LISTS:
+[ ]         ; at start of list item
+[/] OR [%]  ; cookie at end of header line (show how much completed as fraction or percentage)
+C-c C-c     ; toggle checkbox
+M-S-RET     ; insert new checkbox item
+C-u C-c C-c ; Convert all items in list (or sub-list) to checkbox items (... toggle)
+
+** DRAWERS:
+... drawers are hidden by default
+C-c C-x d (org-insert-drawer) ; puts active region inside drawer
+
+The format of a drawer is like this:
+
+:name-of-drawer:
+contents
+blah
+blah
+blah
+:END:
+
+** TABLES
+
+SEE ALSO:
+M-x table-insert
+M-x table-capture ; make a table from comma separated values etc...
+
+|     ; to start a column
+|-    ; to start a separator row
+TAB   ; move to next cell/reform table
+M-LEFT/RIGHT/UP/DOWN   ; move column/row...
+M-S-LEFT/RIGHT/UP/DOWN ; delete/add column/row...
+C-c ^ (org-table-sort-lines)
+
+C-c | ; convert region into an org table
+M-x org-table-transpose-table-at-point ; transposes columns to rows & vice versa
+
+** SPREADSHEETS
+SEE ALSO: SES
+
+CELL REFERENCES:
+C-c ? ; display coordinates for current cell
+C-c } ; toggle display of grid
+@2$5  ; cell reference (row 2, col 5)
+
+RANGES:
+@I..@II ; range from first separator to second separator
+
+FORMULAS:
+=@2$5 ; value of cell at row 2, col 5
+=$-2+$-1 ; add together values of two relatively positioned columns
+=$-1 * @2$2 ; multiply value of column 1 space to left by value of an absolute-referenced cell
+
+RECOMPUTING TABLES:
+C-c * ;  org-ctrl-c-star --> calls org-table-recalculate
+C-u C-u C-c * ; recompute entire table and iterate until stable
+SEE INFO FOR MORE RECOMPUTE COMMANDS...
+AUTO-UPDATE CELLS? ; see info: (org)Top > Tables > The spreadsheet > Advanced features
+
+FUNCTIONS:
+=vsum($2..$5) ; sum of cells in range from COL 2 - col 5
+=vsum(@2..@5) ; sum of cells in range from ROW 2 - col 5
+=vmean($2..$5) ; mean of cells in range from COL 2 - col 5
+...
+
+NAMED CELLS/NAMED COLUMNS ; see info: (org)Top > Tables > The spreadsheet > Advanced features
+
+ORG-PLOT (using gnuplot):
+... must install Gnuplot and gnuplot-mode...
+
+** ORG MODE: TODO ITEMS
+ ** TODO A Sample todo...
+C-c C-t ; cycle 'TODO' status of current section (timestamp inserted when 'DONE')
+S-LEFT/S-RIGHT ; (on heading) cycle 'TODO' status
+S-UP/S-DOWN ; cycle urgency state [#A]/[#B]/[#C]
+C-c a t (org-todo-list) ; show global TODO list
+
+** TAGS
+
+C-c C-q ; add tags to headline (with tab completion)
+
+... sub-headings inherit tags
+
+... add tags to whole file with a line like this:
+#+FILETAGS: :Peter:Boss:Secret:
+... C-c C-c to activate any changes in this line
+
+** INSERTING DATES/TIMESTAMPS
+
+M-x org-date-from-calendar : insert today's date (and link to a diary/agenda entry)
+
+C-c . : prompt rapid date entry interface (and creates an agenda entry)
+C-c ! : same, but doesn't create an agenda entry
+
+
+
+TIME & DATE ENTRY INTERFACE:
+
+Shift + CURSOR KEYS : move the mark in mini calendar window...
+... ENTER to select, or...
+
+... type any part of a date and the rest will be filled in from current date uner mark...
+... tue <ENTER>      : next tuesday
+... oct <ENTER>      : this day of the month in october
+... 2021 <ENTER>     : this day in the year 2021
+... 9 <ENTER>        : the 9th of this month (or next if today is past the 9th)
+... 15 15:00 <ENTER> : the 15th at 15:00
+
+** ORG-CAPTURE
+see info manual for setup...
+... need to setup default notes file in init file
+
+C-c c ; org-capture
+
+** AGENDA VIEWS
+
+C-c [   ; org-agenda-file-to-front ; add current file to the list of org agenda files
+C-'/C-, ; cycle through agenda file list visiting each in turn
+
+C-c a ; agenda views menu --> current day/week, list tags etc...
+
+C-c C-s ; schedule a task
+t       ; toggle TODO/DONE
++/-     ; change priority
+
+:      ; set tags
+/      ; filter by tag
+|      ; remove all filters
+r OR g ; rebuild agenda
+
+; ; set timer...
+
+** TEXT FORMATTING
+/italic/
+*bold*
+_underlined_
++strikethrough+
+=verbatim=
+~code~
+
+Text in the code and verbatim string is not processed for Org specific syntax;
+it is exported verbatim.
+** PARAGRAPH FORMATTING
+Paragraphs are separated by at least one empty line. If you need to enforce a
+line break within a paragraph, use ‘\\’ at the end of a line.
+
+To preserve the line breaks, indentation and blank lines in a region, but
+otherwise use normal formatting, you can use this construct, which can also be
+used to format poetry.
+
+#+BEGIN_VERSE
+ Great clouds overhead
+ Tiny black birds rise and fall
+ Snow covers Emacs
+
+    ---AlexSchroeder
+#+END_VERSE
+
+When quoting a passage from another document, it is customary to format this as
+a paragraph that is indented on both the left and the right margin. You can
+include quotations in Org documents like this:
+
+#+BEGIN_QUOTE
+Everything should be made as simple as possible,
+but not any simpler ---Albert Einstein
+#+END_QUOTE
+
+If you would like to center some text, do it like this:
+
+#+BEGIN_CENTER
+Everything should be made as simple as possible, \\
+but not any simpler
+#+END_CENTER
+
+** LITERAL EXAMPLES
+You can include literal examples that should not be subjected to markup. Such
+examples are typeset in monospace, so this is well suited for source code and
+similar examples.
+
+#+BEGIN_EXAMPLE
+Some example from a text file.
+#+END_EXAMPLE
+
+There is one limitation, however. You must insert a comma right before lines
+starting with either ‘*’, ‘,*’, ‘#+’ or ‘,#+’, as those may be interpreted as
+outlines nodes or some other special syntax. Org transparently strips these
+additional commas whenever it accesses the contents of the block.
+
+#+BEGIN_EXAMPLE
+,* I am no real headline
+#+END_EXAMPLE
+
+For simplicity when using small examples, you can also start the example lines
+with a colon followed by a space. There may also be additional whitespace before
+the colon:
+
+Here is an example
+: Some example from a text file.
+
+** BABEL (working with source code)
+
+Babel is Org-mode’s ability to execute source code within Org-mode documents...
+... when the point in the code block...
+C-c '   ; to edit the code
+C-c C-c ; to run the code
+
+BABEL EXAMPLE:
+#+BEGIN_SRC java :classname example
+public class example {
+    public static void main (String args []) {
+        System.out.println("Go Babel!");
+    }
+}
+#+END_SRC
+
+BABEL SNIPPETS:
+I've made some YaSnippets for inserting babel blocks...
+  babeljav TAB
+  babelpy TAB
+
+
+
+SOURCE CODE INDENTATION
+
+to get source code blocks to indent nicely
+
+(setq org-src-preserve-indentation t)
+(setq org-src-tab-acts-natively t)
+
+*** DITAA (Diagrams Through Ascii Art)
+
+Ditaa is distributed with Org mode. The file ditaa.jar can be found in contrib/scripts.
+
+Activate evaluation of ditaa source code blocks by adding ditaa to org-babel-load-languages.
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((ditaa . t))) ; this line activates ditaa
+
+Super basic example (note: output file is required)
+#+BEGIN_SRC ditaa :file images/hello-world.png
++--------------+
+|              |
+| Hello World! |
+|              |
++--------------+
+#+END_SRC
+
+passing command line argument -r for rounded corners
+#+begin_src ditaa :file images/blue_pink.png :cmdline -r
++---------+
+| cBLU    |
+|         |
+|    +----+
+|    |cPNK|
+|    |    |
++----+----+
+#+end_src
+
+** LINKS
+#+BEGIN_EXAMPLE
+Org recognizes plain URIs, possibly wrapped within angle brackets, and activate
+them as clickable links. The general link format, however, looks like this:
+
+[[LINK][DESCRIPTION]]
+
+or alternatively
+
+[[LINK]]
+
+Once a link in the buffer is complete, with all brackets present, Org changes
+the display so that ‘DESCRIPTION’ is displayed instead of ‘[[LINK][DESCRIPTION]]’ and
+‘LINK’ is displayed instead of ‘[[LINK]]’. To edit the invisible LINK part, use C-c
+C-l with the point on the link.
+#+END_EXAMPLE
+** IMAGES
+An image is a link to an image file that does not have a description part, for example
+
+#+BEGIN_EXAMPLE
+[[./images/cat.jpg]]
+#+END_EXAMPLE
+
+You can add a caption, name etc...
+
+#+CAPTION: This is the caption for the next figure link (or table)
+#+NAME:   fig:SED-HR4049
+[[./img/a.jpg]]
+
+
+
+To display the image in the org buffer:
+
+  M-x org-display-inline-images
+
+or, put this in your init file:
+
+  (setq org-startup-with-inline-images t)
+
+... inlined images can be refreshed with M-x org-redisplay-inline-images
+
+or, add this to your org-file to inline images only for that file:
+
+  #+STARTUP: inlineimages
+
+
+
+Resize inline image to fit:
+
+Add something like this to the attributes...
+#+ATTR_ORG: :width 400
+
+... it won't work unless emacs has been compiled with imagemagick - to check
+whether you've got imagemagick available exwcute this:
+
+(image-type-available-p 'imagemagick)
+
+** LITERATE PROGRAMMING
+
+The idea of literate programming is to write a book which explains exactly
+how the program works, and to embed the program code in the text of that book...
+... write a book in org mode...
+... enclose code blocks using BABEL...
+
+** EXPORT TO MARKDOWN/HTML/PDF ETC
+*** export options
+Place these options at the top of the file
+
+- #+OPTIONS: toc:nil = do not add a table of contents to the exported file
+*** EXPORT TO MARKDOWN
+org-md-export-to-markdown --- exports to filename.md - OVERWRITING EXISTING FILE WITHOUT ASKING!
+org-md-export-as-markdown --- exports to buffer
+*** EXPORT TO PDF
+
+org-latex-export-to-pdf
+
+org-beamer-export-to-pdf
+
+Beamer is a LaTeX document class for creating presentation slides, with a wide
+range of templates and a set of features for making slideshow effects.
+
+**** getting it working
+
+See \"*Org PDF LaTeX Output*\" for details
+
+/bin/bash: pdflatex: command not found
+
+
+STILL DOESN'T WORK - BUT DIFFERENT ERROR MESSAGES NOW
+
+! LaTeX Error: File `wrapfig.sty' not found.
+
+
+apt-cache search wrapfig
+texlive-latex-extra - TeX Live: LaTeX additional packages
+
+** FOOTNOTES
+*** basic example
+
+ 'The Org homepage[fn:1] now looks a lot better than it used to.'
+
+Put your footnotes at the bottom of the file
+
+ '[fn:1] The link is: https://orgmode.org'
+
+*** inline footnote
+ [fn:: This is the inline definition of this footnote]
+
+An anonymous footnote where the definition is given directly at the reference point.
+
+ [fn:NAME: a definition]
+
+An inline definition of a footnote, which also specifies a name for the note. Since Org allows multiple references to the same note, you can then use ‘[fn:NAME]’ to create additional references.
+
+*** more footnote commands
+Footnote labels can be created automatically, or you can create names
+yourself. This is handled by the variable org-footnote-auto-label and its
+corresponding ‘STARTUP’ keywords. See the docstring of that variable for
+details.
+
+The following command handles footnotes:
+
+C-c C-x f
+The footnote action command.
+
+When point is on a footnote reference, jump to the definition. When it is at a
+definition, jump to the—first—reference.
+
+Otherwise, create a new footnote. Depending on the variable
+org-footnote-define-inline120, the definition is placed right into the text as
+part of the reference, or separately into the location determined by the
+variable org-footnote-section.
+
+When this command is called with a prefix argument, a menu of additional options is offered:
+
+s	Sort the footnote definitions by reference sequence.
+r	Renumber the simple ‘fn:N’ footnotes.
+S	Short for first r, then s action.
+n	Rename all footnotes into a ‘fn:1’ … ‘fn:n’ sequence.
+d	Delete the footnote at point, including definition and references.
+Depending on the variable org-footnote-auto-adjust121, renumbering and sorting footnotes can be automatic after each insertion or deletion.
+
+C-c C-c
+If point is on a footnote reference, jump to the definition. If it is at the definition, jump back to the reference. When called at a footnote location with a prefix argument, offer the same menu as C-c C-x f.
+
+C-c C-o or mouse-1/2
+Footnote labels are also links to the corresponding definition or reference, and you can use the usual commands to follow these links.
+** ORG-ROAM
+
+https://www.orgroam.com/manual.html
+
+Org-roam provides utilities for maintaining a digital slip-box. This section
+aims to provide a brief introduction to the “slip-box”, or “Zettelkasten”
+method.
+ 
+* SES (Simple Emacs Spreadsheet)
+SEE ALSO: org mode/org tables
+
+NEW SPREADSHEET:
+Navigate to new file with .ses extension...
+
+
+BASIC COMMANDS:
+TAB ; add new cell
+" ; enter string in current cell
+RET ; edit-cell - use this to look at formula in cell
+C-x n w ; widen buffer - to see data area of file
+C-c C-n ; ses-renarrow-buffer
+
+C-c C-c ; ses-recalculate-cell ; force recalculate current cell or range
+C-c C-1 ; ses-recalculate-all ; recalculate the entire spreadsheet
+
+
+
+FORMULAS:
+Formulas are regular elisp, but there are some special ses functions...
+
+basic range formula...
+(apply 'ses+ (ses-range A1 A3))
+... ses-range evaluates to a list of values in the rectangle of cells...
+... ses+ is like + but it also treats empty cells as 0...
+
+* CALENDAR
+
+M-x calendar
+
+. : goto today
+
+DIARY...
+
+* MULTIPLE CURSORS
+
+installed from melpa
+
+C-S-c C-S-c ; mc/edit-lines ; puts a cursor on every line in region
+C-S-c C-S-n ; mark next like this
+C-S-c C-S-p ; mark previous like this
+
+C-S-c C-} ; mc/skip-to-next-like-this
+C-S-c C-{ ; mc/skip-to-previous-like-this
+
+C-S-<mouse-1> ; add cursor at mouse point
+
+C-g OR <return> ; exit multiple cursors
+... to insert a newline use C-j
+
+
+
+SUGGESTED KEYBINDINGS:
+http://endlessparentheses.com/multiple-cursors-keybinds.html
+
+
+
+UNKNOWN COMMANDS/COMMANDS WHICH ARE NOT DUPLICATED:
+... some commands run only for the main cursor (rather than for all of them)...
+... if mc is not sure, it will ask and remember decision in this file:
+    ~/.emacs.d/.mc-lists.el
+
+... if you change your mind about a decision, you can edit that file...
+... then restart emacs to have it take effect.
+
+* DISPLAYING IMAGES
+
+navigate to image file
+
+* AUTOCOMPLETION/CODE COMPLETION
+
+using company (COMPlete ANYthing)...
+
+C-g       : get rid of suggestions box
+M-p / M-n : prev/next suggestion in list
+TAB       : complete part
+ENTER     : complete whole
+C-s       : company-search-candidates
+C-w       : company-show-location
+C-M-s     : company-filter-candidates
+C-h OR <f1> : company-show-doc-buffer - temporarily show documentation in a buffer
+
+COMPANY BACKENDS....
+
+COMPANY FRONTENDS....
+
+* EMAIL
+** INTRO
+NOTE: Sending and recieving email are completely different things...
+... you don't need an email account to send email, whereas you do need an email account to recieve email...
+... almost all SMTP servers now require you to authenticate before sending mail - this is the only reason why you need an email account to send email.
+
+** SENDING EMAIL
+
+C-x m   ; (compose-mail)          ; ... go to *unsent mail* buffer...
+C-c C-c ; (message-send-and-exit) ; ... computer will ask for system password...
+C-c C-s ; (message-send)          ; ... computer will ask for system password...
+
+
+=== IN MAIL-MODE ===
+... separate email addresses with comma
+... address completion should work if bbdb/company are set up
+
+
+
+=== SETUP USING EXTERNAL SMTP SERVER ===
+
+1: INSTALL AN SMTP PROGRAM:
+
+I'm using ssmtp because it's very easy
+
+  $ sudo apt-get install ssmtp
+
+2: MAKE .AUTHINFO FILE IN HOME DIR:
+
+Make a file called ~/.authinfo and add lines like this...
+
+machine mail3.gridhost.co.uk login ben@bschambers.info password SECRET_PASSWORD
+
+... FOR SECURITY either: make root owner of ~/.authinfo
+                         use cryptography --> ~/.authinfo.gpg
+
+3: EMACS CONFIGURATION:
+
+These lines are required in .emacs...
+
+(setq send-mail-function (quote smtpmail-send-it))
+(setq smtpmail-smtp-server "mail3.gridhost.co.uk")
+(setq smtpmail-smtp-service 25) ; gridhost say I should use port 465 (SEE BELOW)
+
+... optionally, set up default email address and name for sending mail...
+(setq user-full-name "[Ben Chambers]")
+(setq user-mail-address "ben@bschambers.info")
+
+
+
+=== TROUBLESHOOTING ===
+
+PROBLEM:
+With the setup above I am able to send email from one @bschambers.info email address to another, but when I try to send to benopod@hotmail.com it fails and tells me:
+"Sending failed: 535 5.7.0 hotmail.com is not a local domain. If you are trying to send outbound email please ensure that you have outgoing server authentication enabled."
+SOLUTION:
+Create ~/.authinfo file (see above)
+
+PROBLEM:
+(GRIDHOST SMTP SETUP) Only works on port 25... if I switch to port 465 like gridhost tell me to emacs just hangs for ages until eventually it tells me: "process smtp is not running"
+SOLUTION:
+(setq smtpmail-stream-type 'ssl)
+... this is the forum post which finally helped me to do this:
+http://superuser.com/questions/702698/smtp-protocol-error-when-sending-mail-in-emacs
+
+** RECIEVING EMAIL
+
+POP3 or IMAP protocol...
+
+
+gnus ---
+
+mu4e
+
+notmuch
+
+
+
+================================ GNUS ================================
+NOTE: gnus is a news reader, so we refer to articles instead of mail or messages
+
+WARNING: always quit gnus before closing emacs!
+
+NICE GUIDE:
+https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/gnus-guide-en.org
+
+
+q ; quit
+RET ; enter group under cursor
+
+m ; new mail
+r ; reply
+R ; reply, and cite the article...
+
+
+HOW TO DELETE EMAIL
+E ; mark article as EXPIRABLE...
+... articles are expired when gnus is quit...?
+B <del> ; delete article at once
+
+SEARCHING: use normal search to search subject lines...
+
+SEARCH CONTENTS OF ARTICLES
+M-s / M-r ; search regex in all subsequent articles forward/backwards
+M-S / M-R ; repeat last search search forward/backwards
+
+
+
+GNUS STRUCTURE
+
+GROUP BUFFER
+RET ; select group & go to summary buffer
+SPACE ; ... same, but also show first unread article
+A A ; list all newsgroups known to the server
+L ; list all subscribed newsgroups in your .newsrc
+l ; list subscribed groups with unread articles
+u ; toggle whether you are subscribed or not to group
+g ; check for new articles in all groups
+c ; mark all unticked articles in group as read
+C ; mark ALL articles in group as read
+HOW? ; set level of subscribedness to 1 (lower number is higher priority)
+
+SUMMARY BUFFER
+/ o ; show old articles
+/ a ; limit to author
+/ t ; limit to at least N days old
+/ w ; pop limit (remove last limit applied)
+C-u / w ; remove all limits
+... most of these limits will be negated if given C-u prefix argument
+
+ARTICLE BUFFER
+C-u g ; show actual article text
+g ; return to default display mode
+
+
+
+MISC
+G c ; customize gnus
+
+
+
+======================= NOTMUCH (EMAIL SYSTEM) =======================
+
+Notmuch is fast, global-search and tag-based email system for use within a text editor or terminal.
+
+It doesn't store the emails
+
+It doesn't send or recieve the emails
+
+
+
+FIRST: must have notmuch set up on system (SEE: quickstart-system)
+
+
+
+================== COMPOSING AND SENDING HTML EMAIL ==================
+
+TODO: package org-mime can send html emails from org files, but not sure it
+supports my very basic (sending only) setup... might have to get gnus configured
+again to be able to use it...
+
+
+
+... began to experiment with writing html code directly into email...
+... didn't work - I think it might be more work than it's worth to make it work...
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Demystifying Email Design</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+<body style="margin: 0; padding: 0;">
+ <table border="1" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+   <td>
+    Hello!
+   </td>
+  </tr>
+ </table>
+</body>
+
+</html>
+
+* WEB BROWSER
+
+M-x eww ; a text only web browser (Emacs We Wowser)
+
+M-s M-w ; does a web search on the selected text using eww
+
+M-x eww-open-file ; open a local html file
+
+
+EWW COMMANDS:
+h ; help (show mode info)
+& ; eww-browse-with-external-browser ; switch to system default browser
+
+l ; eww-back-url ; go back to the last url visited
+TAB ; jump to next link
+
+R ; eww-readable ; tries identify main textual parts of a web page and display only that...
+... leaving menus and the like off the page (press l to return to old view)
+S ; list all eww buffers
+
+these navigation commands only work if previous/next etc are defined in web page...
+n/p ; next/previous page
+u ; eww-up-url
+t ; eww-top-url
+
+open a new web page in a new buffer...
+M-x rename-buffer ... then call eww again to open new page...
+M-x eww
+
+
+cookies and cache location?
+M-h v url-cookie-file
+M-h v url-configuration-directory
+
+
+
+WEBKIT INTEGRATION: since emacs 25 ... I have yet to try it!
+... emacs must be compiled with xwidget support...
+
+xwidget-webkit-browse-url
+
+* MANAGING CONTACTS WITH BBDB (insidious Big Brother Database)
+
+Install bbdb from ELPA...
+... look at extension packages (bbdb-, bbdb-ext, bbdb-handy, bbdb-android, bbdb-vcard)
+
+NOTE: info pages don't seem to have installed properly - full manual can be found online (http://bbdb.sourceforge.net/bbdb.html)
+
+CONFIG:
+; in .emacs
+(require 'bbdb)
+(bbdb-initialize)
+
+BBDB COMMANDS
+M-x bbdb        ; show records matching regexp (if no input, show all)
+M-x bbdb-create ; interactively create new record
+M-x bbdb-snarf  ; attempt to create record from a block of text (didn't work very well when I tried...)
+
+COMMANDS IN BBDB BUFFER
+b ; show records matching regexp (same as M-x bbdb)
+c ; create new record (same as M-x bbdb-create)
+e ; edit field under cursor
+i ; insert new field in record (NOTE: will allow you to add custom fields)
+d ; delete field under cursor
+
+m   ; compose mail to current
+
+t   ; toggle display single/multi-line display (current record)
+o   ; OMIT - remove record from display without deleting it (useful for '*' commands)
+/ c ; show all records modified since database last saved
+
+a   ; add mail alias (prefix arg to delete instead)
+
+PREFIX ARGUMENTS
+ * ; do to all displayed records
++ ; append results to display
+/ ; prefix command (/ m, / n, / o (search by mail, name, organisation))
+
+DATABASE stored in plain text file at:
+~/.emacs.d/bbdb
+
+
+
+PROBLEMS:
+ * a ; doesn't work for me...
+... see attempted fix in .emacs (not working yet)
+
+* ELFEED (RSS FEED READER)
+
+install packages:
+ elfeed
+ elfeed-org
+
+
+
+SOME COMMANDS:
+    b: visit the selected entries in a browser
+    y: copy the selected entry URL to the clipboard
+    r: mark selected entries as read
+    u: mark selected entries as unread
+    +: add a specific tag to selected entries
+    -: remove a specific tag from selected entries
+    RET: view selected entry in a buffer
+
+* TRAMP (Transparent Remote (file) Access Multiple Protocol)
+
+Edit files on a remote computer.
+
+Ever start up another shell so you could run Emacs to edit a file? (e.g. a root
+shell, or a shell on a remote host) Well, Tramp has greatly reduced the number
+of situations where this is necessary. It allows you to edit "remote" files as
+if they were local to your machine, taking care of opening up shells, retrieving
+and writing data for you, etc. You simply specify remote files using a special
+syntax in C-x C-f (and near anywhere else Emacs asks you for a filename), e.g.:
+/ssh:phil@remotehost:records/pizza-toppings.txt. I say "'remote'" in quotes
+above because Tramp is general enough that you can also use it to edit local
+files— as another user— via su or sudo e.g.: /sudo::/etc/hosts.
+
+
+REMOTE FILENAME SYNTAX:
+/host:filename
+/user@host:filename
+/user@host#port:filename
+/method::filename
+/method:user@host:filename
+/method:user@host#port:filename
+
+
+
+NOTES:
+For remote machine access you will need to know IP ADDRESS/USERNAME/PASSWORD...
+... get IP address using `hostname -I` or `ifconfig` on remote machine...
+
+
+
+CLOSE CONNECTION:
+M-x tramp-cleanup-all-buffers ; close all connections and any buffers relating to them
+M-x tramp-cleanup-connection ; prompts user for which connection
+M-x tramp-cleanup-this-connection ; flushes only the current buffer's remote connection objects
+M-x tramp-cleanup-all-connections
+
+
+
+EXAMPLES:
+
+C-x C-f /bstpg@192.168.0.12:
+... open home directory of bstpg in dired using default protocol
+
+C-x C-f /bstpg@192.168.0.12:tpg_test_dir/bing
+... open a file relative to home directory using default protocol
+
+C-x C-f /ftp:ben@bschambers.info@91.208.99.4:
+... open home dir on remote server via ftp...
+... NOTE: ftp user name is ben@bschambers.info, hence the '@' appears twice
+
+C-x C-f /sudo::/home/user/file
+... using sudo to edit a read-only file
+
+
+
+TRANSFERRING FILES:
+Navigate to directory in dired and press 'C' to copy...
+... you may want to copy the path from dired listing --> press 'w' (works on top line also)
+
+* WRITE-PROTECTED FILES
+
+C-x C-q (toggle-read-only) ; Upon save, emacs will ask if you want to overwrite...
+
+... if emacs can't overwrite file this way, then you may have to open it as root:
+$ sudo emacs FILENAME
+
+ALSO NOTE: You can chmod the file in dired...
+
+
+
+? use TRAMP to open file via sudo...
+
+* SPECIAL CHARACTERS/UNICODE
+
+M-x describe-char ; display info about character under cursor
+
+C-x 8 RETURN ; prompts for name of character - use tab completion
+
+;; many shortcuts are defined...
+C-x 8 ' e ; é
+C-x 8 `e  ; è
+C-x 8 ^ e ; ê
+C-x 8 " u ; ü
+C-x 8 / / ; ÷
+C-x 8 C   ; ©
+
+* WHITESPACE
+
+M-x whitespace-mode ; show whitespace characters/non-printing characters
+
+M-\ ; shrink-whitespace ; shrink vertical or horizontal whitespace...
+... first to a single unit, then to nothing (installed from melpa)...
+... a bit like cycle-spacing, but handles vertical as well as horizontal!
+
+* RUNNING SHELLS IN EMACS
+
+M-& ; async-shell-command ; Execute a single shell command in the background.
+
+
+INFERIOR SHELL
+M-x shell
+... for a shell which behaves like an emacs buffer...
+
+TERMINAL EMULATOR
+M-x term
+M-x ansi-term
+... for faithful terminal emulator...
+
+THE EMACS SHELL
+M-x eshell
+... written entierly in emacs lisp...
+
+
+ALSO...
+M-x python-shell
+
+* ESHELL
+
+: $ alias ll = 'ls -l'
+
+any alias created is stored automatically in a file for future sessions
+
+where is that file?
+
+: $ echo $eshell-aliases-file
+
+some aliases which may be useful:
+
+: $ alias emacs 'find-file $1'
+
+: $ alias w3m 'w3m-find-file $1'
+
+* CALCULATOR (CALC)
+
+C-x *          : ... you will be prompted for options
+M-x calc
+M-x quick-calc : prefix arg will cause result to be inserted into buffer
+
+CALC MANUAL
+C-x * i ; or inside calc --> h i
+
+CALC TUTORIAL
+C-x * t ; or inside calc --> h t
+
+CALCULATOR TRAIL BUFFER: *Calc Trail*
+
+USEFUL KEYS
+<TAB> ; exchange/swap the two numbers at the top of the stack
+C-<TAB> ; rotate top three numbers on stack (calc-roll-up)
+_     ; instead of '-' for negative number
+n     ; switch sign (positive/negative)
+s s   ; store value at top of stack in a variable...
+... digits 0-9 are 'quick-variables' q0-q9... or enter any variable name you like...
+s r   ; recall variable
+
+
+
+GRAPH EXAMPLE
+... install gnu-plot: $ sudo apt-get install gnuplot
+QUICKEST WAY TO MAKE A GRAPH...
+... define two vectors e.g. [1 2 3 4]...
+... then do `g f` (calc-graph-fast)...
+... takes the last two vectors for x & y axes
+
+* RUN CERTAIN INIT COMMMANDS ONLY IN GUI/TERMINAL
+
+... use this to set up different colour scheme for terminal session...
+
+(if window-system (color-scheme-blah))
+
+(display-graphic-p &optional DISPLAY)
+
+* SNIPPETS
+
+yasnippets
+
+... install from melpa
+
+M-x yas-minor-mode  ; toggle on/off
+M-x yas-global-mode ; activate for all buffers
+
+... when enabled, <TAB> is bound to yas-expand...
+
+C-c & C-n ; yas-new-snippet
+C-c & C-s ; yas-insert-snippet
+C-c & C-v ; yas-visit-snippet-file
+
+M-x yas-describe-tables ; show all snippets for current major mode
+
+JAVA USAGE EXAMPLES:
+pr <TAB>  ---> System.out.println
+o <TAB>   ---> @Override
+doc <TAB> ---> javadoc
+< <TAB>   ---> sgml tag
+. <TAB> ---> this.thing = thing;
+for <TAB>
+
+TODO:
+- improve javadoc...
+
+
+
+
+
+==== CREATING AND EDITING SNIPPETS
+
+https://joaotavora.github.io/yasnippet/snippet-development.html
+
+
+M-x yas-new-snippet
+
+
+
+SNIPPET FILE EDITING:
+... everything above the line with # -- is treated as a comment, although some of them can be directives which affect certain snippet properties...
+
+SOME DIRECTIVES: (all optional except for 'key')
+ # key:         ... the abbreviation which you type before pressing TAB
+ # name:        ... name that will appear in menus
+ # contributor: ... snippet author
+ # condition:   ... elisp code - only expand if this returns true
+ # group:       ... groups snippets for purpose of organising menus
+ # expand-env:  ... elisp in form of a 'let' varlist form - override variables during snippet expansion
+ # binding:     ... expand snippet directly from a normal emacs keybinding
+ # type:        ... (snippet OR command) if set to command, the snippet is interpreted as lisp code to be executed, instead of the normal template syntax
+ # uuid:        ... provides to a way to identify a snippet, independent of its name - loading a second snippet file with the same uuid would replace the previous snippet
+
+
+
+NOTATION:
+$0 has special meaning of exit point from snippet
+
+TAB STOP FIELDS:
+$1, $2, $3, etc
+... can be navigated with TAB & S-TAB ...
+
+PLACEHOLDER FIELDS (default values):
+${1:blah}
+... 'blah' will be overwritten if you type something
+
+MIRRORS:
+placeholder fields can also be mirrored...
+${1:blah} $1 $1 $1
+... will mirror the value at blah three times
+
+MIRRORS WITH TRANSFORMATIONS:
+${1:blah} $1 $1 ${1:$(capitalize yas-text)}
+... the third mirror also capitalizes the text...
+... can use any emacs lisp expressions to transform...
+... yas-text is the variable where the current text is stored
+
+FIELDS WITH TRANSFORMATIONS:
+#define "${1:mydefine$(upcase yas-text)}"
+... to do it without using a placeholder, use double-dollar $$...
+${1:$$(upcase yas-text)}
+... this is neccessary, to distinguish it from a mirror
+
+CHOOSE VALUES FROM A LIST:
+... same syntax as a field-transformation...
+... use the function yas-choose-value...
+<div align="${2:$$(yas-choose-value '("right" "center" "left"))}">
+  $0
+</div>
+
+
+
+(POSSIBLY) USEFUL VARIABLES/FUNCTIONS
+yas-text
+yas-choose-value
+yas-modified-p
+yas-moving-away-p
+yas-verify-value
+yas-indent-line
+
+* FILE LOCAL VARIABLES
+
+METHOD 1: ON FIRST LINE
+
+- name/value pairs separated with colon & semicolon
+- may be embedded in a comment
+
+EXAMPLE:
+;; -*- mode: Lisp; fill-column: 75; comment-column: 50; -*-
+
+
+
+
+METHOD 2: LOCAL VARIABLES LIST
+
+- must be near end of file (within 3000 lines)
+- may be embedded in comment, provided that each line has same comment format as first line
+
+FORMAT: (remove the '...' - I put it in to stop these variables from being applied to this file)
+...Local Variables:
+var1: value;
+var2: value;
+End:
+
+POSSIBLE USE CASES:
+mode: java
+comment-column: 0
+eval: (font-lock-mode -1
+compile-command: javac *.java
+
+* PER-DIRECTORY LOCAL VARIABLES
+
+Define a set of local variables to all the files in a certain directory and its subdirectories. For example the directory tree of a large software project.
+
+Make file called:
+
+.dir-locals.el
+
+The .dir-locals.el file should hold a specially-constructed list, which maps major mode names (symbols) to alists (see Association Lists in The Emacs Lisp Reference Manual). Each alist entry consists of a variable name and the directory-local value to assign to that variable, when the specified major mode is enabled. Instead of a mode name, you can specify ‘nil’, which means that the alist applies to any mode; or you can specify a subdirectory name (a string), in which case the alist applies to all files in that subdirectory.
+
+EXAMPLE:
+
+(nil . ((indent-tabs-mode . t)
+(fill-column . 80)))
+
+
+other settings to try:
+
+c-mode . c-file-style . "BSD"
+subdirs . nil
+src/imported
+. nil . change-log-default-name
+. ChangeLog.local
+
+* EDITING ENCRYPETD FILES
+
+USING GPG:
+
+First, set up gpg on the machine SEE FILE:  quickstart-shell.
+
+CREATE NEW GPG ENCRYPTED FILE:
+... create new buffer with .gpg extension...
+... when you save it, you will prompt for setup...
+
+OPENING A GPG ENCRYPTED FILE:
+... when you open a .gpg file, you will be prompted for the passphrase...
+
+* TIME
+
+(current-time)
+(current-time-string)
+
+M-x display-time-mode ; display time and average system load on mode line
+
+(emacs-uptime)
+
+* JUMPING/MOVING AROUND
+
+AVY replaces ace-jump-mode and does more...
+
+I've made these bindings:
+
+C-c j ; avy-goto-word-or-subword-1
+... type first letter of word or subword...
+... each instance is replaced by hilighted char...
+... type this to jump!
+
+C-c M-j ; avy-goto-char
+
+* XREF
+
+xref is a unified interface for jumping to definitions...
+... should work straight out the box for emacs-lisp-mode...
+... for any other language some setup is needed...
+
+M-. ; xref-find-definitions ; show all definitions of symbol under point
+M-, ; xref-pop-marker-stack ; pop back to where M-. was last invoked
+
+
+
+SETUP:
+
+The easiest way to use it is with PROJECTILE - just do C-c p R
+(projectile-regenerate-tags) while you're in a project, and then jump to
+definition works nicely...
+... if it doesn't work, then you probably need to install exuberant-ctags on the
+system:
+$ sudo apt-get install exuberant-ctags
+
+
+
+SETUP WITHOUT PROJECTILE
+
+1) Build tags table in project root directory using etags command line program:
+$ find . -name "*.java" | etags -
+... find all .java files recursively and pipe them to etags
+... etags '-' option takes filenames from std-in
+
+2) Set tags file as a dir-local variable:
+((nil . ((tags-file-name . "/home/bsc/ComputerWork/PROJECTS/blockspace/TAGS"))))
+... 'nil' sets variable for all modes (something fails when I try to set for just java-mode)
+
+
+
+SOME FUNCTIONS TO LOOK AT:
+visit-tags-table
+find-tag
+tags-reset-tags-table
+
+VARIABLES:
+tags-file-name
+
+* SPEEDBAR
+
+M-x speedbar... or <f8>
+
+q ; quit
+Q ; quit and kill frame
+g ; refresh
+
+SPC ; expand/contract directory node
+RET ; visit file
+S-u ; up to parent directory
+
+f ; switch to File mode
+b ; switch to Quick Buffers mode
+r ; switch to previous mode
+more modes: right-click-->speedbar-->Displays...
+... info, gud etc
+
+
+
+SPEEDBAR SHOWS DIFFERENT THINGS IN DIFFERENT MODES:
+  JAVA MODE: browse method definitions in file
+  ORG-MODE: browse headings in file
+  DEFAULT: show current directory
+
+* TAIL/RELOAD FILE FROM DISK
+
+M-x auto-revert-tail-mode ; follow the tail of a file as it is appended by an external process,
+... somewhat like tail -f
+
+M-x auto-revert-mode ; use this for changes other than appends!
+
+To suppress the message generatated when a buffer reverts...
+... set auto-revert-verbose to nil
+
+M-x revert-buffer ; manually revert a buffer
+
+* LEDGER MODE
+
+ledger command line tool
+
+----
+
+DOUBLE ENTRY ACCOUNTING
+
+CATEGORIES
+Assets
+expenses
+income
+liabilities
+equity
+
+NET WORTH = assets - liabilities
+
+Net income = income - expenses
+
+----
+
+LEDGER COMMAND LINE TOOLS
+
+$ ledger -f ledger.dat balance
+
+$ ledger -f ledger.dat register ACCOUNT-NAME
+
+time periods
+$ ledger bal "Liabilities:Credit Card" --begin "last month"
+$ ledger reg "Expenses:Shopping" --period "last october"
+$ ledger reg eating -M # -M = monthly
+
+transaction properties/metadata
+$ ledger reg "Assets:Roth IRA:2015" and @Contribution
+$ ledger reg "Expenses" and %Gift
+$ ledger bal Assets Liabilities --cleared
+
+----
+
+LEDGER MODE
+...
+
+* REALGUD
+
+Interface to external debuggers...
+
+
+
+EXAMPLE SESSION:
+
+M-x realgud:jdb
+
+* MISC
+
+display-battery-mode ; show battery status on mode line
+... also in battery.el:
+M-x battery ; display detailed battery info in echo area
+
+mwe-log-commands
+package logs keyboard commands to a buffer --> good for demo videos etc
+
+bind-key
+for managing personal keybindings
+
+guide-key
+reminder for key commands
+
+visual-regexp
+
+project-archetypes
+
+annoying-arrows-mode
+hardcore-mode
+
+dash
+
+vc diff of current file
+C-x v =
+
+flashcard.el
+
+emacsspeak
+... a complete audio desktop environment for Emacs (need speech synthesizer)
+
+erc : irc chat (SEE: emacs irc channel)
+
+interact with javascript engine in the web browser...
+swank js
+
+invert colours quick and easy
+xcalib

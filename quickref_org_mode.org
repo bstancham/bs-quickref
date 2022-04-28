@@ -1,0 +1,404 @@
+* INTRODUCTION
+
+http://orgmode.org/manual/
+
+Org mode uses:
+ - note taking
+ - tasks and planning
+   - simple todo list
+   - day planner/schedule
+   - detailed time planning & accounting
+ - small database (using tags)
+ - basis for constructing web pages
+ - making drafts
+
+NOTE TAKING
+- collapsible headings
+- lists
+- hyperlinks (internal & external)
+- tables & spreadsheet
+- embedded LaTeX for taking notes during science class
+
+PLANNING
+- tasks
+- notes and planning in same document
+* COMMENTS
+
+# single line comment
+
+#+BEGIN_COMMENT
+multi-line comment...
+... dainefoen...
+... fienfien
+#+END_COMMENT
+
+* METADATA
+** 'TODO'
+** priority
+** tags ---> one key per tag interface
+** DEADLINE etc
+** PROPERTIES
+** timestamps ---> rapid date/time reading function
+C-c .  --- prompts for you to enter a date-stamp using the super quick interface.
+C-c !  --- same, but doesn't create an agenda entry.
+
+<2016-09-19 Mon>
+
+... clicking on the timestamp will take you to a day-agenda view for that date.
+
+C-u C-c .
+C-u C-c !  ---- prompt for date-and-time.
+
+<2016-09-12 Mon 05:00>
+
+** column view for fast tabular editing of metadata[fn:2]
+
+CAPTURE WITH remember.el
+
+SPARSE VIEW - retains hieracical skeleton outline
+AGENDA VIEW - flat list - schedule e.g. daily agenda
+
+
+AUTHORING SYSTEM
+
+EXPORTING
+- HTML
+- LaTEX (gateway to PDF)
+- ASCII (more presentable version)
+
+
+
+RADIO TABLES
+- embed org mode table in comments of arbitrary file
+- define a translation of how to convert table into correct format
+- define location to insert it
+- translated and updated in real time
+
+
+embedded source code
+
+
+
+? heading indentation ?
+
+* SIMPLE TEXT FORMATTING
+/italic/
+*bold*
++strikethrough+
+~inline code~
+=quoted insert=
+* TABLES
+
+A simple table example (C-c ^ to sort by column)
+
+| NAME      | RANKING | STYLE       | CITY         |
+|-----------+---------+-------------+--------------|
+| Bilbo     |       4 | neo-rococco | Addis Abbaba |
+| Agnes     |         |             |              |
+| Fred      |       1 | art deco    |              |
+| Zoroaster |         |             |              |
+| Arnold    |         |             |              |
+
+** NARROWING VISIBLE PART OF COLUMN
+Need to add special row to table...
+... C-U C-<TAB> to temporarily show contents of cell...
+
+| <10>       | <15>            | <5>   |
+| hello dolly | fripple         | bob   |
+| bingo      | hey diddle diddle | flipper |
+
+
+** RADIO TABLE - convert table to HTML from comment block
+
+USE: +ORGTBL: SEND table-name translator-function function-args
+
+Org mode tables are exported to HTML using the table attributes defined in org-html-table-default-attributes.
+The default setting makes tables without cell borders and frame.
+If you would like to change this for individual tables, place something like the following before the table:
+
+#+ORGTBL: SEND shows orgtbl-to-html 
+#+CAPTION: This is a table with lines around and between cells
+#+ATTR_HTML: :border 2 :rules all :frame border
+| 2016 | Summer Salon, Angus-Hughes Gallery, London                                 |
+| 2015 | Summer Salon, Angus-Hughes Gallery, London                                 |
+| 2013 | STARS IN MY EYES, Schwartz Gallery, London (collaboration with Karen Tang) |
+| 2013 | Postcard From My Studio, Acme Project Space, London                        |
+| 2010 | TWIG, Vitrine Gallery, London                                              |
+| 2006 | Nihilism Part II, Trinity Buoy Wharf, London                               |
+| 2005 | Moss Corporation Presents, Vision-On Projects, London                      |
+| 2004 | Noise, Corsica Studios, London                                             |
+| 2002 | Hot Haus, Cowper Street, London                                            |
+
+
+
+This is where table will appear when document is exported...
+# BEGIN RECEIVE ORGTBL shows
+# END RECEIVE ORGTBL shows
+
+* DONE SPREADSHEETS
+  CLOSED: [2016-02-20 Sat 21:48]
+
+** DONE make a basic spreadsheet example
+   CLOSED: [2016-02-19 Fri 19:07]
+
+using an org-mode table as a spreadsheet...
+
+|          |     |   |   IN |  OUT | GROSS |  TAX |   NET |   |   |   |   |   |
+|----------+-----+---+------+------+-------+------+-------+---+---+---+---+---|
+| TAX RATE | 0.2 |   |  500 |  200 |   300 |  60. |  240. |   |   |   |   |   |
+|          |     |   |  600 |  200 |   400 |  80. |  320. |   |   |   |   |   |
+|          |     |   |  700 |  650 |    50 |  10. |   40. |   |   |   |   |   |
+|          |     |   |  850 | 1000 |  -150 | -30. | -120. |   |   |   |   |   |
+|          |     |   |  400 |  100 |   300 |  60. |  240. |   |   |   |   |   |
+|          |     |   | 1000 |  100 |   900 | 180. |  720. |   |   |   |   |   |
+|          |     |   | 2500 |   25 |  2475 | 495. | 1980. |   |   |   |   |   |
+|          |     |   |   10 |  100 |   -90 | -18. |  -72. |   |   |   |   |   |
+|          |     |   |  100 |  150 |   -50 | -10. |  -40. |   |   |   |   |   |
+#+TBLFM: $6=$-2 - $-1::$7=$-1 * @2$2::$8=$-2-$-1
+
+** DONE spreadsheet example with advanced features (automatic recompute, named cells etc)
+   CLOSED: [2016-02-20 Sat 21:48]
+
+ IMPORTANT: For these special tables, recalculating the table with `C-u C-c *' will only affect rows that are marked `#' or `*', and fields that have a formula assigned to the field itself. The column formulas are not applied in rows with empty first field.
+
+ The first column is reserved for special characters which denote functionality of the rows...
+ ! ; row defines names for columns
+ ^ ; row defines names for fields above
+ _ ; row defines names for fields below
+ $ ; Fields in this row can define _parameters_ for formulas. e.g.`max=50' (refer to the value 50 using `$max')
+ \# ; Fields in row automatically recalculated when pressing <TAB>, <RET> or S-<TAB> in this row
+ \* ; Global recalculation with `C-u C-c *' only.  Use this when automatic recalculation slows down editing too much.
+ / ; Do not export this line.  Useful for lines that contain the narrowing `<N>' markers or column group markers.
+
+
+ |   |              |   IN |  OUT | GROSS |  TAX |   NET |   |   |   |   |   |   |   |
+ |---+--------------+------+------+-------+------+-------+---+---+---+---+---+---+---|
+ | $ | TAX_RATE=0.2 |      |      |       |      |       |   |   |   |   |   |   |   |
+ | # |              |  500 |  100 |   400 |  80. |  320. |   |   |   |   |   |   |   |
+ | # |              |  600 |  200 |   400 |  80. |  320. |   |   |   |   |   |   |   |
+ | # |              |  700 |  650 |    50 |  10. |   40. |   |   |   |   |   |   |   |
+ | # |              |  850 | 1000 |  -150 | -30. | -120. |   |   |   |   |   |   |   |
+ | # |              |  400 |  100 |   300 |  60. |  240. |   |   |   |   |   |   |   |
+ | # |              | 1000 |  100 |   900 | 180. |  720. |   |   |   |   |   |   |   |
+ | # |              | 2500 |   25 |  2475 | 495. | 1980. |   |   |   |   |   |   |   |
+ | # |              |   10 |  100 |   -90 | -18. |  -72. |   |   |   |   |   |   |   |
+ | # |              |  100 |  150 |   -50 | -10. |  -40. |   |   |   |   |   |   |   |
+ #+TBLFM: $5=$-2-$-1::$6=$-1*$TAX_RATE::$7=$-2-$-1
+
+* DONE list examples
+  CLOSED: [2016-02-20 Sat 14:50]
+
+** Animals
+   in no particular order
+      - Penguin
+      - Griffin
+        - Frog
+          - [ ] a checkbox (use C-c C-c to toggle)
+      - Dog
+
+** Cars
+   in order of preference
+   1. buckminster fuller's funny little car
+   2. citroen karin
+   3. classic american baroque 50s stuff
+   4. delorean
+   5. nissan multipla
+
+* DONE demonstrate Drawers
+  CLOSED: [2017-01-29 Sun 23:45]
+
+  Using a drawer for some info which is normally hidden...
+
+  :TOPSECRETINFO: 
+  this info is inside my secret info drawer...
+  insert a drawer with C-c C-x d
+  ... blah blah blah.
+  :END:      
+
+NOTE: before version 8.3 org mode would not recognise custom drawer names automatically...
+... add name to list:
+(add-to-list 'org-drawers "TOPSECRETINFO")
+... then M-x org-mode ... to restart org-mode
+
+* hyperlinks
+
+Type:
+C-c C-l ; org-insert-link ; will prompt for LINK and DESCRIPTION
+
+[[http://bschambers.info][My personal website]]
+
+Type C-c C-l on an existing link to edit the values of LINK and DESCRIPTION
+
+To follow link:
+1. mouse left-click
+2. keyboard <RETURN> (must have org-return-follows link set)
+
+
+links are constructed as nested square brackets [[][]]...
+... URL followed by DESCRIPTION
+
+
+
+link to info page:
+[[info:org#Top]]
+... in info press 'c' to copy current node name...
+... will get something like this:
+(org) Top
+... edit into the form: info:org#Top
+
+* BLOCK QUOTES AND EXAMPLE BLOCKS
+
+Yasnippets for inserting blocks:
+quote TAB
+example TAB
+
+
+#+BEGIN_QUOTE
+blah blah blah
+#+END_QUOTE
+
+
+#+BEGIN_EXAMPLE
+dibble dibble dibble
+#+END_EXAMPLE
+
+* EMBEDDING SOURCE CODE BLOCKS:                                 :programming:
+
+Yasnippets for inserting code blocks
+<s TAB
+babel TAB
+babeljav TAB
+babelpy TAB
+
+
+CODE-BLOCK EXECUTION:
+C-c C-c
+
+LANGUAGE SUPPORT:
+by default, only emacs lisp is supported for execution...
+... add more languages like this:
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((C . t)
+                               (shell . t)
+                               (java . t)
+                               (python . t)))
+
+
+language is specified after #+BEGIN_SRC...
+... see how return value is inserted below after execution
+#+BEGIN_SRC elisp
+
+(split-string "dingdongdingdong!" "g")
+
+#+END_SRC
+
+#+RESULTS:
+| din | don | din | don | ! |
+
+
+
+#+BEGIN_SRC elisp
+(emacs-uptime)
+#+END_SRC
+
+#+RESULTS:
+: 13 hours, 7 minutes, 41 seconds
+
+
+
+options used here:
+... :dir - execute in this dir
+... :results - output format of results
+#+BEGIN_SRC sh :dir ~/bin :results raw
+ls | grep count
+#+END_SRC
+
+#+RESULTS:
+count_down
+count_in_place
+count_in_place~
+
+
+
+#+BEGIN_SRC java :classname Example
+public class Example {
+public static void main(String[] args) {
+System.out.print(blah());
+}
+
+public static String blah() {
+return "blah" + "FLAPPER";
+}
+
+}
+#+END_SRC
+
+#+RESULTS:
+blahFLAPPER
+
+
+#+BEGIN_SRC python 
+"dingdongdingdong!".split("g")
+#+END_SRC
+
+#+RESULTS:
+: None
+
+* PROJECT BABEL
+Project Babel is all about using org mode to do literate programming.
+Source code blocks embedded in org comments.
+Multiple different programming languages can interact in same file.
+
+EXAMPLES:
+- ditaa --- diagrams through ascii art
+
+A META-PROGRAMMING LANGUAGE FOR ORG-MODE
+Because the return value of a function written in one language can be passed to a function written in another language, or to an Org-mode table, which is itself programmable, Babel can be used as a meta-functional programming language. With Babel, functions from many languages can work together. You can mix and match languages, using each language for the tasks to which it is best suited. 
+
+SEE: Org Manual ---> Library of Babel
+
+** LITERATE PROGRAMMING
+ Babel supports Literate Programming (LP) by allowing the act of programming to take place inside of Org-mode documents. The Org-mode file can then be exported (woven in LP speak) to HTML or LaTeX for consumption by a human, and the embedded source code can be extracted (tangled in LP speak) into structured source code files for consumption by a computer.
+
+To support these operations Babel relies on Org-mode's existing exporting functionality for weaving of documentation, and on the org-babel-tangle function which makes use of Noweb reference syntax for tangling of code files. 
+
+* IMAGES
+You can insert links to image files, e.g:
+
+[[image.png]]
+
+To display the image in the org buffer:
+
+  M-x org-display-inline-images
+
+or, put this in your init file:
+
+  (setq org-startup-with-inline-images t)
+
+... inlined images can be refreshed with M-x org-redisplay-inline-images
+
+or, add this to your org-file to inline images only for that file:
+
+  #+STARTUP: inlineimages
+
+* USE LIKE A DATABASE USING TAGS:                             :blah:database:
+
+Tags can be added to a headline... they are quoted in colons :blah:bing:ping:
+
+They can be typed, or press C-c C-q for TAB completion and special single key tag insertion.
+
+[[info:org#Tags]]
+
+
+INHERITANCE:
+sub-headings inherit tags from their parents
+
+
+TAG COMPLETION:
+based on dynamically generated list of tags in buffer...
+... can also define tags, groups, and alternatives in various ways... see manual...
+
+* Footnotes
+
+[fn:2] this is the second footnote
+

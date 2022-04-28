@@ -1,0 +1,34 @@
+* WEB BROWSER
+** Duck Duck Go (search engine)
+*** search syntax
+cats dogs 	Results about cats or dogs
+"cats and dogs" 	Results for exact term "cats and dogs". If no results are found, we'll try to show related results.
+cats -dogs 	Fewer dogs in results
+cats +dogs 	More dogs in results
+cats filetype:pdf 	PDFs about cats. Supported file types: pdf, doc(x), xls(x), ppt(x), html
+dogs site:example.com 	Pages about dogs from example.com
+cats -site:example.com 	Pages about cats, excluding example.com
+intitle:dogs 	Page title includes the word "dogs"
+inurl:cats 	Page url includes the word "cats"
+
+Use \ to go to directly to the first search result. For example, \futurama
+*** BANGS - Search directly on other sites
+Use ! to search other sites' search engines directly. 
+
+... Remember, though, because your search is actually taking place on that other
+site, you are subject to that site’s policies, including its data collection
+practices. For example, !a blink182 searches Amazon.com for blink182. There are
+thousands of sites covered!
+
+!w = wikipedia
+!a = amazon
+!ebay
+!stackoverflow
+!g = google
+!guk = google UK
+!gi = google images
+!gim = google images
+!gis = google image search
+!giuk = google images UK
+!gisoff = google images (safe off)
+!gmaps = google maps

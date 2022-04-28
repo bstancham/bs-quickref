@@ -1,0 +1,251 @@
+* SVG FILE ANATOMY/SPECIFICATION
+** introduction/fundamentals
+SVG is XML
+
+doctype definition
+
+WC3
+** tutorial
+https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
+** xml elements
+*** <svg>
+*** <defs>
+*** <metadata>
+*** <g> (group?)
+All drawing elements go inside 'g'.
+*** <line>
+A single straight line.
+
+EXAMPLE:
+<line x1="10" x2="50" y1="110" y2="150"/>
+*** <rect>
+A rectangle.
+
+ATTRIBUTES:
+- 'x' = The x position of the top left corner of the rectangle.
+- 'y' = The y position of the top left corner of the rectangle.
+- 'width' = The width of the rectangle.
+- 'height' = The height of the rectangle.
+- 'rx' = The x radius of the corners of the rectangle (defaults to zero).
+- 'ry' = The y radius of the corners of the rectangle (defaults to zero) .
+
+EXAMPLES:
+<rect x="10" y="10" width="30" height="30"/>
+<rect x="60" y="10" width="30" height="30" rx="10" ry="10"/>
+*** <polyline>
+- Multiple straight lines.
+- Vertex co-ordinates contained inside the 'points' attribute.
+
+EXAMPLE:
+<polyline points="60, 110 65, 120 70, 115 75, 130 80, 125 85, 140 90, 135 95, 150 100, 145"/>
+*** <polygon>
+- Like POLYLINE but ends joined up automatically.
+- Vertex co-ordinates contained inside the 'points' attribute.
+
+EXAMPLE:
+<polygon points="50, 160 55, 180 70, 180 60, 190 65, 205 50, 195 35, 205 40, 190 30, 180 45, 180"/>
+*** <path>
+- Combines multiple straight and curved lines.
+- Shape information contained inside the 'd' attribute.
+- 'd' is a list of vertices and other information required to draw the path.
+
+EXAMPLE:
+<path d="M20,230 Q40,205 50,230 T90,230" fill="none" stroke="blue" stroke-width="5"/>
+
+COMMANDS INSIDE 'd':
+- All of the commands also come in two variants. An uppercase letter specifies
+  absolute coordinates on the page, and a lowercase letter specifies relative
+  coordinates (e.g., move 10px up and 7px to the left from the last point).
+- 'm' e.g. "m 5 2"' = move to (without drawing a line)
+- 'l' e.g. "l 10 3" = draw line from previous point to this
+- 'h' e.g. "h 4" = draw horizontal line
+- 'v' e.g. "v 7" = draw vertical line
+- 'z' = close path
+- 'c' = cubic curve (two control points)
+- 's' = (shorcut/smooth) (only works after 'c'). Cubic curve where first control
+  point is reflection of last one on previous curve (makes a smooth curve, so
+  's' could be short for 'smooth' or 'shortcut').
+- 'q' = quadratic curve (one control point)
+- 't' = equivalent of 's', but for quadratic curve (only works after
+  'q'). Quadratic curve where control point is reflection of one on previous
+  curve (makes a smooth curve).
+
+BEZIER CURVES
+- 'c' = cubic curve
+- 'q' = quadratic curve
+- 's' = smooth continuation of previous curve
+* SOFTWARE FOR CREATING AND EDITING SVG GRAPHICS
+** COMPARISON
+
+Inkscape
+** LibreOffice/OpenOffice Draw
+
+** Karbon14
+** Inkscape
+*** installation
+
+  add archive to package sources and update list first...
+  $ sudo apt-add-repository ppa:inkscape.dev/stable
+  $ sudo apt update
+  $ sudo apt-get install inkscape
+
+*** built-in help & tutorials
+
+  Help-->Inkscape Manual : opens online manual in web browser
+
+  Help-->Tutorials-->... : svg format (open in a new inkscape window)
+
+*** BASIC OPERATIONS
+
+  F1 = select        --> move/scale/rotate etc
+  ... click to toggle between scale/rotate handles...
+
+
+  F2 = node editing  --> edit paths
+
+
+  Ctrl + ARROWS = move view
+
+  +/- = zoom in/out
+
+*** GROUPS
+Object-->Group/Ungroup
+
+Ctrl + G         = group objects
+Ctrl + SHIFT + G = ungroup
+*** DRAWING PATHS (BEZIER TOOL)
+
+  finish a path by either:
+  ... joining it up with it's start point
+  ... right-click to finish an un-closed path
+
+*** EDITING PATHS AND NODES
+
+  NODE MODES
+
+  Shift + C = cusp
+  Shift + S = smooth
+  Shift + Y = symmetric
+  Shift + A = auto-smooth
+
+  Ctrl + CLICK = retract handles (straight line)
+  Shift + DRAG = pull retracted handles out
+
+
+
+  SUB-PATHS
+
+  Ctrl + K         = combine paths
+  Ctrl + Shift + K = split paths
+
+
+  CONVERT TO PATH
+  Ctrl + Shift + C
+
+  SIMPLIFY PATH
+  Ctrl + L
+
+*** OVERLAPPING
+  PgUp = move object up
+  PgDn = move object down
+
+*** DUPLICATING
+  Ctrl + D --> Duplicate
+
+  Edit-->Clone-->Create Tiled Clones
+  ... enter number of rows/columns...
+  ... many more advanced options...
+  ... to convert lines into guides, must unlink first (Edit-->Clone-->Unlink Clone)...
+  ... otherwise bounding box will be converted to guides instead
+*** TEXT
+
+  F8 = text tool
+
+*** XML EDITOR
+
+  Shift + Ctrl + X = display XML tree of entire documentation
+
+*** TRACING A BITMAP IMAGE
+
+**** manual
+  import image, then draw over top of it...
+
+**** automated
+  import image, then:
+
+  Path-->Trace Bitmap
+
+  Path-->Trace Pixel Art
+
+*** INTERPOLATE (TWEENING/MORPHING)
+
+  (need to get 'interpolate' extension)
+
+  first, convert object to path...
+
+*** ADDONS/EXTENSIONS
+
+  download from:
+  https://inkscape.org/en/gallery/%3Dextension/
+
+*** FILL AND STROKE (OUTLINE)
+  Ctrl+Shift+F
+  or Object-->Fill and Stroke
+
+*** ALIGN AND DISTRIBUTE
+
+  Ctrl+Shift+A
+  or Object-->Align and Distriute
+
+  EXAMPLE: centre an object on the page
+  - select object
+  - Align and Distribute
+  - Align - relative to: page
+  - Align - centre on vertical axis
+  - Align - centre on horiontal axis
+
+*** GRIDLINES AND GUIDELINES
+
+  GRID:
+
+  View-->Grid = toggle grid
+
+  File-->Document Properties-->Grids : for many more options
+
+
+  GUIDELINES:
+
+  '|' = show/hide all guides
+
+  CREATE GUIDES:
+  ... click on either horizontal or vertical ruler and drag onto canvas...
+  ... click near to the intersection to create an angled guide...
+  ... shift+G to convert object to path
+
+  ANGLED GUIDES:
+  ... shift-drag to rotate
+  ... ctrl-drag to move origin
+  ... double-click to type exact value
+
+  LOCK ALL GUIDES: Edit-->Lock All Guides
+
+**** using the grid for drawing icons
+
+  Suppose you want to create a 24x24 pixel icon. Create a 24x24 px canvas (use the
+  Document Preferences) and set the grid to 0.5 px (48x48 gridlines). Now, if you
+  align filled objects to even gridlines, and stroked objects to odd gridlines
+  with the stroke width in px being an even number, and export it at the default
+  96dpi (so that 1 px becomes 1 bitmap pixel), you get a crisp bitmap image
+  without unneeded antialiasing.
+
+*** CRASH AND AUTOMATIC BACKUPS
+
+  ...
+
+*** PAGE SIZE
+  File-->Document Properties-->Page
+*** SCRIPTING
+Python
+*** ANIMATING WITH BLENDER
+beginner tutorial in PDF form:
+https://inkscape.org/~Jellyfish/%E2%98%85animation-with-inkscape-and-blender

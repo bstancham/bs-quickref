@@ -1,0 +1,374 @@
+SQL/MYSQL QUICKSTART GUIDE
+
+* WHAT IS SQL?
+
+    SQL stands for Structured Query Language
+    SQL lets you access and manipulate databases
+    SQL is an ANSI (American National Standards Institute) standard
+
+What Can SQL do?
+
+    SQL can execute queries against a database
+    SQL can retrieve data from a database
+    SQL can insert records in a database
+    SQL can update records in a database
+    SQL can delete records from a database
+    SQL can create new databases
+    SQL can create new tables in a database
+    SQL can create stored procedures in a database
+    SQL can create views in a database
+    SQL can set permissions on tables, procedures, and views
+
+SQL is a Standard - BUT....
+
+Although SQL is an ANSI (American National Standards Institute) standard, there are different versions of the SQL language.
+
+However, to be compliant with the ANSI standard, they all support at least the major commands (such as SELECT, UPDATE, DELETE, INSERT, WHERE) in a similar manner.
+Note 	Note: Most of the SQL database programs also have their own proprietary extensions in addition to the SQL standard!
+
+
+
+
+RDBMS
+
+RDBMS stands for Relational Database Management System.
+
+RDBMS is the basis for SQL, and for all modern database systems such as MS SQL Server, IBM DB2, Oracle, MySQL, and Microsoft Access.
+
+The data in RDBMS is stored in database objects called tables.
+
+A table is a collection of related data entries and it consists of columns and rows.
+
+* SQL BASICS
+
+- keywords are NOT case sensitive: select is the same as SELECT (although they
+  are often written in uppercase as a convention)
+- statements separated by semicolon (some database systems require semicolon
+  even for a single statement line, but not all)
+- 'single quotes' around text values
+
+COMMENTS
+/* comment */
+-- comment to end of line
+
+
+COMMON COMMANDS:
+SELECT - extracts data from a database
+UPDATE - updates data in a database
+DELETE - deletes data from a database
+INSERT INTO - inserts new data into a database
+CREATE DATABASE - creates a new database
+ALTER DATABASE - modifies a database
+CREATE TABLE - creates a new table
+ALTER TABLE - modifies a table
+DROP TABLE - deletes a table
+CREATE INDEX - creates an index (search key)
+DROP INDEX - deletes an index
+
+* EXECUTING SQL STATEMENTS FROM A TEXT FILE
+e.g. restoring database from a .sql file
+
+COMMAND LINE OPTIONS;
+--version : print version info then exit
+
+
+
+$ mysql -u root -p
+
+mysql> create database mydb;
+mysql> use mydb;
+mysql> source db_backup.dump;
+
+
+
+IMPORT BINARY .SQL FILE:
+binary mode must be enabled AND mysql run in non-interactive mode
+
+--binary-mode
+
+
+
+EXECUTE COMMANDS NON-INTERACTIVE FROM TEXT FILE:
+
+However, it is also possible to put your SQL statements in a file and then tell
+mysql to read its input from that file. To do so, create a text file text_file
+that contains the statements you wish to execute. Then invoke mysql as shown
+here:
+
+shell> mysql db_name < text_file
+
+If you place a USE db_name statement as the first statement in the file, it is
+unnecessary to specify the database name on the command line:
+
+shell> mysql < text_file
+
+* USING THE MYSQL TERMINAL SHELL
+** LOGGING IN
+Terminal login as root:
+$ mysql -u root -p
+
+... using xampp it will be:
+$ /opt/lampp/lampp start
+$ /opt/lampp/bin/mysql -u root -p
+
+** COMMAND EXAMPLES
+
+mysql> help;
+mysql> exit;
+
+mysql> show databases;
+mysql> use [database name];
+mysql> show tables;
+mysql> show columns from [table name];
+
+mysql> desc [table name];
+
+mysql> select * from [table name];
+mysql> select [column name] from [table name];
+
+Create a new user 'karen' with all privileges on the 'karentang' database and set password to 'karenpw'...
+mysql> GRANT ALL PRIVILEGES ON karentang.* To 'karen'@'localhost' IDENTIFIED By 'karenpw';
+
+* GET INFO ABOUT MYSQL USERS
+
+In MySQL, a user is identified by both a username and a host e.g. 'gordon'@'localhost'
+
+SELECT * FROM mysql.user
+SELECT user, host FROM mysql.user
+
+* COMMAND LINE OPTIONS
+
+| -h | --host=name       | connect to host e.g. IP address                                                                                                                 |
+| -p | --password[=name] | password to use - if password value is omitted mysql will prompt for one                                                                        |
+| -u | --user=name       | user for login                                                                                                                                  |
+|    | --print-defaults  | print the program argument list and exit. Must be given as the first option                                                                     |
+| -P | --port=num        | Port number to use for connection or 0 for default to, in order of preference, my.cnf, $MYSQL_TCP_PORT, /etc/services, built-in default (3306). |
+| -D | --database=name   | database to use                                                                                                                                 |
+
+* SQL LANGUAGE 
+** SELECT
+
+$ SELECT column_name,column_name FROM table_name;
+$ SELECT * FROM table_name;
+$ SELECT column_name,column_name FROM table_name;
+$ SELECT DISTINCT column_name,column_name FROM table_name; -- use DISTINCT keyword to omit duplicate values
+$ SELECT DISTINCT City FROM Customers;
+
+$ SELECT * FROM Customers WHERE Country='Mexico';
+
+Operators in The WHERE Clause:
+=       --- Equal
+<>      --- Not equal. Note: In some versions of SQL this operator may be written as !=
+>       --- Greater than
+<       --- Less than
+>=      --- Greater than or equal
+<=      --- Less than or equal
+BETWEEN --- Between an inclusive range
+LIKE    --- Search for a pattern
+IN      --- To specify multiple possible values for a column
+
+AND & OR:
+$ SELECT * FROM Customers WHERE Country='Germany' AND City='Berlin';
+$ SELECT * FROM Customers WHERE City='Berlin' OR City='München';
+$ SELECT * FROM Customers WHERE Country='Germany' AND (City='Berlin' OR City='München');
+
+ORDER BY:
+syntax:
+SELECT column_name, column_name
+FROM table_name ORDER BY column_name ASC|DESC, column_name ASC|DESC;
+
+
+
+WILDCARD OPERATORS (used with LIKE):
+_     matches a single character.
+%     matches one or more characters.
+[abc] matches one of a list of characters.
+[a-e] matches one of a range of characters.
+SELECT FROM table-name WHERE column-name LIKE ...;
+$ SELECT FROM Customers WHERE  LIKE ...;
+
+SELECT * FROM Customers WHERE City LIKE '%es%';
+SELECT * FROM Customers WHERE City LIKE '_erlin';
+SELECT * FROM Customers WHERE City LIKE '[bsp]%';
+SELECT * FROM Customers WHERE City LIKE '[a-c]%';
+SELECT * FROM Customers WHERE City LIKE '[!bsp]%';    -- city NOT starting with b, s or p
+SELECT * FROM Customers WHERE City NOT LIKE '[bsp]%'; -- city NOT starting with b, s or p
+
+** INSERT INTO
+
+Insert new records in a table.
+
+INSERT INTO table_name VALUES (value1,value2,value3,...);
+INSERT INTO table_name (column1,column2,column3,...) VALUES (value1,value2,value3,...);
+
+$ INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country) VALUES ('Cardinal','Tom B. Erichsen','Skagen 21','Stavanger','4006','Norway');
+$ INSERT INTO Customers (CustomerName, City, Country) VALUES ('Cardinal', 'Stavanger', 'Norway'); 
+
+** UPDATE
+
+Update existing records in a table.
+
+WARNING! If you omit the WHERE clause, ALL records will be updated!
+
+UPDATE table_name SET column1=value1,column2=value2,... WHERE some_column=some_value;
+
+$ UPDATE Customers SET ContactName='Alfred Schmidt', City='Hamburg' WHERE CustomerName='Alfreds Futterkiste';
+
+** SEARCH AND REPLACE
+
+use REPLACE
+
+OR dump the database into a text file, run search and replace using a text editor or sed then reload the database to MYSQL...
+
+** DELETE
+
+Delete records in a table.
+
+WARNING! If you omit the WHERE clause, ALL records will be deleted from table!
+
+$ DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste' AND ContactName='Maria Anders';
+
+** SQL FUNCTIONS
+
+Avg()
+Count()
+First()
+Last()
+Max()
+Min()
+Sum()
+Group By
+Having
+Ucase()
+Lcase()
+Mid()
+Len()
+Round()
+Now()
+Format()
+
+** builtin functions/variables...
+mysql> SELECT VERSION(), CURRENT_DATE;
+mysql> SELECT USER();
+mysql> SELECT DATABASE(); -- show current database name
+mysql> SELECT COUNT(*) FROM pet; -- show number of rows in pet table
+mysql> SELECT owner, COUNT(*) FROM pet GROUP BY owner; -- how many pets each owner has
+mysql> SELECT species, COUNT(*) FROM pet GROUP BY species; -- how may pets of each species
+mysql> SELECT species, sex, COUNT(*) FROM pet GROUP BY species, sex; -- count by combination of species AND sex
+mysql> SELECT species, sex, COUNT(*) FROM pet WHERE species = 'dog' OR species = 'cat' GROUP BY species, sex; -- same for only dogs & cats
+
+** mathematical operations
+mysql> SELECT SIN(PI()/4), (4+1)*5;
+
+* CREATE A DATABASE
+
+mysql> CREATE DATABASE menagerie; -- database names ARE case-sensitive!
+
+mysql> USE menagerie              -- switch to database
+OR select database on login to mysql...
+$ mysql -u ben -p menagerie 
+
+mysql> SHOW TABLES;
+mysql> SHOW TABLES IN menagerie;
+mysql> SHOW DATABASES;
+
+mysql> CREATE TABLE pet (name VARCHAR(20), owner VARCHAR(20), species VARCHAR(20), sex CHAR(1), birth DATE, death DATE);
+mysql> DESCRIBE pet; -- describes table columns
+
+mysql> INSERT INTO pet VALUES ('Puffball','Diane','hamster','f','1999-03-30',NULL); -- insert a row of data into the table
+
+mysql> LOAD DATA LOCAL INFILE '/path/pet.txt' INTO TABLE pet; -- load data into table from a text file...
+mysql> LOAD DATA LOCAL INFILE '/path/pet.txt' INTO TABLE pet LINES TERMINATED BY '\r\n'; -- maybe useful for windows machines or other systems...
+... text file example (\N = NULL value, TAB separates values)...
+Fluffy	Harold	cat	f	1993-02-04      \N
+Claws	Gwen	cat	m	1994-03-17      \N
+Whistler        Gwen    bird    \N              1997-12-09      \N
+Bowser	Diane	dog	m	1979-08-31	1995-07-29
+Slim	Benny	snake	m	1996-04-29      \N
+
+* MYSQL: MANAGING USERS (CREATING USERS & GRANTING PRIVILEGES)
+https://dev.mysql.com/doc/refman/5.7/en/account-management-sql.html
+
+mysql> CREATE USER 'jeffrey'@'localhost' IDENTIFIED BY 'new_password';
+mysql> CREATE USER 'jeffrey'@'localhost' IDENTIFIED BY 'new_password' PASSWORD EXPIRE; -- password is expired, so will have to choose new one on first login
+mysql> CREATE USER 'jeffrey'@'localhost' IDENTIFIED WITH sha256_password BY 'new_password' PASSWORD EXPIRE INTERVAL 180 DAY;
+* BACKING UP A DATABASE
+
+https://mariadb.com/kb/en/making-backups-with-mysqldump/
+
+$ mysqldump 
+
+... using xampp it will be:
+$ /opt/lampp/bin/mysqldump
+
+* CONNECTING TO A MYSQL DATABASE REMOTELY
+
+** INTRO
+Connect to a database remotely like this (where the IP address of the database is 44.55.66.77):
+
+  $ mysql -u fooUser -p -h 44.55.66.77
+
+** REALWORLD EXAMPLE
+
+$ /opt/lampp/bin/mysql -u bschambe_wp_user -p -h 91.208.99.2 -P 1156
+
+** useful article
+Connect to a MySQL database remotely
+
+    Last updated on: 2018-12-19 Authored by: Rackspace Support 
+
+This article explains how to set up a user on your MySQL® server in order to connect to a MySQL database remotely.
+
+Note: The article shows you how to connect to a MySQL instance local to a server. For the corresponding steps for Cloud Databases, see Connect to a Cloud Database instance.
+
+In order to perform these steps, you must have local server access to log in as the root MySQL user.
+Retrieve your IP address
+
+You need to know the Internet Protocol (IP) address of the computer from which you’re connecting. You can retrieve this information by visiting one of the following sites:
+
+    https://icanhazip.com
+    https://www.whatismyip.com
+
+Grant access
+
+Perform the following steps to grant access to a user from a remote host:
+
+    Log in to your MySQL server locally as the root user by using the following command:
+
+     # mysql -u root -p
+
+    You are prompted for your MySQL root password.
+
+    Note: If you gain access to MySQL without entering a password, consider running the mysql_secure_installation script, which sets a MySQL root password and updates other settings to increase security. Microsoft SQL Server Managed Services can help you manage your SQL server instances.
+
+    Use a GRANT command in the following format to enable access for the remote user. Ensure that you change 1.2.3.4 to the IP address that you obtained previously, and my_password to the password that you want fooUser to use:
+
+     mysql> GRANT ALL ON fooDatabase.* TO fooUser@'1.2.3.4' IDENTIFIED BY 'my_password';
+
+    This statement grants ALL permissions to the new user when the user connects from the specified IP address by using the specified password.
+
+Test the connection remotely
+
+To test the connection remotely, access the MySQL server from another Linux® server. The following example uses 44.55.66.77 as the IP address of the MySQL server:
+
+# mysql -u fooUser -p -h 44.55.66.77
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 17
+Server version: 5.0.45 Source distribution
+
+Type 'help;' or '\h' for help. Type '\c' to clear the buffer.
+
+mysql> _
+
+Considerations
+
+When you set up a remote user, consider the following information:
+
+    A local user is different from a remote user. For example, fooUser@localhost is not the same as fooUser@1.2.3.4. If you want both users to have the same permissions, you need to duplicate permissions.
+
+    We don’t recommend granting ALL permissions. For standard users, we recommend granting GRANT SELECT,INSERT,UPDATE,DELETE permissions.
+
+    To grant access to only a specific table, you can use the database.table command. For example, in the preceding step, you could use fooDatabase.fooTable instead of fooDatabase.
+
+    If you’re using iptables, you need to add an entry to your firewall rule for Transmission Control Protocol (TCP) port 3306. You can use the name mysql for the port number.

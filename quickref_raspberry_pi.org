@@ -1,0 +1,146 @@
+RASPBERRY PI
+
+* GPIO pins (General Purpose Input Output)
+
+NOTE:
+ See GPIO pin layout diagram
+ GPIO pins output 3.3v when 'on'
+ there are also some power supply pins at both 3.3v and 5v
+ may have to run these python programs as superuser
+ make sure LED is the right way around
+
+
+# LIGHTING AN LED
+http://thepihut.com/blogs/raspberry-pi-tutorials/27968772-turning-on-an-led-with-your-raspberry-pis-gpio-pins
+
+# THE CIRCUIT
+see GPIO pins diagram...
+... put LED in series with resistor...
+
+# CAUSES AN LED TO TURN ON FOR 1 SECOND
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BCM) # which naming convention to use (there are several different names for each pin)
+GPIO.setwarnings(False)
+GPIO.setup(18,GPIO.OUT) # set up pin 18 for outputting information, so we can turn it 'on' and 'off'
+# flash LED on for 1 second
+GPIO.output(18,GPIO.HIGH) # turn pin 18 'on' (3.3 volts)
+time.sleep(1) # hold for 1 sec
+GPIO.output(18,GPIO.LOW) # turn pin 18 'off' (voltage to zero)
+
+
+
+# PUSHBUTTON INPUT
+# http://razzpisampler.oreilly.com/ch07.html
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+while True:
+    input_state = GPIO.input(18)
+    if input_state == False:
+        print('Button Pressed')
+        time.sleep(0.2)
+
+
+
+
+USING GPIO 5v OUTPUT:
+... string 5v LED in series with resistor
+... for switching: use transistors switched by the standard GPIO 3.3v pins
+
+
+
+* BOOT DIRECTLY TO COMMAND LINE
+
+$ sudo raspi-config
+... in boot options menu...
+
+also use raspi-config to change user default-user password, and other things...
+
+* REMOTE ACCESS COMMAND LINE WITH SSH
+
+NB: need to know IP address for remote computer and, user name and password for user on that computer...
+
+... get IP address
+$ hostname -I
+OR
+$ ifconfig #
+
+... enable SSH
+On RPi: Preferences-->Raspberry Pi Configuration
+
+... enable SSH on a headless setup
+
+... setup SSH client
+
+10.0.0.220
+192.168.0.12
+
+** SSH in emacs using TRAMP
+See quickstart-emacs...
+
+* RUN PROGRAM ON STARTUP
+
+** .bashrc (EASY)
+... just add command to the end of the .bashrc file...
+
+PROBLEM: my program goes into an infinite loop waiting for the button to be
+pressed, this means that when I try to do remote emacs editing through TRAMP and
+a new bash session is invoked, there is an infinite loop and I can't get in!
+
+** /etc/init.d (BETTER)
+
+This directory contains the scripts which are started during the boot process (in addition, all programs here are  executed when you shutdown or reboot the system).
+
+Add the program to be run at startup to the init.d directory using the following lines:
+
+sudo cp /home/pi/sample.py /etc/init.d/
+
+Move to the init directory and open the sample script
+
+cd /etc/init.d
+sudo nano sample.py
+
+Add the following lines to the sample script to make it a Linux Standard Base LSB A standard for software system structure, including the filesystem hierarchy used in the Linux operating system init script.
+
+# /etc/init.d/sample.py
+### BEGIN INIT INFO
+# Provides:          sample.py
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+
+init.d scripts require the above runtime dependencies to be documented so that it is possible to verify the current boot order, the order the boot using these dependencies, and run boot scripts in parallel to speed up the boot process.  
+
+You can learn to write init.d scripts following the guide here.
+https://wiki.debian.org/LSBInitScripts
+
+BRIEF DETAILS:
+# Provides: name of the service provided by the script - normally the same as the name of the script (minus the .sh)
+# Required-Start: facilities which must be available before starting the script...
+# Required-Stop: facilities used by the service provided by the script - this script should stop before these listed services - usually the same as Required-Start
+# Should-Start: see Required-Start (but not essential)
+# Should-Stop: see Required-Stop (but not essential)
+# Default-Start: defines the run levels where the script should be started
+# Default-Stop: 
+
+Make the sample script in the init directory executable by changing its permission.
+
+sudo chmod +x sample.py
+
+Run this command:
+
+sudo update-rc.d sample.py defaults
+
+Now reboot to hear the Pi speak at startup.
+
+sudo reboot
+
+*** actual code...
+
+# /etc/init.d/bstpg_console.py

@@ -1,0 +1,199 @@
+PERL QUICKSTART GUIDE
+=====================
+
+
+# comments like in shell script
+
+
+VARIABLES:
+$x = 27;
+
+
+SPECIAL VARIABLES:
+$_ ---> the default variable
+
+
+
+DOCUMENTATION:
+
+
+
+
+======================================================================
+ONE-LINERS:
+* Use command line option -e
+* Enclose code in quotes
+
+EXAMPLES:
+perl -e 'print "hello world\n";'
+perl -e 'if ("mega" =~ /egg/) { print "T\n"; } else { print "F\n"; }' # testing an RE - print T or F
+perl -e '$_ = "dingle01.JPG"; s/^/DONG/; print "$_\n";' # testing a substitution
+
+
+
+======================================================================
+HELP & DOCUMENTATION:
+
+* perldoc command line tool ($ sudo apt-get install perl-doc)
+
+
+
+======================================================================
+BOOLEAN VALUES:
+
+* The following evaluate to false - anything else is true:
+0         # converts to "0" so it's false;
+""        # is empty string so it's false;
+'0'
+0.0       # computes to 0 and is then converted to "0" so false
+''        # Empty scalar
+()        # Empty list
+undef     # evaluates to "" so it's false -- note, you may get a warning "use of uninitialized value" if you are using -w
+2-3+1     # computes to 0 which is converted to "0" so it is false
+
+
+"0.0"     # TRUE: not "0" or "" so it's TRUE
+
+
+
+======================================================================
+REGULAR EXPRESSIONS:
+
+* A regular expression is contained in slashes, and matching occurs with the =~ operator. The following expression is true if the string the appears in variable $sentence.
+* RE is case sensitive.
+
+$sentence =~ /the/ # true if RE matches
+$sentence !~ /the/ # true if NON-MATCH
+/the/              # operate on the default variable $_ if match operator not used
+
+SPECIAL CHARACTERS:
+.	# Any single character except a newline
+^	# The beginning of the line or string
+$	# The end of the line or string
+*	# Zero or more of the last character
++	# One or more of the last character
+?	# Zero or one of the last character
+\n	# A newline
+\t	# A tab
+\w	# Any alphanumeric (word) character. The same as [a-zA-Z0-9_]
+\W	# Any non-word character. The same as [^a-zA-Z0-9_]
+\d	# Any digit. The same as [0-9]
+\D	# Any non-digit. The same as [^0-9]
+\s	# Any whitespace character: space, tab, newline, etc
+\S	# Any non-whitespace character
+\b	# A word boundary, outside [] only
+\B	# No word boundary
+\       # Use backslash to escape any special character
+
+GROUPED CHARACTERS: (^ = negation)
+[qjk]		# Either q or j or k
+[^qjk]		# Neither q nor j nor k
+[a-z]		# Anything from a to z inclusive
+[^a-z]		# No lower case letters
+[a-zA-Z]	# Any letter
+[a-z]+		# Any non-zero sequence of lower case letters
+
+OR/ALTERNATIVES:
+jelly|cream	# Either jelly or cream
+(eg|le)gs	# Either eggs or legs
+(da)+		# Either da or dada or dadada or...
+
+EXAMPLE MATCHES: (Remember that should be enclosed in /.../ slashes to be used.)
+t.e	# t followed by anthing followed by e
+	# This will match the
+	#                 tre
+	#                 tle
+	# but not te
+	#         tale
+^f	# f at the beginning of a line
+^ftp	# ftp at the beginning of a line
+e$	# e at the end of a line
+tle$	# tle at the end of a line
+und*	# un followed by zero or more d characters
+	# This will match un
+	#                 und
+	#                 undd
+	#                 unddd (etc)
+.*	# Any string without a newline. This is because
+	# the . matches anything except a newline and
+	# the * means zero or more of these.
+^$	# A line with nothing in it.
+[01]		# Either "0" or "1"
+\/0		# A division by zero: "/0"
+\/ 0		# A division by zero with a space: "/ 0"
+\/\s0		# A division by zero with a whitespace:
+		# "/ 0" where the space may be a tab etc.
+\/ *0		# A division by zero with possibly some
+		# spaces: "/0" or "/ 0" or "/  0" etc.
+\/\s*0		# A division by zero with possibly some
+		# whitespace.
+\/\s*0\.0*	# As the previous one, but with decimal
+		# point and maybe some 0s after it. Accepts
+		# "/0." and "/0.0" and "/0.00" etc and
+		# "/ 0." and "/  0.0" and "/   0.00" etc.
+
+
+
+======================================================================
+SUBSTITUTION & TRANSLATION:
+
+
+MATCH OPERATOR:
+m//
+
+SUBSTITUTION OPERATOR:
+s///
+
+TRANSLATION OPERATOR:
+tr///
+
+
+$sentence =~ s/london/London/; # replace a single occurence in the string $sentence
+s/london/London/; # do the same in the default variable $_
+
+s/london/London/; # substitutes first instance only
+s/london/London/g; # 'global' option - substitutes all instances
+s/london/London/gi; # 'i' = ignore case
+s/[Ll][Oo][Nn][Dd][Oo][Nn]/London/g; # much more complicated way of doing the same thing
+
+s/^/DONG/; # add 'DONG' to start
+s/$/DONG/; # add 'DONG' to end
+
+
+REMEMBERING PATTERNS:
+* Anything matched in parenthesis gets remembered in the special variables $1,...,$9. These strings can also be used in the same expression using RE codes /1,...,/9.
+
+s/([A-Z])/:\1:/g; # replace each uppercase letter by that letter surrounded by colons
+
+
+
+======================================================================
+STRINGS:
+* Double-quoted strings are interpolated - single-quoted strings aren't.
+
+
+
+STRING-LIKE OPERATORS:
+
+'STRING' # A single-quoted string literal
+q%STRING% # Also a single-quoted string literal (afer 'q', use any character)
+
+"STRING" # A double-quoted (interpolated) string literal
+qq!STRING! # Also a double-quoted string literal (afer 'qq', use any character)
+
+qw/STRING/ # Evaluates to a list of the words extracted out of STRING, using embedded whitespace as the word delimiters.
+
+qx/STRING/
+`STRING`
+
+
+
+======================================================================
+ARRAYS:
+
+
+HASHES:
+
+
+
+OBJECTS:

@@ -1,0 +1,669 @@
+* donut tutorial
+up to part 7 (texturing)
+https://www.youtube.com/watch?v=CmrAv8TSAao
+
+* DOWNLOAD/INSTALL/SETUP
+
+(December 2021)
+
+downloaded from website
+
+uncompressed in ~/Software
+
+double-click to run
+
+* MISC USEFUL THINGS
+
+Shift+C = return 3D cursor to the origin and reset view
+
+Shift+Space = toggle fullscreen (for viewport with mouse over)
+
+To ORBIT VIEWPOINT:
+click & drag on the Axes gizmo (in 3D Viewport)
+
+Scale interface (text etc):
+Edit-->Preferences-->Interface
+
+shift-A = add
+
+- object mode
+- edit mode
+
+faces-> delete
+
+
+select vertices all the way through an object:
+- switch to x-ray mode
+- make box-selection as normal
+
+make selected vertices into a new separate object
+- select vertices
+- duplicate (Shift-D)
+- p (to make part of an object into a new object)
+- ... choose 'selection'
+
+select only linked/connected parts
+- Ctrl-L
+
+dragging donut icing
+- snap to face
+- project individual elements
+
+
+APPLY modifier
+
+** editing shape
+
+moving vertices around (use proportional editing to drag along nearby vertices as well):
+- in edit mode
+- turn proportional editing on
+- select some vertices
+- g - to move
+- mouse wheel to change radius of proportional editing effect
+
+shring/fatten (Alt-S):
+- in edit mode
+- select some vertices
+- alt-s - to move along direction of normals
+
+select random vertices/edges/faces:
+- in edit mode
+- select-->random
+
+** sculpting
+
+Stroke-->Stroke Methods
+- Space/Airbrush etc
+
+** world properties
+
+- lighting strength
+
+** rendering
+
+F12 to start rendering
+ESC to stop
+
+
+
+
+
+** camera
+
+camera to view:
+- Ctrl-Alt-Numpad0
+OR
+- n (bring up properties)
+- view-->camera to view
+- ... untick box when you want to stop moving the camera
+
+** lights
+
+
+
+** render engines
+*** workbench
+*** eevee = realtime - similar to what you'd get in a game engine e.g. unreal
+
+
+*** cycles = raytracing - more realistic (not realtime)
+
+make rendering faster - good for use in viewport:
+- set max samples count low
+- then add denoiser
+
+more handy settings:
+- noise threshold
+- max/min samples (adaptive sampling may be used to reduce number of samples in easy-to-render areas)
+- time limit (stop rendering after set time limit)
+
+** material properties
+
+** lighting
+
+- sun is very bright!
+- spot
+- point light
+
+** preferences
+
+emulate numpad:
+Edit-->Preferences-->Input
+
+** boolean operations
+
+select two geometry objects
+single-spanner symbol -> add modifier -> boolean
+
+* CREATING A 2D MESH
+
+draw outline in SVG program such as Inkscape
+
+* bezier curve
+
+Shift-A --> add curve/bezier curve
+
+TAB (edit mode)
+
+select control point(s) and press G to move them
+
+EXTENDING/ADDING MORE NODES
+- (in edit mode)
+- select an end point
+- press E, or R-Click-->Extrude Curve and Move
+
+* repeat an object along a curve
+
+NOTE: want CURVE and MESH to both be in same location, otherwise there will be
+offset, which is usually undesirable
+
+create a curve
+- make sure location is at the origin
+
+create a mesh object
+- make sure that it is centred at the origin, otherwise it will be offset when
+  we add it to the path
+
+add an array modifier to the mesh
+- set relative offset to reflect the axis of the mesh which you want to extend along
+- set Fit Type to Fit Curve
+- select the our curve - now the length of the array will be the same as the length of the curve (the shape doesn't follow yet)
+
+add a curve modifier to the mesh
+- select the curve object
+
+That should do it!
+
+* scripting
+
+- python console
+
+- flow chart/nodes view
+
+* 100 blender tips video
+- drag and drop materials
+- copy to selected
+- knife cut
+- ctrl + space
+- bisect
+- ivy generator addon
+- bsckspace to reset parameters
+- alt-G = reset position of object - alt-R = reset rotation
+- ctrl+right click -> auto find shortest path of faces
+- HDRI - 360 view textures which contain lighting data - download from HDRI HAVEN
+- convert to voxels --> modifiers
+- select linked flat faces (can adjust sharpness)
+- architecture addons - archimesh/archipack
+- color ramp node
+- pixabay - for good backgrounds
+- textures.com - for good textures
+- use image as a colour palette
+- walk navigation - walk around scene link fps game with WASD etc
+- separate by loose parts
+- select linked (apply limits, materials/seams etc)
+- render with transparent background
+- convert texture to normal map
+- snap view to face (shift/numpad key)
+- use alt-D instead of shift-D --> shift-D = duplicate --> alt-D = instance
+- discombobulator (addon)
+- auto-smooth - automatically chooses which angles to smooth based on maximum angle
+- radial symmetry - for sculpting
+- grid-fill - fill 2D shape with quads
+- select boundary loops
+- scatter objects (addon)
+- recalculate normals
+- dissolve edges (instead of delete edges)
+- node wrangler (addon) --> see any node on it's own
+- ray visibility options (cycles renderer)
+- "steal like an artist" (book) - use blendswap to get free models
+- import SVG - imports as curves by default --> convert to mesh etc
+- circle select - click and drag to "paint" selection area
+- pie menus
+- set camera to view - Ctrl+Alt+Numpad0
+- display all UVs
+- loop cuts
+- bevel loop cuts
+- ctrl-i - inverse selection
+- hardOps/boxcutter (addons)
+- denoiser (rendering)
+- bend - shift-W
+- blender sync - sync blender settings on the cloud
+- animating in edit mode
+- follow path constraint - offset value
+- skin modifier --> add skin to a path!
+  - add cube (shift-A --> mesh --> cube)
+  - TAB (edit mode), then RIGHT-CLICK-->merge vertices (to end up with a single vertex)
+  - Ctrl+RightClick to add connected vertex/edge
+  - add sking modifier
+  - switch to wireframe mode
+  - select any vertex
+  - press Ctrl-A to scale the skin around the vertex
+  - ... make each section as thick or thin as you like
+- boolTool (addon)
+- snapping settings - snap to face, edge, vertex etc
+- shrink - shrink/fatten
+- symmetrize
+- bridge faces
+- bridge edge loops
+- transform locks
+- repeat last action - shift-R
+- ctrl-LMB (with something selected i.e. a face) to extend...
+- the blender manual - technical definitions
+- join blender community on social media
+
+* scripting in python
+** documentation
+API documentation: https://docs.blender.org/api/current/
+API quickstart: https://docs.blender.org/api/current/info_quickstart.html
+
+** key concepts
+*** data access
+Accessing data from the currently loaded blend-file is done with the module bpy.data
+
+: bpy.data.objects
+
+: bpy.data.scenes
+
+: bpy.data.materials
+
+Access items in collections by string or by index --> WARNING! index of a member
+may change while running blender:
+
+: list(bpy.data.objects)
+
+: bpy.data.objects['Cube']
+
+: bpy.data.objects[0]
+
+CREATE OR REMOVE DATA OBJECTS
+
+New bpy.data objects cannot be created directly - add or remove by using methods
+in the collections:
+
+: mesh = bpy.data.meshes.new(name="MyMesh")
+
+: bpy.data.meshes.remove(mesh)
+
+CONTEXT (GET USER SELECTION & OTHER THINGS RELATED TO CURRENT EDITOR CONTEXT)
+
+: bpy.context.object
+
+: bpy.context.selected_objects
+
+: bpy.context.visible_bones
+
+OPERATORS (Tools)
+
+Operators are tools generally accessed by the user from buttons, menu items or
+key shortcuts. From the user perspective they are a tool but Python can run
+these with its own settings through the bpy.ops module.
+
+: bpy.ops.mesh.flip_normals()
+
+: bpy.ops.mesh.hide(unselected=False)
+
+: bpy.ops.object.transform_apply()
+
+OPERATOR POLL
+
+Many operators have a “poll” function which checks if the cursor is in a valid
+area or if the object is in the correct mode (Edit Mode, Weight Paint Mode,
+etc). When an operator’s poll function fails within Python, an exception is
+raised.
+
+For example, calling bpy.ops.view3d.render_border() from the console raises the following error:
+
+RuntimeError: Operator bpy.ops.view3d.render_border.poll() failed, context is incorrect
+In this case the context must be the 3D Viewport with an active camera.
+
+Can do something like this:
+#+BEGIN_SRC python
+if bpy.ops.view3d.render_border.poll():
+    bpy.ops.view3d.render_border()
+#+END_SRC
+
+** scripting examples
+
+Basic add cuboids:
+#+BEGIN_SRC python
+import bpy
+from random import randint
+
+# add 5 cuboids at random locations
+for c in range(0, 5):
+    x = randint(-10, 10)
+    y = randint(-10, 10)
+    z = randint(-10, 10)
+    bpy.ops.mesh.primitive_cube_add(location=(x, y, z), scale(0.5, 6, 0.5))
+#+END_SRC
+
+Add a cuboid, then subtract parts of it using boolean difference:
+#+BEGIN_SRC python
+  import bpy
+
+  # add cuboid and save references to it in a variable (cuboid will be selected
+  # automatically when added so can just get first selected object)
+  bpy.ops.mesh.primitive_cube_add(location=(5, 5, 5), scale=(0.5, 10, 0.5))
+  c1 = bpy.context.selected_objects[0]
+
+  for i in range(5):
+
+      bpy.ops.mesh.primitive_cube_add(location=(5.2, 3 + (i * 2), 5), scale=(0.5, 0.5, 4))
+      c2 = bpy.context.selected_objects[0]
+
+      # perform boolean operation
+      # - add new boolean modifier to c1
+      # - set c2 as the OBJECT of the modifier
+      # - set boolean operation to DIFFERENCE, then apply
+      boolMod = c1.modifiers.new('bool_diff', 'BOOLEAN')
+      boolMod.object = c2
+      boolMod.operation = 'DIFFERENCE'
+      bpy.ops.object.modifier_apply(modifier='bool_diff')
+
+      # need to hide c2 or we won't be able to see the effect
+      c2.hide_set(True)
+#+END_SRC
+
+Switch mode, do something, then return to original mode:
+#+BEGIN_SRC python
+import bpy
+oldMode = bpy.context.mode
+bpy.ops.object.mode_set(mode='OBJECT')
+
+bpy.ops.object.mode_set(mode=oldMode)
+#+END_SRC
+
+Make a curved path, then add a bunch of spheres along it:
+#+BEGIN_SRC python
+  import bpy
+
+  def create_curve(coords_list):
+      crv = bpy.data.curves.new('crv', 'CURVE')
+      crv.dimensions = '3D'
+      spline = crv.splines.new(type='NURBS')
+      spline.use_endpoint_u = True
+      spline.points.add(len(coords_list) - 1) 
+      for p, new_co in zip(spline.points, coords_list):
+          p.co = (new_co + [1.0])  # (add nurbs 
+      obj = bpy.data.objects.new('object_name', crv)
+      bpy.data.scenes[0].collection.objects.link(obj)
+
+  coords = []
+  coords.append([0,0,0])
+  coords.append([0,0,1])
+  coords.append([1.079576297914498, 0.12957629791449818, 1])
+  coords.append([1.796242964581165, -0.5870903687521685, 1])
+
+  create_curve(coords)
+
+
+
+# make mesh object and create an array following curve
+
+  bpy.ops.mesh.primitive_cube_add(enter_editmode=False, align='WORLD', location=(0, 0, 0), scale=(0.1, 0.1, 0.1))
+
+  bpy.ops.object.modifier_add(type='ARRAY')
+
+  bpy.context.object.modifiers["Array"].fit_type = 'FIT_CURVE'
+  bpy.context.object.modifiers["Array"].curve = bpy.data.objects["object_name"]
+  bpy.context.object.modifiers["Array"].relative_offset_displace[0] = 1.5
+
+  bpy.ops.object.modifier_add(type='CURVE')
+  bpy.context.object.modifiers["Curve"].object = bpy.data.objects["object_name"]
+
+#+END_SRC
+
+Make spheres within an cuboid area and add them with BOOLEAN UNION
+... need to CONVERT TO MESH so that I can get rid of all the boolean operations
+and dependent objects, but that part of script doesn't work yet!
+#+BEGIN_SRC python
+import bpy
+#from random import randint
+from random import uniform as randfloat
+
+agregate = None
+
+# add some spheres
+for c in range(0, 5):
+    x = randfloat(-1, 1)
+    y = randfloat(-1, 1)
+    z = randfloat(0, 0.2)
+    bpy.ops.mesh.primitive_uv_sphere_add(location=(x, y, z), scale=(1, 1, 1))
+    
+    if agregate == None:
+        agregate = bpy.context.selected_objects[0]
+        agregate.name = "agregate"
+    else:
+        temp = bpy.context.selected_objects[0]
+        unionMod = agregate.modifiers.new('bool_union', 'BOOLEAN')
+        unionMod.object = temp
+        unionMod.operation = 'UNION'
+        bpy.ops.object.modifier_apply(modifier='bool_union')
+        temp.hide_set(True)
+
+
+#bpy.ops.object.select_all(action='DESELECT')
+##bpy.ops.outliner.item_activate(deselect_all=True)
+
+#agregate = bpy.data.objects["agregate"]
+#agregate.select_set(True)
+#bpy.ops.object.convert(target='MESH')
+
+#finalMesh = bpy.context.selected_objects[0]
+#finalMesh.name = 'final_mesh'
+
+#bpy.ops.object.convert(target='MESH')
+
+#finalMesh = bpy.context.selected_objects[0]
+#finalMesh.name = 'final_mesh'
+
+#+END_SRC
+
+* useful little scripts
+** create a new uv sphere primitive and add as a boolean difference modifier to existing scene object
+
+USAGE:
+- change name "subtractive01" to name of whichever object you want to add subtractive modifer to
+- change type of primitive, location & size if required
+
+#+BEGIN_SRC python
+import bpy
+
+obj = bpy.data.objects['subtractive01']
+
+bpy.ops.mesh.primitive_uv_sphere_add(location=(5.2, 3, 5), scale=(2, 2, 2))
+obj2 = bpy.context.selected_objects[0]
+
+boolMod = obj.modifiers.new('bool_diff', 'BOOLEAN')
+boolMod.object = obj2
+boolMod.operation = 'DIFFERENCE'
+bpy.ops.object.modifier_apply(modifier='bool_diff')
+#+END_SRC
+
+
+subtractive boolean operation, then convert to mesh and delete the subtraction object
+#+BEGIN_SRC python
+  import bpy
+
+  # add cuboid and save references to it in a variable (cuboid will be selected
+  # automatically when added so can just get first selected object)
+  bpy.ops.mesh.primitive_cube_add(location=(5, 5, 5), scale=(0.5, 10, 0.5))
+  base_object = bpy.context.selected_objects[0]
+  base_object.name = 'base_object'
+
+  bpy.ops.mesh.primitive_cube_add(location=(5.2, 3, 5), scale=(0.5, 0.5, 4))
+  temp = bpy.context.selected_objects[0]
+
+  # perform boolean operation
+  # - add new boolean modifier to base_object
+  # - set temp as the OBJECT of the modifier
+  # - set boolean operation to DIFFERENCE, then apply
+  boolMod = base_object.modifiers.new('bool_diff', 'BOOLEAN')
+  boolMod.object = temp
+  boolMod.operation = 'DIFFERENCE'
+  bpy.ops.object.modifier_apply(modifier='bool_diff')
+
+  # convert base_object to mesh - gets rid of dependency on boolean modifier, so
+  # that we can delete the temp object
+  bpy.ops.object.select_all(action='DESELECT')
+  base_object.select_set(True)
+  bpy.context.view_layer.objects.active = base_object
+  bpy.ops.object.convert(target='MESH')
+
+  # delete temporary object
+  bpy.ops.object.select_all(action='DESELECT')
+  temp.select_set(True)
+  bpy.ops.object.delete(use_global=False)
+#+END_SRC
+
+
+creating random step patterns by boolean union
+
+#+BEGIN_SRC python
+  # build random stairs by boolean union
+
+  import bpy
+  from random import random as rand
+
+  # dimensions in metres
+  base_unit_size = 2
+  step_size = 0.2
+
+  # makes base shape at given location and returns the resulting object
+  def create_base_shape(x, y, z):
+      #bpy.ops.mesh.primitive_cube_add(size=1, location=(x, y, z), scale=(base_unit_size, base_unit_size, step_size * 2))
+      bpy.ops.mesh.primitive_cube_add(size=base_unit_size, location=(x, y, z))
+      return bpy.context.selected_objects[0]
+
+  # init point at origin
+  x = 0
+  y = 0
+  z = 0
+
+  xStep = 0;
+  yStep = 0;
+  zStep = 0;
+
+  # create base shape at start position
+  base = create_base_shape(x, y, z)
+  base.name = "base_shape"
+
+  # adds a step at the current point
+  def add_step():
+      temp = create_base_shape(x, y, z)
+    
+      # perform boolean operation
+      # - add new boolean modifier to base_object
+      # - set temp as the OBJECT of the modifier
+      # - set boolean operation to DIFFERENCE, then apply
+      boolMod = base.modifiers.new('bool_diff', 'BOOLEAN')
+      boolMod.object = temp
+      boolMod.operation = 'UNION'
+      bpy.ops.object.modifier_apply(modifier='bool_diff')
+
+      # convert base_object to mesh - gets rid of dependency on boolean modifier, so
+      # that we can delete the temp object
+      bpy.ops.object.select_all(action='DESELECT') # select NONE
+      base.select_set(True)
+      bpy.context.view_layer.objects.active = base
+      bpy.ops.object.convert(target='MESH')
+
+      # delete temporary object
+      bpy.ops.object.select_all(action='DESELECT')
+      temp.select_set(True)
+      bpy.ops.object.delete(use_global=False)
+
+  def invert_step_amount(val):
+      if (val > 0):
+          return 0
+      else:
+          return step_size
+
+  # make some steps
+  for i in range(10):
+      if (rand() < 0.5):
+          xStep = invert_step_amount(xStep)
+      if (rand() < 0.5):
+          yStep = invert_step_amount(yStep)
+      if (rand() < 0.5):
+          zStep = invert_step_amount(zStep)
+      x += xStep
+      y += yStep
+      z += zStep
+      add_step()
+#+END_SRC
+
+heavy roof made out of spheres
+chimney created with cosine function
+#+BEGIN_SRC python
+
+  import bpy
+  from random import uniform as randfloat
+  import math
+
+  # # dimensions in metres
+  # base_unit_size = 2
+  # step_size = 0.2
+
+  # # makes base shape at given location and returns the resulting object
+  # def create_base_shape(x, y, z):
+  #     #bpy.ops.mesh.primitive_cube_add(size=1, location=(x, y, z), scale=(base_unit_size, base_unit_size, step_size * 2))
+  #     bpy.ops.mesh.primitive_cube_add(size=base_unit_size, location=(x, y, z))
+  #     return bpy.context.selected_objects[0]
+
+  # # init point at origin
+  # x = 0
+  # y = 0
+  # z = 0
+
+  # xStep = 0;
+  # yStep = 0;
+  # zStep = 0;
+
+  # # create base shape at start position
+  # base = create_base_shape(x, y, z)
+  # base.name = "base_shape"
+
+
+  def create_unit():
+      r = randfloat(0.5, 1.5)
+      x = randfloat(-5, 5)
+      y = randfloat(-5, 5)
+      dist = math.sqrt(x * x + y * y) / 5
+      z = 0
+      if (1 - dist > 0):
+          z = math.sin(1 - dist) * 5
+      bpy.ops.mesh.primitive_uv_sphere_add(radius=r, location=(x, y, z))
+      return bpy.context.selected_objects[0]
+    
+  def bool_union(base_object, union_object):
+      # perform boolean operation
+      # - add new boolean modifier to base_object
+      # - set temp as the OBJECT of the modifier
+      # - set boolean operation to UNION, then apply
+      boolMod = base_object.modifiers.new('bool_mod', 'BOOLEAN')
+      boolMod.object = union_object
+      boolMod.operation = 'UNION'
+      bpy.ops.object.modifier_apply(modifier='bool_mod')
+
+      # convert base_object to mesh - gets rid of dependency on boolean modifier, so
+      # that we can delete the temp object
+      bpy.ops.object.select_all(action='DESELECT') # select NONE
+      base_object.select_set(True)
+      bpy.context.view_layer.objects.active = base_object
+      bpy.ops.object.convert(target='MESH')
+
+  def delete_object(obj):
+      bpy.ops.object.select_all(action='DESELECT')
+      obj.select_set(True)
+      bpy.ops.object.delete(use_global=False)
+
+  base = create_unit()
+  for i in range(10):
+      temp = create_unit()
+      bool_union(base, temp)
+      delete_object(temp)
+#+END_SRC
+
+* script deleting an object (not tested)
+bpy.ops.object.delete(use_global=False)

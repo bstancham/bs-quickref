@@ -1,0 +1,120 @@
+HTTP:
+
+http://www.ntu.edu.sg/home/ehchua/programming/webprogramming/HTTP_Basics.html
+
+https://www.jmarshall.com/easy/http/#postmethod
+
+https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
+
+https://www.tutorialspoint.com/http/
+
+* ===================== cURL: command line tool ======================
+
+Use -v (verbose) option to see full details of HTTP requests...
+
+$ curl -v google.com
+
+This will display the complete HTTP conversation...
+... Requests are preceded by >, while responses are preceded by <.
+
+* ========================== HTTP REQUESTS ===========================
+
+PUT: 
+
+POST: same as PUT, but may have side-effects i.e. successive POST requests may have additional effects, like posting an order several times...
+
+* GET request example...
+
+CLIENT REQUEST:
+
+GET /index.html HTTP/1.1
+Host: www.example.com
+
+
+
+SERVER RESPONSE:
+
+HTTP/1.1 200 OK
+Date: Mon, 23 May 2005 22:38:34 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Encoding: UTF-8
+Content-Length: 138
+Last-Modified: Wed, 08 Jan 2003 23:11:55 GMT
+Server: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)
+ETag: "3f80f-1b6-3e1cb03b"
+Accept-Ranges: bytes
+Connection: close
+
+<html>
+<head>
+  <title>An Example Page</title>
+</head>
+<body>
+  Hello World, this is a very simple HTML document.
+</body>
+</html>
+
+
+* ====================== TESTING HTTP REQUESTS =======================
+
+TELNET
+
+"Telnet" is a very useful networking utility.  You can use telnet to establish a
+TCP connection with a server; and issue raw HTTP requests.  For example, suppose
+that you have started your HTTP server in the localhost (IP address 127.0.0.1)
+at port 8000:
+
+> telnet
+telnet> help
+... telnet help menu ...
+telnet> open 127.0.0.1 8000
+Connecting To 127.0.0.1...
+GET /index.html HTTP/1.0
+(Hit enter twice to send the terminating blank line ...)
+... HTTP response message ...
+
+NOTE: Telnet is a character-based protocol. Each character you enter on the
+telnet client will be sent to the server immediately. Therefore, you cannot make
+typo error in entering you raw command, as delete and backspace will be sent to
+the server. You may have to enable "local echo" option to see the characters you
+enter. Check the telnet manual (search Windows' help) for details on using
+telnet.
+
+
+
+NETWORK TEST PROGRAM
+
+#+BEGIN_SRC java :classname example
+import java.net.*;
+import java.io.*;
+   
+public class HttpClient {
+   public static void main(String[] args) throws IOException {
+      // The host and port to be connected.
+      String host = "127.0.0.1";
+      int port = 8000;
+      // Create a TCP socket and connect to the host:port.
+      Socket socket = new Socket(host, port);
+      // Create the input and output streams for the network socket.
+      BufferedReader in
+         = new BufferedReader(
+              new InputStreamReader(socket.getInputStream()));
+      PrintWriter out
+         = new PrintWriter(socket.getOutputStream(), true);
+      // Send request to the HTTP server.
+      out.println("GET /index.html HTTP/1.0");
+      out.println();   // blank line separating header & body
+      out.flush();
+      // Read the response and display on console.
+      String line;
+      // readLine() returns null if server close the network socket.
+      while((line = in.readLine()) != null) {
+         System.out.println(line);
+      }
+      // Close the I/O streams.
+      in.close();
+      out.close();
+   }
+}
+#+END_SRC
+

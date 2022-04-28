@@ -1,0 +1,572 @@
+PHP QUICKSTART GUIDE
+====================
+====================
+====================
+
+PHP is another recursive acronym (Php Hypertext Preprocessor)
+
+BASICS:
+* Server-side scripting (JavaScript is for client-side scripting).
+* Code is executed on the server, and the result is returned to the browser as plain HTML.
+* Files have extension ".php" * PHP files can contain text, HTML, CSS, JavaScript, and PHP code.
+* enclose code inside PHP tags <?php ?> ... everything outside of a pair of PHP opening and closing tags is ignored by the PHP parser.
+* Statements end with semicolon;
+* Keywords (e.g. if, else, while, echo, etc.) are NOT case-sensitive.
+* Variable names ARE case-sensitive.
+* Loosely typed - PHP automatically converts the variable to the correct data type, depending on its value.
+
+
+
+======================================================================
+PHP ON THE COMMAND LINE:
+* Most of the time CLI & CGI binaries behave the same way, but be aware that there is a difference...
+
+CLI INSTALLATION: (Sat Aug 15 19:30:22 2015)
+$ sudo apt-get install php5-cli
+
+PHP CLI REPL:
+* REMEMBER: A php statement is not finished until the semicolon
+$ php -a # -a enables interactive mode
+
+
+
+======================================================================
+HELLO WORLD
+===========
+
+<!DOCTYPE html>
+<html>
+  <body>
+    <?php echo "hello world!\n"; ?>
+  </body>
+</html>
+
+
+
+======================================================================
+COMMENTS
+========
+
+/* multi-line
+c style comment */
+
+// single line c++ style comment
+
+# unix shell style comment
+
+
+
+======================================================================
+VARIABLES (Variables start with a dollar sign)
+=========
+
+DISPLAY TYPE AND VALUE OF VARIABLE AS STRING:
+* Both of these convert object into a nice readable string...
+* ... var_dump includes more detail - print_r may be easier to read...
+$x = 15;
+echo var_dump($x); // Displays 'int(15)'.
+print_r($x); // Displays '15'.
+$str = print_r($x, true); // Optional arg specifies string to be RETURNED (not printed).
+
+
+
+VARIABLE TYPES AND DECLARATIONS:
+
+SCALAR TYPES:
+* BOOLEAN ---> $x = true;
+* INTEGER
+* FLOAT
+* STRING
+COMPOUND TYPES:
+* ARRAY   ---> $cars = array("Volvo","BMW","Toyota");
+* OBJECT
+SPECIAL TYPES:
+* RESOURCE
+* NULL    ---> $x = null;
+PSEUDO-TYPES:
+* MIXED
+* NUMBER
+* CALLBACK (aka callable)
+* ARRAY|object
+* VOID
+
+$... // special pseudo-variable...
+
+
+
+EXAMPLE --> DECLARING VARIABLES:
+
+<?php
+$a_bool = TRUE;   // a boolean
+$a_str  = "foo";  // a string
+$a_str2 = 'foo';  // a string
+$an_int = 12;     // an integer
+
+echo gettype($a_bool); // prints out:  boolean
+echo gettype($a_str);  // prints out:  string
+
+// If this is an integer, increment it by four
+if (is_int($an_int)) {
+    $an_int += 4;
+}
+
+// If $a_bool is a string, print it out
+// (does not print out anything)
+if (is_string($a_bool)) {
+    echo "String: $a_bool";
+}
+?>
+
+
+
+======================================================================
+STRINGS
+=======
+
+'single quoted strings are literal - escape characters are NOT interpreted'
+"double quoted strings DO interpret escape characters such as this one\n"
+
+STRING OPERATORS:
+$a . $b # concatenation
+$a .= $b # concatenation assignment (appends $b to $a)
+
+STRING FUNCTIONS:
+strlen("Hello world!"); // string length - returns 12
+str_word_count("Hello world!"); // word count - returns 2
+strrev("Hello world!"); // reverse string - returns "!dlrow olleH
+strpos("Hello world!", "world"); // search for sub-string - returns index of sub-string (6)
+str_replace("world", "Dolly", "Hello world!"); // replace/substitute sub-string - returns "Hello Dolly!"
+...
+... many more string functions:
+http://www.w3schools.com/php/php_ref_string.asp
+
+
+
+=========================================
+SCOPE OF VARIABLES (LOCAL/GLOBAL/STATIC/CONSTANTS):
+
+
+GLOBAL VARIABLE EXAMPLE:
+<?php
+  $x = 5; // Variables declared outside a function are GLOBAL.
+  $y = 10;
+  function myTest() {
+    global $x, $y; // Global variables used in a fuction need to be declared using the 'global' keyword.
+    $y = $x + $y;
+  }
+  myTest(); // Invoke function.
+  echo $y; // outputs 15
+?>
+
+
+STATIC VARIABLE EXAMPLE:
+* The variable $x is LOCAL because it's declared inside a function.
+* Because it's STATIC, it isn't created afresh every time the fuction is run... but retains it's value.
+<?php
+  function myTest() {
+    static $x = 0;
+    echo $x;
+    $x++;
+  }
+  myTest(); // displays '0'
+  myTest(); // displays '1'
+  myTest(); // displays '2'
+?>
+
+CONSTANTS EXAMPLE:
+* SYNTAX: define(name, value, case-insensitive) // Default for 'case-insensitive' is FALSE.
+* Constants are GLOBAL.
+<?php
+  define("GREETING", "Welcome!");
+  echo GREETING; // outputs "Welcome!"
+?>
+
+
+
+SUPERGLOBAL VARIABLES:
+Predefined variables in PHP are "superglobals", which means that they are always accessible, regardless of scope - and you can access them from any function, class or file without having to do anything special
+$GLOBALS
+$_SERVER
+$_REQUEST
+$_POST
+$_GET
+$_FILES
+$_ENV
+$_COOKIE
+$_SESSION
+
+
+
+======================================================================
+ECHO and PRINT
+==============
+
+* echo has no return value.
+* print has a return value of 1, so it can be used in expressions.
+* both can be used with or without parens ().
+* text can contain HTML markup.
+
+echo "<h2>PHP is Fun!</h2>";
+print "Hello world!<br>";
+
+
+
+======================================================================
+OBJECTS
+=======
+
+// class definition
+class Car {
+  function Car() { // constructor
+    $this->model =  "VW";
+  }
+}
+
+// create and object
+$herbie = new Car();
+
+// show an object property
+echo $herbie->model;
+
+
+
+======================================================================
+ASSIGNMENT OPERATORS
++
+-
+*
+/
+%
+**
+
+COMPARISON OPERATORS
+==
+===
+!=
+<>
+!==
+>
+<
+>=
+<=
+strcmp(string1, string2) // best way to compare strings - it is case-sensitive and binary-safe
+
+INCREMENT/DECREMENT OPERATORS
+++$x --$x # pre-increment/decrement (returns $x after operation) 
+$x++ $x-- # post-increment/decrement (returns $x before operation) 
+
+LOGICAL OPERATORS
+and
+or
+xor
+&&
+||
+!
+
+ARRAY OPERATORS
++
+==
+===
+!=
+<>
+!==
+
+
+
+======================================================================
+
+# CONTROL STRUCTURE SYNTAX (C-like):
+<?php if ($a == 5) { ?>
+  A is equal to 5
+<?php } ?>
+
+#ALTERNATIVE SYNTAX FOR CONTROL STRUCTURES (since PHP 4):
+<?php if ($a == 5): ?>
+  A is equal to 5
+<?php endif; ?>
+
+# Alternative syntax works for: if while for foreach switch (END: endif; endwhile; endfor; endforeach; endswitch;)
+
+
+
+======================================================================
+CONDITIONAL STATEMENTS
+======================
+
+//// IF:
+if (condition) {
+  ...
+} elseif (condition) {
+  ...
+} else {
+  ...
+}
+
+//// SWITCH STATEMENT:
+$fave = "red";
+switch ($fave) {
+    case "red":
+        echo "Your fave is red!";
+        break;
+    case "blue":
+        echo "Your fave is blue!";
+        break;
+    default:
+        echo "Can't guess it!";
+}
+
+
+
+======================================================================
+LOOPING
+=======
+
+while (CONDITION) { ... }
+
+do { ... } while (CONDITION); # executes code once, even if not true.
+
+for (init-counter; test-counter; increment-counter) { ... }
+
+$colors = array("red", "green", "blue", "yellow");
+foreach ($colors as $value) {
+    echo "$value <br>";
+}
+
+
+
+======================================================================
+FUNCTIONS
+=========
+
+# NOTE: Default value for $amount...
+function frobniz($name, $amount = 10) {
+    return "Frobnicate $name by $amount";
+}
+
+
+
+======================================================================
+ARRAYS
+======
+
+$cars = array("Volvo", "BMW", "Toyota");
+$cars[1] # returns array index 1 ("BMW")
+
+count($cars) # array length
+
+
+ASSOCIATIVE ARRAYS
+==================
+
+$age = array("Peter"=>"35", "Ben"=>"37", "Joe"=>"43");
+$age["George"] = "12"; # add a new value
+
+foreach($age as $x => $x_value) {
+    echo "Key=" . $x . ", Value=" . $x_value;
+    echo "<br>";
+}
+
+
+SORTING ARRAYS
+sort() - sort arrays in ascending order
+rsort() - sort arrays in descending order
+asort() - sort associative arrays in ascending order, according to the value
+ksort() - sort associative arrays in ascending order, according to the key
+arsort() - sort associative arrays in descending order, according to the value
+krsort() - sort associative arrays in descending order, according to the key
+
+
+
+======================================================================
+INCLUDE and REQUIRE
+===================
+Both insert the contents of another php file... exactly the same only 'require' produces a fatal error if it can't find the file (include only produces a warning).
+
+include 'filename'; 
+require 'filename';
+
+<html>
+  <body>
+    <?php require 'menu.php' ?>
+    Page Text...
+    <?php include 'footer.php' ?>
+  </body>
+</html>
+
+
+
+======================================================================
+FILE HANDLING
+=============
+
+echo readfile("webdictionary.txt"); # Echo contents of file
+
+fopen() # opens a file (... many options)
+fread() # reads from an open file
+fclose() # close an open file
+
+fgets() # reads a single line
+fgetc() # reads a single character
+feof() # checks whether end of file has been reached
+
+fwrite() # write to a file
+
+NOTE: create a new file using fopen()...
+
+
+
+======================================================================
+THE FILTER EXTENSION
+====================
+
+Validating data = Determine if the data is in proper form.
+Sanitizing data = Remove any illegal character from the data.
+
+filter_list()
+
+# EXAMPLE: Lists filter options in a table...
+<table>
+  <tr>
+    <td>Filter Name</td>
+    <td>Filter ID</td>
+  </tr>
+  <?php
+  foreach (filter_list() as $id =>$filter) {
+      echo '<tr><td>' . $filter . '</td><td>' . filter_id($filter) . '</td></tr>';
+  }
+  ?>
+</table> 
+
+
+filter_var()
+
+filter_var($str, FILTER_SANITIZE_STRING); # remove HTML tags from $str - return new string
+filter_var($int, FILTER_VALIDATE_INT); # return boolean - WARNING: if integer is 0, it will return False...
+filter_var($ip, FILTER_VALIDATE_IP); # return boolean
+filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)
+filter_var($email, FILTER_SANITIZE_EMAIL); # return string
+filter_var($email, FILTER_VALIDATE_EMAIL); # return boolean
+filter_var($url, FILTER_SANITIZE_URL);
+filter_var($url, FILTER_VALIDATE_URL);
+
+filter_var($int, FILTER_VALIDATE_INT, array("options" => array("min_range"=>1, "max_range"=>200))); # int in range 1-200
+filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_QUERY_REQUIRED); # URL with a querystring
+filter_var($str, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH); # Remove all HTML tags, AND all characters with ASCII value > 127, from the string.
+
+
+
+======================================================================
+ERROR HANDLING
+==============
+
+# simple version with DIE...
+if(!file_exists("welcome.txt")) {
+  die("File not found");
+} else {
+  $file=fopen("welcome.txt","r");
+}
+
+# PROPER ERROR HANDLING:
+http://www.w3schools.com/php/php_error.asp
+
+# EXCEPTION HANDLING:
+http://www.w3schools.com/php/php_exception.asp
+
+
+
+======================================================================
+MYSQL DATABASES
+===============
+Using MySQLi (MySQL improved) - can also use PDO (PHP Database Objects - works for 12 different types of database)...
+
+EXAMPLE:
+<?php
+$servername = "localhost";
+$username = "username";
+$password = "password";
+// Create connection
+$conn = new mysqli($servername, $username, $password);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+echo "Connected successfully";
+
+// attempt to insert some data...
+$sql = "INSERT INTO MyGuests (firstname, lastname, email) VALUES ('John', 'Doe', 'john@example.com')";
+if ($conn->query($sql) === TRUE) {
+    echo "New record created successfully";
+} else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+}
+
+// attempt to insert multiple records... NOTE: SQL statements separated by semicolon
+$sql = "INSERT INTO MyGuests (firstname, lastname, email) VALUES ('Phil', 'Dill', 'phil@example.com')";
+$sql .= "INSERT INTO MyGuests (firstname, lastname, email) VALUES ('Mary', 'Moe', 'mary@example.com');";
+$sql .= "INSERT INTO MyGuests (firstname, lastname, email) VALUES ('Julie', 'Dooley', 'julie@example.com')";
+if ($conn->multi_query($sql) === TRUE) {
+    echo "New records created successfully";
+} else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+}
+
+$conn->close(); # CLOSE CONNECTION (... will close automatically at end of script anyway)
+?> 
+
+
+
+CREATING A DATABASE: ...
+
+
+
+PREPARED STATEMENTS: ...
+// prepare and bind
+$stmt = $conn->prepare("INSERT INTO MyGuests (firstname, lastname, email) VALUES (?, ?, ?)");
+$stmt->bind_param("sss", $firstname, $lastname, $email);
+
+// set parameters and execute
+$firstname = "John";
+$lastname = "Doe";
+$email = "john@example.com";
+$stmt->execute();
+
+$firstname = "Mary";
+$lastname = "Moe";
+$email = "mary@example.com";
+$stmt->execute();
+
+$firstname = "Julie";
+$lastname = "Dooley";
+$email = "julie@example.com";
+$stmt->execute();
+
+echo "New records created successfully";
+
+$stmt->close();
+
+
+
+
+======================================================================
+COOKIES
+=======
+
+setcookie(name, value, expire, path, domain, secure, httponly);
+
+
+
+======================================================================
+PHP SESSION
+===========
+
+
+
+======================================================================
+
+MISC
+====
+
+
+
+double colon
+Scope Resolution Operator (::)

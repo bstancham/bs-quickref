@@ -1,0 +1,496 @@
+* HTML HELLO WORLD
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Page Title</title>
+  </head>
+  <body>
+    <!-- This is a comment -->
+    <h1>This is a Heading</h1>
+    <p>This is a paragraph.</p>
+    Hello, World!
+  </body>
+</html>
+
+* COMMON DOCTYPE DECLARATIONS
+
+HTML 5 : <!DOCTYPE html>
+HTML 4.01 : <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+XHTML 1.0 : <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+DOCUMENT TYPE COMPATIBILITY
+
+All these things are not required by HTML 5, but are required by some stricter
+document types e.g. XHTML; so use them anyway:
+
+- Element tags in lower case
+- Attributes in lower case
+- Attribute values quoted
+- Empty elements closed (<br/> = good, <br> = BAD)
+- Minimization of attributes NOT allowed
+
+* HTML ELEMENTS
+
+SYNTAX:
+<element>content</element>
+<element attribute="value" attribute='value'>content</element>
+<element/>
+
+COMMON ELEMENTS:
+
+<body> : Contains the visible content of the page - what is actually displayed in the web browser window.
+
+<div> : Div is nothing more than a container unit that encapsulates other page elements and divides the HTML document into sections. Web developers use <div> elements to group together HTML elements and apply CSS styles to many elements at once.
+
+<span> : Same as <div>, but inline...
+
+<main> : (since HTML 5) Main content. The content inside the <main> element should be unique to the document. It should not contain any content that is repeated across documents such as sidebars, navigation links, copyright information, site logos, and search forms. NOTE: There must not be more than one <main> element in a document. The <main> element must NOT be a descendant of an <article>, <aside>, <footer>, <header>, or <nav> element.
+
+<h1> <h2> <h3> <h4> <h5> <h6> : Headings --- Use HTML headings for headings only. Don't use headings to make text BIG or bold. Search engines use your headings to index the structure and content of your web pages. Users skim your pages by its headings. It is important to use headings to show the document structure. h1 headings should be main headings, followed by h2 headings, then the less important h3, and so on.
+
+<article> : specifies independent, self-contained content. An article Should make sense on its own and it should be possible to distribute it independently.
+
+<nav> : a set of navigation links. Not ALL links of a document should be inside a <nav> element. The <nav> element is intended only for major block of navigation links. Browsers, such as screen readers for disabled users, can use this element to determine whether to omit the initial rendering of this content.
+
+<object> : Defines an embedded object within an HTML document - used to embed plug-ins (e.g. Java applets, PDF readers, Flash Players).
+
+<embed/> : (?how is it different or prefereable to <object>?)
+
+* HTML ATTRIBUTES (declared in opening tags)
+
+alt -------- Alternative text for an image
+disabled --- Specifies that an input element should be disabled
+href ------- HTTP Reference (URL for a link)
+id --------- Specifies a unique id for an element
+src -------- URL for an image
+style ------ Specifies an inline CSS style for an element
+title ------ Extra information about an element (displayed as a tool tip)
+value ------ Specifies the value (text content) for an input element.
+
+EXAMPLES:
+
+LANG: Useful for search engines and screen readers.
+<html lang="en-US">
+<html lang="en-GB">
+
+TITLE: This will be shown as a tooltip when mouse points at element.
+<p title="About W3Schools">
+
+ATTRIBUTE MINIMIZATION: (attribute without a value)
+... This is allowed in HTML 5 but not XHTML.
+
+<details open>...</details>
+<details open="open">...</details>
+
+* HTML ELEMENTS DETAIL
+** HEAD
+
+<head> : Contains meta-data.
+
+
+INSIDE HEAD:
+
+<title> : Page Title.
+<style> : Define internal CSS style sheet.
+<link> : Link to external CSS style sheet.
+
+
+<meta/> : Metadata is used by browsers (how to display content), by search engines, and other web services.
+<meta name="description" content="Free Web tutorials">
+<meta name="keywords" content="HTML,CSS,XML,JavaScript"> : Define keywords for search engines
+<meta name="author" content="Ben Chambers">
+<meta charset="UTF-8">
+<meta http-equiv="refresh" content="30"> : refresh page every 30 seconds
+
+SCRIPT element is used to define client-side JavaScripts:
+<script>
+  function myFunction { document.getElementById("demo").innerHTML = "Hello JavaScript!"; }
+</script>
+
+The BASE element specifies the base URL and base target for all relative URLs in a page:
+<base href="http://www.w3schools.com/images/" target="_blank"/>
+
+* HTML CHARACTER ENTITIES (SPECIAL CHARACTER CODES)
+SYNTAX: &NAME; or &#NUMBER;
+
+
+EXAMPLES:
+RESULT   DESCRIPTION            ENTITY NAME   ENTITY NUMBER
+         non-breaking space     &nbsp;        &#160;
+"        quotation mark         &quot;        &#32;
+'        single quote                         &#39;
+‘        open single quote      &lsquo;       &#8216;
+’        close single quote     &rsquo;       &#8217;
+“        open double quote      &ldquo;       &#8220;
+”        close double quote     &rdquo;       &#8221;
+<        less than              &lt;          &#60;
+>        greater than           &gt;          &#62;
+&        ampersand              &amp;         &#38;
+¢        cent                   &cent;        &#162;
+£        pound                  &pound;       &#163;
+¥        yen                    &yen;         &#165;
+€        euro                   &euro;        &#8364;
+©        copyright              &copy;        &#169;
+®        registered trademark   &reg;         &#174;
+½        fractional half        &frac12;      &#188;
+
+
+COMBINING DIACRITICAL MARKS:
+- A diacritical mark is a "glyph" added to a letter.
+- Some diacritical marks, like grave (  ̀) and acute (  ́) are called accents.
+- Diacritical marks can appear both above and below a letter, inside a letter, and between two letters.
+- Diacritical marks can be used in combination with alphanumeric characters, to produce a character that is not present in the character set (encoding) used in the page.
+
+EXAMPLES:
+MARK   CHAR   CONSTRUCT   RESULT
+̀      a      a&#768;     à
+́      a      a&#769;     á
+̂      a      a&#770;     â
+̃      a      a&#771;     ã
+̀      O      O&#768;     Ò
+́      O      O&#769;     Ó
+̂      O      O&#770;     Ô
+̃      O      O&#771;     Õ
+
+* FAVICON
+... this is the little icon which appears beside the name on the web browser tab...
+... use a favicon generator tool... (enclose various different resolution in file...)
+
+* LINE BREAKS AND PARAGRAPHS
+
+<p></p> : Paragraph
+<br/>   : Line break.
+<hr/>   : Horizontal rule.
+
+* TEXT FORMATTING and STYLE
+
+FORMATTING as opposed to STYLING, denotes text with special meaning. STYLING is
+purely concerned with design.
+
+** FORMATTING:
+<b> -------- Bold text
+<strong> --- Important text (text with added "strong" semantic importance)
+<i> -------- italic text
+<em> ------- Emphasized text (text with added semantic importance)
+<small> ---- Smaller text
+<sub> ------ Subscripted text
+<sup> ------ Superscripted text
+<ins> ------ Inserted text
+<del> ------ Deleted text (strikethrough)
+<mark> ----- Marked/highlighted text
+
+NOTE: Browsers display <strong> as <b>, and <em> as <i>. However, there is a difference in the meaning of these tags: <b> and <i> defines bold and italic text, but <strong> and <em> means that the text is "important".
+
+<pre> : Preformatted text. Displayed in a fixed-width font, and it preserves both spaces and line breaks.
+
+** STYLE:
+
+Elements may have a STYLE attribute - CSS properties which override any other
+CSS lower down in the hierachy:
+
+EXAMPLES:
+<body style="background-color:lightgrey">
+<h1 style="font-family:verdana">This is a heading</h1>
+<p style="font-size:160%">This is a paragraph.</p>
+<h1 style="text-align:center">Centered Heading</h1>
+<p style="font-family:courier; font-size:200%">Paragraph with multiple style properties!</p>
+
+... SEE: QUICKSTART_CSS.txt for more...
+
+** QUOTATION and CITATION
+
+<q> 	Defines a short inline quotation
+<blockquote> 	Defines a section that is quoted from another source
+<cite> 	Defines the title of a work
+<abbr> 	Defines an abbreviation or acronym
+<address> 	Defines contact information for the author/owner of a document
+<bdo> 	Defines the text direction
+
+** COMPUTER CODE
+
+<code> 	Defines programming code (NOTE: to preserve whitespace, wrap it also in <pre>).
+<kbd> 	Defines keyboard input 
+<samp> 	Defines computer output
+<var> 	Defines a mathematical variable
+
+* CONDITIONAL COMMENTS
+
+<!--[if IE 8]>
+    ... some HTML here ....
+    ... usually used to define HTML tags to be executed by Internet Explorer only...
+<![endif]-->
+
+* LISTS
+
+SEE: QUICKSTART_CSS.txt for neat menu layouts using lists...
+
+<ul> : Unordered list (use STYLE attr to choose bullets style)
+<ol> : Ordered list (use TYPE attr to choose numbering style)
+<li> : List item
+
+<dl> : description list (use with <dt> and <dd>)
+
+EXAMPLE:
+<ul> <!-- unorderd list -->
+  <li>Item One</li>
+  <li>Item Two</li>
+  <li>Item Three</li>
+</ul>
+
+* TABLES (use CSS to specify borders, padding etc for each element)
+
+<table>
+<caption> : NOTE: must come immediately after <table>
+<tr> : Table Row
+<td> : Table Data
+<th> : Table Heading (just like <td>, but displays with EMPHASIS)
+
+EXAMPLE:
+<table style="width:100%">
+  <tr>
+    <td>surname</td>
+    <td>first name</td>
+    <td>age</td>
+  </tr>
+  <tr>
+    <td>surname</td>
+    <td>first name</td>
+    <td>age</td>
+  </tr>
+</table>
+
+
+
+CELLS THAT SPAN MULTIPLE COLUMNS OR ROWS:
+... use attributes COLSPAN and ROWSPAN:
+<th colspan="2">Telephone</th>
+<th rowspan="2">Telephone:</th>
+
+* HYPERLINKS (use the <a> (anchor) element)
+
+SYNTAX: <a href="url">link text (or another HTML element)</a>
+
+ABSOLUTE AND RELATIVE HYPERLINKS:
+<a href="http://www.w3schools.com/">This is an ABSOLUTE link</a>
+<a href="interesting-page.html/">This is a RELATIVE or LOCAL link (not a full URL)</a>
+
+
+
+TARGET attribute:
+<a href="http://www.w3schools.com/" target="_blank">Visit W3Schools!</a> 
+_blank ------ Opens the linked document in a new window or tab
+_self ------- Opens the linked document in the same frame as it was clicked (this is default)
+_parent ----- Opens the linked document in the parent frame
+_top -------- Opens the linked document in the full body of the window
+FRAMENAME --- Opens the linked document in a named frame
+
+
+
+HTML BOOKMARKS (to jump to a specific part of a page):
+LINK TO A SPECIFIC PART OF A PAGE (OR SAME PAGE)
+You can link to a specific element if it has an id attribute - specify the id using the hash symbol #:
+<h2 id="tips">Useful Tips Section</h2> : first, create a bookmark using the ID attribute
+<a href="#tips">Visit the Useful Tips Section</a> : linking to bookmark from same page
+<a href="html_tips.htm#tips">Visit the Useful Tips Section</a> : linking to bookmark from another page
+
+
+
+DOWNLOAD attribute:
+- Specifies that the target will be downloaded when a user clicks on the hyperlink.
+- New in HTML 5 - previously you just hyperlink to a file, and the browser decides how to treat it.
+- If the value is set, that is the filename for the download, otherwise the original filename is used.
+
+<a href="/images/myw3schoolsimage.jpg" download>
+<a href="/images/myw3schoolsimage.jpg" download="w3logo">
+
+* URL - Uniform Resource Locator
+
+A URL can be composed of words (w3schools.com), or an Internet Protocol (IP) address (192.68.20.50).
+
+SYNTAX: scheme://host.domain:port/path/filename
+    scheme   - defines the type of Internet service (http, https, ftp, file etc...)
+    host     - defines the domain host (default host for http is www)
+    domain   - defines the Internet domain name (w3schools.com)
+    port     - defines the port number at the host (default for http is 80)
+    path     - defines a path at the server (If omitted: the root directory of the site)
+    filename - defines the name of a document or resource
+
+* IMAGES
+
+WIDTH and HEIGHT can be set either by style, or by width and height attributes...
+... better to use style. It prevents styles sheets from changing the original size of images...
+<img src="html5.gif" alt="HTML5 Icon" style="width:128px;height:128px;"/>
+<img src="html5.gif" alt="HTML5 Icon" width="128" height="128"/>
+
+ALT attribute sets an alternative text to be used when a HTML element cannot be displayed. Also used by screen readers, so a blind person can "hear" the element:
+<img src="frog.jpg" alt="Picture of a frog"/>
+
+An image on ANOTHER SERVER:
+<img src="http://www.w3schools.com/images/w3schools_green.jpg" alt="W3Schools.com"/>
+
+FLOATING:
+<p>
+  <img src="smiley.gif" alt="Smiley face" style="float:left; width:42px; height:42px;"/>
+  The image will float to the left of the paragraph.
+</p>
+
+IMAGE MAPS: an image with clickable areas...
+<p>Click on the sun or on one of the planets to watch it closer:</p>
+<img src="planets.gif" alt="Planets" usemap="#planetmap" style="width:145px;height:126px;"/>
+<map name="planetmap">
+  <area shape="rect" coords="0,0,82,126" alt="Sun" href="sun.htm"/>
+  <area shape="circle" coords="90,58,3" alt="Mercury" href="mercur.htm"/>
+  <area shape="circle" coords="124,58,8" alt="Venus" href="venus.htm"/>
+</map>
+
+* BLOCK and INLINE ELEMENTS
+
+<div> and <span>
+
+<div> for html elements
+<span> for text
+
+
+BLOCK-LEVEL ELEMENTS
+A block-level element always starts on a new line and takes up the full width available (stretches out to the left and right as far as it can).
+
+<div> : Defines a section in a document (block-level)
+<h1> - <h6>
+<p>
+<form>
+
+
+
+INLINE ELEMENTS
+An inline element does not start on a new line and only takes up as much width as necessary.
+
+<span> : Defines a section in a document (inline)
+<a>
+<img>
+
+* HTML LAYOUTS
+
+http://www.w3schools.com/html/html_layout.asp
+
+* RESPONSIVE WEB DESIGN
+
+... using CSS and HTML to resize, hide, shrink, enlarge, or move the content to
+make it look good on any screen...
+
+http://www.w3schools.com/html/html_responsive.asp
+
+... ALSO SEE: QUICKSTART_CSS.txt
+
+* SCRIPTS
+
+JAVASCRIPT HELLO WORLD:
+<body>
+  <p id="demo"></p>
+  <script>
+    /* A multi-line
+       javascript comment */
+    // single line comment
+    document.getElementById("demo").innerHTML = "Hello JavaScript!";
+  </script>
+  <noscript>Sorry, your browser does not support JavaScript!</noscript>
+  <p>A browser without support for JavaScript will show the text written inside the noscript element.</p>
+</body>
+
+
+SOME THINGS:
+document.getElementById("demo").innerHTML = "Hello JavaScript!"; // change HTML content
+document.getElementById("demo").style.fontSize = "25px"; // change HTML styles
+document.getElementById("image").src = "picture.gif"; // change HTML attributes
+
+... SEE: QUICKSTART_JAVASCRIPT.txt for more...
+
+* MISCELLANEOUS OTHER STUFF
+
+iframes : Inline Frame - used to display a web page within a web page.
+
+COLOURS : hexadecimal, RGB, or 140 recognised colour names.
+
+<form> : used to capture user input...
+
+
+
+HTML GRAPHICS:
+
+<canvas> : used to draw graphics on web page (normally in conjunction with javascript)
+
+<svg> : container for Scalable Vector Graphics - NOTE: SVG is a language for describing 2D graphics in XML.
+
+SVG EXAMPLE:
+<svg width="100" height="100">
+  <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+</svg>
+
+HTML MULTIMEDIA
+- <video> and <audio>.
+- Multiple <source> elements can link to different files. The browser will use the first recognized format.
+- Plain text between the tags is displayed if the brower doesn't support the <video>/<audio> element.
+
+
+VIDEO EXAMPLE: 
+NOTE: Only MP4, WebM, and Ogg video are supported by the newest HTML5 standard (Sep 21 2015).
+<video width="320" height="240" controls> <!-- controls attribute adds video controls, like play, pause etc -->
+  <source src="movie.mp4" type="video/mp4">
+  <source src="movie.ogg" type="video/ogg">
+  Your browser does not support the video tag. <!-- text displayed if video fails -->
+</video> 
+
+
+AUDIO EXAMPLE:
+NOTE: Only MP3, WAV, and Ogg audio are supported by the newest HTML5 standard (Sep 21 2015).
+<audio controls>
+  <source src="horse.ogg" type="audio/ogg">
+  <source src="horse.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+
+YOUTUBE VIDEO: (using iFrame (the recommended method))
+NOTE: using autoplay here. Several other options available.
+<iframe width="420" height="315"
+  src="http://www.youtube.com/embed/XGSy3_Czz8k?autoplay=1">
+</iframe>
+
+* XHTML
+
+The Most Important Differences from HTML:
+Document Structure
+
+    XHTML DOCTYPE is mandatory
+    The xmlns attribute in <html> is mandatory
+    <html>, <head>, <title>, and <body> are mandatory
+
+XHTML Elements
+
+    XHTML elements must be properly nested
+    XHTML elements must always be closed
+    XHTML elements must be in lowercase
+    XHTML documents must have one root element
+
+XHTML Attributes
+
+    Attribute names must be in lower case
+    Attribute values must be quoted
+    Attribute minimization is forbidden (DO THIS: attr="attr")
+
+* FORMS
+
+<form> : used to capture user input...
+
+<input name="name" type="checkbox" checked />
+
+EXAMPLE:
+<!--
+ACTION = (URL) where to send the submitted data, usually a server page with a script for processing input.
+METHOD = http method (GET or POST) to be used when submitting. GET is the default.
+input TYPE=SUBMIT will produce a button which triggers the action detailed above.
+ -->
+<form action='demo_form.php' method='get'>
+  First name: <input type="text" name="fname"><br>
+  Last name: <input type="text" name="lname"><br>
+  <input type="submit" value="Submit">
+</form>

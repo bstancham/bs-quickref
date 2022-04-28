@@ -1,0 +1,421 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;; SCHEME QUICKSTART GUIDE ;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;; WHICH SCHEME TO USE? ;;;;;;;;;;;;;;;;;;;;;;;;
+
+; I used RACKET (Mon Jul  7 17:36:26 2014)
+
+;;;; INSTALLING RACKET
+; * Download installer from the Racket website (I used 'Linux i386 (Ubuntu Precise)')
+; * chmod +x to make the installer script runnable...
+; * Run installer script & follow prompts... NOTE: if doing the Unix style directory structure, you will have to run it with sudo to have write priveledges.
+
+;;;; RACKET REPL
+; $ racket # to open interpreter (very basic - doesn't even have command history)
+
+;;;; DR RACKET
+; $ drracket # runs Dr Racket, a GUI interpreter with much improved interactivity
+; ctrl-UP/ctrl-DOWN = command history
+
+
+
+;;;; EMACS AND RACKET
+; $ which racket # returns /usr/bin/racket
+; (setq scheme-program-name "/usr/bin/racket")
+; ...
+; M-x run-scheme --- opens an interactive racket REPL in a buffer
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;; EMACS AND SCHEME ;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; QUACK:
+; * Quack enhances scheme mode, which isn't very good by default.
+; * It piggybacks on scheme-mode automatically, so there's no need to invoke it directly when starting to edit in scheme mode, just do:
+; M-x scheme-mode
+
+;;;; PAREDIT: (minor mode for pseudo-structurally editing Lisp code)
+; M-x paredit-mode
+; * Paredit is optional - it automatically balances parentheses... and...
+; ... definitely don't make it start automatically, because it can behave badly if parentheses are unbalanced...
+; ...paredit keeps parentheses balanced and adds many keys for moving S-expressions and moving around in S-expressions. Its behavior can be jarring for those who may want transient periods of unbalanced parentheses, such as when typing parentheses directly or commenting out code line by line.
+
+;;;; INSTALLATION:
+; * Put files somewhere on the emacs load path (can find the load path with: C-h v load-path)...
+; quack.el
+; paredit.el
+; ... I put them in /usr/share/emacs/site-lisp/
+; * INSERT LINES IN .emacs file:
+; (require 'quack)
+; (require 'paredit)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; HELLO WORLD ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(display "HELLO WORLD!") ; prints text to terminal
+
+(+ 12 90 -3) ; simple numeric operations...
+(+ (* 2 3) (- 7 1)) ; 12
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; FUNDAMENTALS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; * Use .scm file extension
+
+
+;;;; FUNDAMENTAL ELEMENTS
+
+1        ; * ATOM
+'(1 2 3) ; * LIST
+'dog     ; * SYMBOL
+
+; comments start with semicolon & continue to end of line
+
+#|
+multi-
+-line-
+-comment
+|#
+
+
+
+;;;; BOOLEAN LITERALS
+#t
+#f
+
+;
+(null? '()) ; #t - tests for empty list 
+
+
+;;;; TYPE PREDICATES
+(boolean? arg)
+(number? arg)
+(pair? arg)
+(symbol? arg)
+(procedure? arg)
+(null? arg)
+(zero? 0)        ; #t
+(odd? 3)         ; #t
+(even? 4)        ; #t
+(not (odd? 4))   ; same as above
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;; VARIABLES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; DEFINING FREE VARIABLES (GLOBAL VARIABLES)
+; (define name value)
+
+(define size 3)
+size ; returns 3
+(define pi 3.14159)
+(define radius 10)
+(* pi (* radius radius)) ; returns 314.159
+(define circumference (* 2 pi radius))
+circumference ; returns 62.8318
+
+
+;;;; DEFINING LOCAL VARIABLES
+
+(let ((x 5)
+      (y 1))
+  (+ x y)) ; returns 6
+
+; sequential binding (definition may reference variables bound earlier in sequence)
+(let* ((x 5)
+       (y (+ x 1)))
+  (+ x y)) ; returns 13
+
+; letrec - recursive - definitions which refer to themselves
+; ...
+
+
+;;;; SET!
+; assigns new value
+(define balance 100)
+(set! balance 70)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;; PROCEDURES (FUNCTIONS) ;;;;;;;;;;;;;;;;;;;;;;;
+; (define (name formal-parameters) body)
+; (define (name formal-parameters) docstring body)
+
+(define (square x) (* x x))
+(square 4) ; returns 16
+
+(define square-lambda (lambda (x) (* x x))) ; exactly same effect as above
+(square-lambda 6)
+
+(define (sum-of-squares x y)
+  "Returns sum of square of x and square of y."
+  (+ (square x) (square y)))
+
+
+;;;; BLOCK STRUCTURE... definitions may have internal definitions
+(define (b-sqrt x)
+  "Find square root by Newton's method."
+  (define (square a) (* a a))
+  (define (average a b)
+    (/ (+ a b) 2))
+  (define (good-enough? guess)
+    (< (abs (- (square guess) x)) 0.001))
+  (define (improve guess)
+    (average guess (/ x guess)))
+  (define (sqrt-iter guess)
+    (if (good-enough? guess)
+        guess
+        (sqrt-iter (improve guess))))
+  (sqrt-iter 1.0))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; LISTS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; the following four are all the same
+(list 1 2 3 4)
+'(1 2 3 4)
+(quote (1 2 3 4))
+(cons 1 (cons 2 (cons 3 (cons 4 '()))))
+(cons 1 (cons 2 (cons 3 (cons 4 nil)))) ; nil is the same as the empty list '()
+
+; lists are built up from chains of linked pairs
+(cons 1 2) ; = (1 . 2) --> cons makes a pair
+(define plonk (cons 1 2))
+(car plonk) ; = 1 --> car gets HEAD of list
+(cdr plonk) ; = 2 --> cdr gets REST of list
+(car '(1 2 3 4)) ; 1
+(cdr '(1 2 3 4)) ; (2 3 4)
+(cadr '(1 2 3 4)) ; 2
+(cddr '(1 2 3 4)) ; (3 4)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; VECTORS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Rather like arrays in some other languages.
+
+; Heterogenous structure whose elements are indexed by integers. A vector typically occupies less space than a list of the same length, and the average time required to access a randomly chosen element is typically less for the vector than for the list.
+
+; The length of a vector is the number of elements that it contains. This number is a non-negative integer that is fixed when the vector is created. The valid indexes of a vector are the exact non-negative integers less than the length of the vector. The first element in a vector is indexed by zero, and the last element is indexed by one less than the length of the vector. 
+
+(vector? 'a) ; predicate - true if object is a vector
+
+(vector 'a 'b 'c 'd) ; creates a vector
+'#(1 2 3 4 5) ; quoting a vector literal
+
+(make-vector 15) ; create a vector with length 15
+(make-vector 7 "Plop!") ; create vector with length 7 and init all values to "Plop!"
+
+(define v (vector 287 "Hello Dolly!" #f 'dink))
+(vector-length v)
+(vector-ref v 2) ; returns element at specified index
+(vector-set! v 2 'new-value) ; set value at specified index
+(vector-fill! v ":-)") ; replaces EVERY value
+
+(vector->list v)
+(list->vector (list 'a 'b 'c 'd))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;; QUOTING (SYMBOLIC DATA) ;;;;;;;;;;;;;;;;;;;;;;;
+; quotation causes a variable to be treated as a symbol instead of a value
+
+(quote a)
+'a ; shorthand for the same thing
+(quote (+ 1 2 3))
+'(+ 1 2 3) ; same as above
+(quote (+ 1 2 3 (+ 1 2 3)))
+'(+ 1 2 3 (+ 1 2 3)) ; note that the sub-list is also quoted
+
+
+;;; QUASIQUOTE
+; a quasiquoted list can contain unquoted items...
+(quasiquote (+ 1 2 3 (+ 1 2 3))) ; returns '(+ 1 2 3) same as above
+`(+ 1 2 3 (+ 1 2 3)) ; same as above - backtick is shorthand for quasiquote
+(quasiquote (+ 1 2 3 (unquote (+ 1 2 3)))) ; returns '(+ 1 2 3 6)
+`(+ 1 2 3 ,(+ 1 2 3)) ; same as above - comma is shorthand for unquote
+
+
+;;; EVAL and QUOTE
+(define (hello-world) (display "Hiya!"))
+hello-world           ; #<procedure:hello-world>
+'hello-world          ; 'hello-world
+(eval 'hello-world)   ; #<procedure:hello-world>
+(hello-world)         ; run procedure
+('hello-world)        ; ERROR! not a procedure
+((eval 'hello-world)) ; run procedure
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;; TESTING EQUALITY ;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; = compares numbers
+(= 1.4 1.4) ; #t
+(= 3 7) ; #f
+(= 'apple 'apple) ; ERROR: = only compares numbers!
+
+; eq? compares symbols
+(eq? 'apple 'apple) ; #t
+(eq? 'apple 'pear) ; #f
+(eq? '(this is a list) '(this is a list)) ; #f - two different object references
+
+; equal? compares lists (and strings)
+(equal? '(this is a list) '(this is a list)) ; #t
+(equal? '(this is a list) '(this (is a) list)) ; #f
+(equal? "noddy" "noddy") ; #t
+(equal? "noddy" (string-append "nod" "dy")) ; #t
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;; CONDITIONAL LOGIC ;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; CASE ANALYSIS
+; NOTE: a predicate is an expression who's return value is interpreted as true or false.
+; (cond (<predicate> <expression>)
+;       (<predicate> <expression>)
+;       ...
+;       (<predicate> <expression>))
+
+(define (abs x)
+  (cond ((> x 0) x)
+        ((= x 0) 0)
+        ((< x 0) (- x))))
+
+(define (abs x)
+  (cond ((< x 0) (- x))
+        (else x))) ; (else x) is the same as saying (true x)
+
+(define (abs x)
+  (if (< x 0)
+      (- x)
+      x))
+
+;; IF is a restricted form of conditional which can be used when there are precisely 2 cases in a case analysis
+; (if <predicate> <consequent> <alternative>)
+
+; LOGICAL COMPOSITION OPERATORS
+; (and <e1> ... <en>)
+; (or <e1> ... <en>)
+; (not <e>)
+
+; returns #t if a is larger than x AND smaller than y
+(define (in-between x a y)
+    (and (> a x)
+         (< a y)))
+
+; #t if x greater than or equal to y
+(define (>= x y)
+  (not (< x y)))
+
+; using if to apply one of two proceedures to input numbers
+(define (a-plus-abs-b a b)
+    ((if (> b 0) + -) a b))
+
+
+;; WHEN and UNLESS
+(when #t (display "true"))    ; display if condition TRUE, else do nothing
+(unless #f (display "false")) ; display if condition FALSE, else do nothing
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;; RANDOM NUMBERS ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(random) ; number between 0.0 and 1.0
+(* 10 (random)) ; between 0.0 and 10.0
+(floor (* 10 (random))) ; integer between 0 and 9
+(round (random)) ; integer either 0 or 1
+
+
+
+;;; ERRORS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; (error <message>) seems at a glance to do exactly the same as (display <message>)...
+
+(define (error-above-5 x)
+  (if (< x 5)
+      #t
+      (error "Number is greater than 5!")))
+
+(error-above-5 6)
+
+
+
+;;; STRING OPERATIONS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(string? "hiya") ; #t
+(string? 32) ; #f
+
+(string-length "BlahBlah...")
+
+; string comparison
+(string=? "HELLO" "hello") ; #f
+(string-ci=? "HELLO" "hello") ; #t (case insensitive)
+
+; Joins strings together
+(string-append "Hello" "world" "DINGLE")
+(string-append "Hello" "world" "DINGLE" (number->string 345))
+
+; Joins a LIST of strings together (RACKET ONLY?)
+(string-join '("bongo" "SHITFACE" "--->" "cuntlord"))
+
+
+
+;;; NUMBERS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; These predicates test the type of number:
+(number? x)
+(complex? x)
+(real? x)
+(rational? x)
+(integer? x)
+
+; some mathematical operators:
++            -             *
+quotient     remainder     modulo
+max          min           abs
+numerator    denominator   gcd
+lcm          floor         ceiling
+truncate     round         rationalize
+expt
+
+
+
+;;; MORE CONTROL FEATRES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(procedure? car) ; #t
+(procedure? 'hello) ; #f
+
+(apply <proc> <args>) ; NOTE: args must be a list
+(apply <proc> <args1> ... <args-n>)
+
+map
+
+for-each
+
+
+
+
+;;; RECURSION ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define (join-strings str-list)
+  "Joins a list of strings into a single string."
+
+  ; Does list contain more than one string?
+  (if (> (length str-list) 1)
+
+      ; YES: make new list by joining first two strings, then adding this to front of remainder of list, then recursively call join-strings on new list.
+      (join-strings (cons 
+      		   	 (string-append (car str-list) (cadr str-list))
+			 (cddr str-list)))
+
+      ; NO: return first item of list.
+      (car str-list))
+)

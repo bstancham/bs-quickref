@@ -1,0 +1,453 @@
+#+TITLE: C++ PROGRAMMING QUICKSTART GUIDE
+
+* C++ PROGRAMMING ENVIRONMENT
+
+using:
+- emacs
+- make
+- gcc/g++
+- git
+
+compiler: gcc/g++
+
+
+directories:
+- src
+
+* HELLO WORLD
+#+BEGIN_SRC c++
+#include <iostream>
+using namespace std;
+
+int main() {
+  cout << "Hello World!" << endl;
+  return 0;
+}
+#+END_SRC
+
+Saved in file named hello.cpp
+
+Compile with:
+
+ $ g++ -Wall -o hello hello.cpp
+
+* DATA TYPES
+** Primitive Data Types
+These data types are built-in or predefined data types and can be used directly
+by the user to declare variables. example: int, char , float, bool
+etc. Primitive data types available in C++ are:
+
+Integer
+Character
+Boolean
+Floating Point
+Double Floating Point
+Valueless or Void
+Wide Character
+
+** Derived Data Types
+The data-types that are derived from the primitive or built-in datatypes are
+referred to as Derived Data Types. These can be of four types namely:
+
+Function
+Array
+Pointer
+Reference
+
+** Abstract or User-Defined Data Types
+These data types are defined by user itself. Like, defining a class in C++ or a
+structure. C++ provides the following user-defined datatypes:
+
+Class
+Structure
+Union
+Enumeration
+Typedef defined DataType
+
+* arrays
+#+BEGIN_SRC c++
+string cars[4];
+
+// defining arrays with literals
+string cars[4] = {"Volvo", "BMW", "Ford", "Mazda"};
+int myNum[3] = {10, 20, 30};
+#+END_SRC
+
+* strings
+Strings are objects, and they are mutable (unlike Java).
+
+#+BEGIN_SRC c++
+#include <string>
+#include <iostream>
+
+std::string greeting = "Hello";
+std::cout << greeting << std::endl;
+#+END_SRC
+
+#+BEGIN_SRC
+#include <string>
+using namespace std;
+
+// STRING CONCATENATION
+
+// can use the + operator
+string name = "Billy" + " " + "Gordon";
+
+// but append is faster
+name.append(" Smith");
+
+// STRING LENGTH
+name.length();
+name.size(); // does the same thing
+
+// STRINGS CAN BE INDEXED JUST LIKE ARRAYS
+char firstLetter = name[0];
+name[0] = 'W'; // changing the first character of the string
+#+END_SRC
+
+* ternary operator
+variable = (condition) ? expressionTrue : expressionFalse;
+
+* pointers, references and memory addresses
+** basic essentials
+A reference variable is a "reference" to an existing variable, and it is created
+with the & operator.
+
+The & operator gets the memory address where the variable is stored.
+
+A pointer is a variable which stores a memory address (rather than a reference to a variable).
+
+#+BEGIN_SRC c++
+using namespace std;
+
+string food = "Pizza"; // food variable
+string &meal = food; // reference to food
+
+cout << meal; // outputs "Pizza"
+cout << &food; // outputs memory address
+
+string* ptr = &food; // pointer variable
+cout << ptr; // outputs memory address of food variable
+cout << *ptr; // (dereferencing pointer) outputs "Pizza"
+
+// assigning a new value via pointer - this will change the value of the original variable
+*ptr = "Hamburger";
+cout << *ptr; // outputs "Hamburger"
+cout << food; // outputs "Hamburger"
+#+END_SRC
+
+** allocating and freeing memory: new/delete, malloc/free
+
+WARNING! Risk of MEMORY LEAK if you don't free up memory before program exits
+
+WARNING! Do not use FREE with NEW, or DELETE with MALLOC
+
+The newer way to do this is with 'new' and 'delete':
+#+BEGIN_SRC c++
+// allocates enough storage on the heap for 100 ints (100 * 32 bits)
+int * myInts = new int[100];
+
+// can now access data just like you would an array e.g. myInts[9]
+
+// must delete it before you program exits
+delete [] myInts; // don't forget the square brackets
+#+END_SRC
+
+Old way of doing it, using 'malloc' and 'free':
+#+BEGIN_SRC c++
+// allocate memory to store 100 ints
+int myInts;
+myInts = (int*) malloc(100 * sizeof(int));
+
+// can now access data just like you would an array e.g. myInts[9]
+
+// must call free() before program exits to prevent memory leak
+free(myInts);
+#+END_SRC
+
+** freeing memeory in a CLASS DESTRUCTOR
+
+When defining classes, you can use the destructor to do DELETE or FREE
+
+#+BEGIN_SRC c++
+// the destructor looks like the constructor but has a tilde in front
+MyClass::~MyClass() {
+  delete [] myInts;
+}
+#+END_SRC
+
+** objects declared by pointers
+
+Any object can be declared with a pointer.
+
+This places the object in a particular block of memory.
+
+However, the object's members must be accessed using the ARROW OPERATOR instead
+of the DOT:
+
+: myObject.myFunction(); // won't work with pointer
+
+: myObject->myFunction(); // this is the way to do it
+
+** STACK vs HEAP
+
+Using NEW or MALLOC creates memory on the heap.
+
+If you don't use these approaches, chances are that your data will end up on the stack.
+
+The stack is well structured.
+
+The heap is dynamic, and useful when you want to create lots of data, process
+it, transform it and move it around.
+
+e.g. you can resize data on the heap but not on the stack.
+
+** smart pointers
+
+https://stackoverflow.com/questions/106508/what-is-a-smart-pointer-and-when-should-i-use-one
+
+* functions
+#+BEGIN_SRC c++
+// default parameters/optional parameters
+// if this function is called without any arguments then the default will be used
+void printCountry(string country = "Norway") {
+  cout << country << endl;
+}
+
+// pass by reference
+// because reference is passed in, this function can alter the values of the original variables
+// this function swaps the values of the two input variables
+void swapNums(int &x, int &y) {
+  int z = x;
+  x = y;
+  y = z;
+}
+#+END_SRC
+
+function overloading is allowed, i.e. multiple functions can have the same name,
+so long as they take different argument lists:
+
+ int myFunction(int x)
+ float myFunction(float x)
+ double myFunction(double x, double y)
+
+* the scope operator ::
+* classes/objects
+** a very simple class
+#+BEGIN_SRC c++
+class Car {
+  public:          // Access specifier
+    string brand;  // Attribute
+    string model;  // Attribute
+    int year;      // Attribute
+};
+
+// instantiating the class
+Car carObj;
+
+// assigning new values to object attributes
+carObj.brand = "BMW";
+carObj.model = "X5";
+carObj.year = 1999;
+#+END_SRC
+
+** constructors
+#+BEGIN_SRC c++
+// This class is the same as the previous example but it has a constructor
+class Car {
+  public:          // Access specifier
+    string brand;  // Attribute
+    string model;  // Attribute
+    int year;      // Attribute
+    Car(string x, string y, int z); // Constructor declaration
+};
+
+// Constructor definition (outside the class declaration, same as any other method)
+Car::Car(string x, string y, int z) {
+  brand = x;
+  model = y;
+  year = z;
+}
+
+// instantiating the class
+Car carObj("BMW", "X5", 1999);
+#+END_SRC
+
+** inheritance - multiple inheritance is allowed with comma-separated list
+#+BEGIN_SRC c++
+// Base class
+class MyClass {
+  public:
+    void myFunction() {
+      cout << "Some content in parent class." ;
+    }
+};
+
+// Another base class
+class MyOtherClass {
+  public:
+    void myOtherFunction() {
+      cout << "Some content in another class." ;
+    }
+};
+
+// Derived class
+class MyChildClass: public MyClass, public MyOtherClass {
+};
+#+END_SRC
+
+** polymorphism
+
+- only VIRTUAL members can redefined by derived classes
+- destructor may have to be virtual also
+
+#+BEGIN_SRC c++
+// virtual members
+#include <iostream>
+using namespace std;
+
+class Polygon {
+  protected:
+    int width, height;
+  public:
+    void set_values (int a, int b)
+      { width=a; height=b; }
+    virtual int area ()
+      { return 0; }
+};
+
+class Rectangle: public Polygon {
+  public:
+    int area ()
+      { return width * height; }
+};
+
+class Triangle: public Polygon {
+  public:
+    int area ()
+      { return (width * height / 2); }
+};
+
+int main () {
+  Rectangle rect;
+  Triangle trgl;
+  Polygon poly;
+  Polygon * ppoly1 = &rect;
+  Polygon * ppoly2 = &trgl;
+  Polygon * ppoly3 = &poly;
+  ppoly1->set_values (4,5);
+  ppoly2->set_values (4,5);
+  ppoly3->set_values (4,5);
+  cout << ppoly1->area() << '\n';
+  cout << ppoly2->area() << '\n';
+  cout << ppoly3->area() << '\n';
+  return 0;
+}
+#+END_SRC
+
+* file operations
+The fstream library includes 3 classes:
+- ofstream Creates and writes to files
+- ifstream Reads from files
+- fstream  A combination of ofstream and ifstream: creates, reads, and writes to files
+
+Create and write to a file
+#+BEGIN_SRC c++
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+  // Create and open a text file
+  ofstream MyFile("filename.txt");
+
+  // Write to the file
+  MyFile << "Files can be tricky, but it is fun enough!";
+
+  // Close the file
+  MyFile.close();
+}
+#+END_SRC
+
+Read from a files
+#+BEGIN_SRC c++
+// Create a text string, which is used to output the text file
+string myText;
+
+// Read from the text file
+ifstream MyReadFile("filename.txt");
+
+// Use a while loop together with the getline() function to read the file line by line
+while (getline (MyReadFile, myText)) {
+  // Output the text from the file
+  cout << myText;
+}
+
+// Close the file
+MyReadFile.close();
+#+END_SRC
+
+* exceptions
+try/throw/catch
+
+#+BEGIN_SRC c++
+try {
+  int age = 15;
+  if (age >= 18) {
+    cout << "Access granted - you are old enough.";
+  } else {
+    throw (age);
+  }
+}
+catch (int myNum) {
+  cout << "Access denied - You must be at least 18 years old.\n";
+  cout << "Age is: " << myNum;
+}
+#+END_SRC
+
+catch all exceptions by putting three dots inside the catch statement brackets (...)
+* math.h vs cmath
+cmath is the newer library - math.h is deprecated
+
+NOTE: cmath puts it's members in namespace std
+
+#+BEGIN_SRC c++
+#include <cmath>
+float pi = std::M_PI;
+#+END_SRC
+* comments & docstrings
+Single line comment: // blah
+
+Multi-line comment: /* blah */
+
+For docstrings, use the doxygen standard.
+
+Doxygen is a widely used tool for generating html documentation from annotated
+source code, basically like javadoc and also conveniently supports very similar
+syntax to javadoc.
+
+#+BEGIN_SRC c++
+/**
+ * 
+ */
+#+END_SRC
+
+* best practice
+** header files
+#+BEGIN_SRC c++
+#ifndef HEADERFILE_H
+#define HEADERFILE_H
+
+// header contents
+
+#endif
+#+END_SRC
+
+or use '#pragma once'
+... note: this is a widely supported but nonstandard compiler feature
+... #ifndef will be a bit more portable
+
+Put this at top of file:
+#+BEGIN_SRC c++
+#pragma once
+#+END_SRC

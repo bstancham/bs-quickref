@@ -1,0 +1,58 @@
+* Kdenlive
+* OPENSHOT (using version 2.4.1)
+** INSTALL & SETUP
+
+$ sudo apt-get install openshot-qt
+
+** WARNINGS
+*** projects in openshot are not portable (YOU CAN'T MOVE IT)
+If you move the project file or any of the assets then it will probably break
+
+I moved my .osp file etc to another directory and then openshot couldn't find my
+original video file - it opened a file chooser dialog to locate the missing
+video but no matter how many times I tried to select the folder/file the video
+was still "missing"! Seems like a bug, which will hopefully be fixed, but still
+better to just think about where you want your project stored before starting.
+*** GENERAL FIX - get the latest version as AppImage
+This fixed my problems more than once!
+** BASICS
+*** carefully choose where to save project before starting (moving it may later may not be possible)
+see above (WARNINGS) - moving the project may break it!
+*** start new project inside a directory of it's own
+Some supplementary directories and files will be generated and don't want things to get messy
+*** play back video preview
+SPACE = start/stop
+Position playback head by clicking and/or dragging on top part of timeine
+** EDITING
+*** add video, audio & image files to the project files window 
+File-->Import Files (Ctrl+F)
+*** arrange clips on the timeline
+Drag and drop from project files section onto one of the tracks on the timeline
+*** right-click on clip for options and presets
+*** split clip (in project files)
+SPLIT CLIP: Right Click on file-->Split Clip
+... split file into as many different clips before editing...
+*** slice clip in place (on the timeline)
+- position playback head where you wnat to slice
+- right click on the clip you want to slice and choose slice
+*** transitions
+overlap clips on same track to create automatic fade transition
+*** speed up video (slow down or reverse video also in Time menu)
+Right click on clip on timeline:
+- Time-->Fast-->Forward-->2X
+*** crop video
+*** rotate video
+** ADD TEXT TO VIDEO
+*** using ready made template
+- Title-->Title (Ctrl+T)
+- choose a template
+- fill in text in template and press save
+- the text item will appear in PROJECT FILES, listed under IMAGES
+- drag image on to one of the tracks on the timeline
+- change duration by dragging edge of clip on timeline (or right-click --> Properties)
+*** make custom SVG template
+OpenShot can use any vector SVG image file as a title template. Just add an SVG
+image file to your .openshot_qt/title_templates/ folder, and it will appear the
+next time you open the Title Editor interface. You can also right click on any
+SVG files in your Project Files panel, and choose Edit Title or Duplicate Title.
+** EXPORT VIDEO

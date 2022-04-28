@@ -1,0 +1,84 @@
+* Basic Syntax
+These are the elements outlined in John Gruber’s original design document. All
+Markdown applications support these elements.
+
+#+BEGIN_EXAMPLE
+HEADINGS:
+
+# H1
+## H2
+### H3
+
+TEXT FORMATTING:
+
+**bold text**
+*italic text*
+`code`
+
+> blockquote
+
+ORDERED LIST:
+
+1. First item
+2. Second item
+3. Third item
+
+UNORDERED LIST:
+
+- First item
+- Second item
+- Third item
+
+LINK:  [title](https://www.example.com)
+
+IMAGE: ![alt text](image.jpg)
+
+HORIZONTAL RULE:
+
+---
+
+#+END_EXAMPLE
+
+* Extended Syntax
+These elements extend the basic syntax by adding additional features. Not all
+Markdown applications support these elements.
+
+TABLE:
+
+| Syntax | Description |
+| ----------- | ----------- |
+| Header | Title |
+| Paragraph | Text |
+
+FENCED CODE BLOCK:
+
+```
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "age": 25
+}
+```
+
+FOOTNOTE:
+
+Here's a sentence with a footnote. [^1]
+
+[^1]: This is the footnote.
+
+HEADING ID:
+
+### My Great Heading {#custom-id}
+
+DEFINITION LIST:
+
+term
+: definition
+
+STRIKETHROUGH: 	~~The world is flat.~~
+
+TASK LIST:
+
+- [x] Write the press release
+- [ ] Update the website
+- [ ] Contact the media

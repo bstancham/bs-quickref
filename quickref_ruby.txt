@@ -1,0 +1,602 @@
+# coding: utf-8
+p# coding: utf-8
+####################### RUBY QUICKSTART GUIDE ########################
+
+
+######################## INSTALLATION & SETUP ########################
+
+# $ sudo apt-get install ruby
+
+# START INTERACTIVE RUBY
+# $ irb
+
+
+
+####################### XAH LEE RUBY IN 1 HOUR #######################
+
+# PRINTING --- puts/print/p
+# puts  : prints in human-friendly form
+# print : similar to 'puts' but doesn't add newlines
+# p     : print in technical form - including quotes/parentheses etc
+p RUBY_VERSION
+
+# NEWLINE & INDENTATION
+# - newline OR semicolon separates expressions e.g. p(3); is same as p(3)
+# - indentation (tabs & whitespace) have no meaning
+# - parentheses are often optional e.g. p(3) is same as p 3
+
+# STRINGS
+# LITERAL STRING - SINGLE QUOTES
+p '4\n5' # prints "4\\n5"
+# DOUBLE QUOTES - EVALUATE EMBEDDED VARIABLES AND RUBY CODE
+puts "cat\nsnake" # print 'cat' and 'snake' on separate lines
+p "there are #{variable_name} cats" # embedded variable
+p "there are #{1+2} cats" # embedded variable
+
+# ALTERNATE STRING QUOTING - MULTI-LINE STRING - QUOTE A LARGE CHUNK OF TEXT
+p %q{'1' "2" (3) [4] {5}}       # literal string, without interpolation
+p %Q{#{aa} and #{1+2} and more} # %Q can also eval code inside
+# ... can use other delimiters e.g. %q(…), %q[…], %q|…|, %q^…^
+
+# HEREDOCS
+# start with <<AAA ---> end with AAA on a line of it's own...
+bb = <<HHHHHHH
+multi-line big string
+that may contain quote marks " " ' '
+also code #{aa}
+HHHHHHH
+# if you want non-interpolated, start quote string with single quote mark...
+myText1 = <<'tttt'
+x is #{x}
+tttt
+
+# SUBSTRINGS
+# get one character
+p "abcdefg"[2]             # ⇒ c
+# string can contain Unicode
+p "α♥β"[1]                 # ⇒ ♥
+# get substring, start at index 2, get 3 chars
+p "abcdefg"[2, 3]          # ⇒ cde
+
+# STRING MANIPULATION
+p "aa" + "bb" # join strings
+
+# replacing string
+myString = "0123456789"
+myString[1]= "a"
+p myString                 # ⇒ "0a23456789"
+# start at index 1, replace 8 chars
+myString[1,8]= "what"
+p myString                 # ⇒ "0what9"
+
+# simple string matching
+# ... get the start index of a substring
+p "in love?".index("love")                 # ⇒ 3
+p "in love?".index("456")                  # ⇒ nil (not found)
+
+# split string in to an array
+p "once upon a time".split(" ") # ⇒ ["once", "upon", "a", "time"]
+
+
+# HELP & DOCUMENTATION
+# everything is an object...
+p 5.methods # print list of all methods that '5' has
+p 5.methods.sort # alphabetically sorted
+p 5.class # what type is object
+
+# VARIABLE NAMES AND SCOPE
+# | starting symbol | EXPLANATION                           |
+# |-----------------+---------------------------------------|
+# | a..z OR _       | lower case = local variable           |
+# | A..Z            | upper case = constant                 |
+# | $               | global variable                       |
+# | @               | instance variable (of a class in OOP) |
+# | @@              | class variable (of a class in OOP     |
+# |-----------------+---------------------------------------|
+# NOTE: constants CAN be re-defined, although you will get a warning
+
+a = 3
+$a = 4
+@a = 5
+@@a = 6
+p defined?(a)   # ⇒ "local-variable"
+p defined?($a)  # ⇒ "global-variable"
+p defined?(@a)  # ⇒ "instance-variable"
+p defined?(@@a) # ⇒ "class variable"
+
+# PRE-DEFINED GLOBAL VARIABLES
+# | $0 | name of the Ruby script file currently executing            |
+# | $* | command line arguments used to invoke the script. (a array) |
+# | $$ | Ruby process ID                                             |
+# | $? | exit status of last executed child process                  |
+# |----+-------------------------------------------------------------|
+# | $@ | location of latest error                                    |
+# | $_ | string last read by gets                                    |
+# | $. | line number last read by interpreter                        |
+# | $/ | input record separator                                      |
+# | $\ | output record separator                                     |
+# |----+-------------------------------------------------------------|
+# | $& | regex. Last matched string                                  |
+# | $~ | regex. Last regexp match. Returns a array                   |
+# | $n | regex. nth subexpression in the last match (same as $~[n])  | 
+# | $= | regex. case-insensitivity flag                              |
+
+
+# TRUE & FALSE
+# 'true' & 'false' are builtin objects...
+# 'false' & 'nil' evaluate to false...
+# ... everything else is true  (including zero, empty string, empty array.)
+
+
+# CONDITIONAL IF THEN ELSE
+if xx > 0 then p 1 end
+if xx > 0 then p 1 else p 0 end
+if xx > 4 then p 1 elsif xx < 4 then p 0 elsif xx == 4 then p "yy" end
+
+# 'if' construct is also a expression. It returns the value of the last line of the block executed.
+xx = 4
+
+p (if xx > 0 then 1 end)    # prints 1
+
+p (if xx > 0 then 1 else 0 end) # prints 1
+
+p (if xx > 4 then 1
+elsif xx < 4 then 0
+elsif xx == 4 then "yes"
+end) # prints "yes"
+
+# short form - like ternary operator in java
+p( xx > 2 ? 1 : 0)        # prints 1
+
+# CASE - like switch in java
+xx = 3
+myResult =
+  case xx
+  when 1 then "one"
+  when 2 then "two"
+  when 3 then "three"
+  when 4 then "four"
+  else "cat"
+  end
+p myResult # --> "three"
+
+
+# LOOPS
+
+# for loop
+for ii in 0..4 do p ii end # prints 0 to 4
+# nested for loop
+for ii in 1..2 do
+  for jj in 1..3 do
+    puts "#{ii}, #{jj}"
+  end
+end
+# ... same thing on one line...
+for ii in 1..2 do for jj in 1..3 do puts "#{ii}, #{jj}" end end
+
+# while loop
+# ... and breaking out of a loop...
+ii = 1
+while ii < 9 do
+  puts ii
+  if ii == 5 then break end
+  ii += 1
+end
+
+
+
+# ITERATION
+# ... each
+# ... collect
+fruits = ['apple', 'orange', 'pear', 'apricot']
+fruits.each do |item| puts "type of fruit: #{item}" end
+fruits.each { |item| puts "type of fruit: #{item}" } # different syntax for same thing
+# building an array from a range...
+aa = [] # empty array
+(0..10).each do |i|
+  puts "adding #{i} to the list."
+  aa.push(i)
+end
+#
+hash.each_pair { |key, value| puts "#{key} is #{value}" }
+
+
+
+
+# creating ranges
+a = (1..5).to_a # to_a converts to array
+p (1..5).class  # --> Range
+p (1..5).to_a.class  # --> Array
+
+
+# List/Array
+aa = [3, "four", 5] # arrays may have mixed data types
+p Array.new(3) # --> [nil, nil, nil]
+p Array.new(3, 1) # --> [1, 1, 1]
+aa = [0, 1, 2, ["8", 9], 3] # nested array literal
+[9,8,7,6].length # number of elements
+# get elements
+aa = ["zero", 1, 2, 3, "four", 5, [6, 8], 7]
+p aa[0] # --> "zero"
+p aa[-1] # --> 7
+p aa[6] # --> [6, 8]
+p aa[6][0] # --> 6
+# find index of element
+p aa.index("four") # --> 4
+p aa.index(9)      # --> nil
+# take a slice
+p aa[4, 6] # --> ["four", 5, [6, 8]]
+# modify elements
+aa[1] = "one"
+# adding elements
+aa.insert(1, "b") # insert
+aa << "c"         # append
+# removing elements
+aa.delete_at(1) # returns the deleted item
+# push and pop - append or remove from the end
+aa.push("a") # add element to end
+aa.pop       # --> "a" --- remove last element and return it
+# join two arrays
+[1,2,3] + ["a", "b", "c"]
+# subtract one array from another (operation is not symmetrical)
+[0,1,2,3] - [2,3,4,5] # --> [0,1]
+[2,3,4,5] - [0,1,2,3] # --> [4,5]
+# array union and intersection
+aa = [0, 8, 7, 3, 1]
+bb = [3, 4]
+# union
+p aa | bb                  # ⇒ [0, 8, 7, 3, 1, 4]
+# intersection
+p aa & bb                  # ⇒ [3]
+# get unique elements
+aa = [1,2,3,4,1,1,4,5]
+p aa.uniq # original array not modified
+aa.uniq!  # origial array modified
+# sorting array
+p aa.sort # original array not modified
+aa.sort!  # sort in-place (original array modified)
+# array equality --> == ignores type, eql? doesn't...
+[0, 1, 2] == [0, 1, 2.0]    # --> true
+[0, 1, 2] == [0, 1, "2"]    # --> false - string is not a number
+[0, 1, 2].eql?([0, 1, 2.0]) # --> false
+
+# HASH TABLE - aka dictionary in Python
+# ... NOTE: keys don't have to by symbols - could use strings, but they are less efficient...
+hh = {:john => 3, :mary => 4, :jane => 5, :vicky => 7}
+p hh[:mary]       # get a value from a key
+hh[:pretty] = 99  # add an entry
+hh.delete :vicky  # delete an entry
+hh.keys           # get all keys
+hh.values         # get all values
+hh.has_key? :mary # check if a key exists
+
+
+# calling unix shell command
+puts `ls -Al ~` # backticks enclose shell command
+
+
+# FUNCTION DEFINITION
+# - returns return value of last expression (explicit 'return' keyword may also be used
+
+# very simple function...
+def f
+  3
+end
+
+# ... same on one line...
+def f() 3 end
+
+# ... with argument...
+def f(x) x+1 end
+
+# ... arguments with default values...
+def f(x = 3, y = 1, z = 2) (x + y) * z end
+
+# varargs - variable length argument list
+def ff(*xx)
+  xx.each { |string| puts string }
+end
+
+
+
+# CLASSES AND OBJECTS
+
+# class name should start with capital letter...
+class Xyz
+  # class variable
+  @@pp = "ting"
+  
+  # initializer/constructor
+  def initialize(ii)
+    @xx = ii               # @xx is a instance variable
+  end
+
+  # a method. Return the instance variable @xx
+  def mm @xx end
+
+  # another method
+  def nn(aa) @xx + aa end
+
+end
+
+# create an object.
+myobj = Xyz.new(3)
+p myobj.nn(2) # call a method
+
+
+
+# WRITING A MODULE
+
+# Module name must start with Capital letter
+module Xyz
+  # …
+end
+
+
+
+
+############################# DATA TYPES #############################
+
+:something # symbol
+'Hello'  # string literal
+"one plus two equals:\n#{1 + 2}" # interpolated string
+[1,2,"three"] # array
+{:jack => 3, :jill => 4} # hash table
+
+
+
+##################### PROC/BLOCK/LAMBDA/CLOSURES #####################
+
+# Block Examples
+
+[1,2,3].each { |x| puts x*2 }   # block is in between the curly braces
+
+[1,2,3].each do |x|
+  puts x*2                    # block is everything between the do and end
+end
+
+# Proc Examples             
+p = Proc.new { |x| puts x*2 }
+[1,2,3].each(&p)              # The '&' tells ruby to turn the proc into a block 
+
+proc = Proc.new { puts "Hello World" }
+proc.call                     # The body of the Proc object gets executed when called
+
+# Lambda Examples            
+lam = lambda { |x| puts x*2 }
+[1,2,3].each(&lam)
+
+lam = lambda { puts "Hello World" }
+lam.call
+
+
+
+
+
+############################ FUNDAMENTALS ############################
+
+# save files with .rb extension
+
+
+# Use magic comment at top of file...
+# -*- coding: utf-8 -*-
+
+
+# This is a comment in Ruby
+
+=begin
+This is a multi-line comment!
+NOTE: The BEGIN and END tags must be on lines of their own!
+=end
+
+
+
+# BASIC CONCEPTS:
+# numbers and strings
+# methods e.g. reverse OR *
+# arrays
+
+
+
+# NUMBER METHODS
+3 + 2  # 3 plus 2
+3 * 2  # 3 times 2
+3 ** 2 # 3 to the power of 2 (3 squared)
+Math.sqrt(9)
+
+
+
+# SOME SIMPLE STRING METHODS:
+"benjamin".reverse
+"benjamin".length
+"benjamin" * 3 # will produce "benjaminbenjaminbenjamin"
+
+306.reverse # will get an error msg - numbers cannot be reversed!
+306.to_s.reverse # is ok (number converted to string)
+
+
+# TYPE CONVERSION
+to_s # to string
+to_i # to integer
+to_f # to float
+to_a # to array
+
+
+
+# ARRAY METHODS
+[12,47,35].max # returns 47
+[12,47,35].sort
+
+
+
+# VARIABLES
+ticket = [12,47,35]
+
+
+
+
+# STRING METHODS:
+poem['toast'] = 'honeydew' # replaces first instance of 'toast' with 'honeydew'
+
+poem.reverse # reverse every character
+poem.lines.to_a.reverse # return an array of lines in reversed order
+poem.lines.to_a.reverse.join # like above but reassembled into a string (to_s would also have had the same effect!
+
+poem.include? "my heart" # return true if poem includes text
+
+poem.downcase #
+
+
+
+
+############### IRB (Interactive Ruby, the Ruby REPL) ################
+
+# To start irb:
+# $ irb
+
+# To load a file:
+# Any constants or globals within the loaded source file will be available in the calling program’s global namespace. However, local variables will not be propagated to the loading environment.
+# > load './test.rb'
+
+
+
+############################## METHODS ###############################
+
+# * parens can be omitted if there are no arguments...
+
+def hi
+  puts "Hello there!"
+end
+
+
+def hi(name)
+  puts "Hello #{name}!"
+end
+
+
+def hi(name)
+  puts "Hello #{name.capitalize}!" # capitalize first letter
+end
+
+
+
+
+############################## CLASSES ###############################
+
+class Greeter
+  def initialize(name = "World")
+    @name = name
+  end
+  def say_hi
+    puts "Hi, #{@name}!"
+  end
+  def say_bye
+    puts "Bye #{@name}, come again soon!"
+  end
+end
+
+# use it like this
+greeter = Greeter.new("Pat")
+greeter.say_hi
+
+
+greeter.instance_methods
+greeter.instance_methods(false) # don't include inherited methods
+
+greeter.respond_to?("name")   # => false (no such method)
+greeter.respond_to?("say_hi") # => true
+greeter.respond_to?("to_s")   # => true (all objects do to_s by default)
+
+
+
+#### ALTERING AN EXISTING CLASS
+
+# finish this tutorial: https://www.ruby-lang.org/en/documentation/quickstart/3/
+
+class Greeter
+  attr_accessor :name
+end
+
+greeter.respond_to?("name")   # => TRUE!
+greeter.say_hi
+greeter.name           # returns name
+greeter.name= 'Norman' # set name to Norman
+
+# Using attr_accessor defined two new methods for us, name to get the value, and name= to set it.
+
+
+
+
+
+
+##################### RUNNING PROGRAM FROM FILE ######################
+# * Save files with .rb extension 
+
+
+
+#!/usr/bin/env ruby
+
+class MegaGreeter
+  attr_accessor :names
+
+  # Create the object
+  def initialize(names = "World")
+    @names = names
+  end
+
+  # Say hi to everybody
+  def say_hi
+    if @names.nil?
+      puts "..."
+    elsif @names.respond_to?("each")
+      # @names is a list of some kind, iterate!
+      @names.each do |name|
+        puts "Hello #{name}!"
+      end
+    else
+      puts "Hello #{@names}!"
+    end
+  end
+
+  # Say bye to everybody
+  def say_bye
+    if @names.nil?
+      puts "..."
+    elsif @names.respond_to?("join")
+      # Join the list elements with commas
+      puts "Goodbye #{@names.join(", ")}.  Come back soon!"
+    else
+      puts "Goodbye #{@names}.  Come back soon!"
+    end
+  end
+end
+
+
+if __FILE__ == $0
+  mg = MegaGreeter.new
+  mg.say_hi
+  mg.say_bye
+
+  # Change name to be "Zeke"
+  mg.names = "Zeke"
+  mg.say_hi
+  mg.say_bye
+
+  # Change the name to an array of names
+  mg.names = ["Albert", "Brenda", "Charles",
+              "Dave", "Engelbert"]
+  mg.say_hi
+  mg.say_bye
+
+  # Change to nil
+  mg.names = nil
+  mg.say_hi
+  mg.say_bye
+end
+
+
+
+############################### FILES ################################
+
+File.exist?("Foo") # true or false
+

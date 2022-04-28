@@ -1,0 +1,213 @@
+* MATHS GLOSSARY
+** ! sign means factorial in mathematics.
+
+The factorial of a non-negative integer n, denoted by n!, is the product of all
+positive integers less than or equal to n.
+
+In general, n! = n(n-1)(n-2)(n-3)…….(2)(1)
+
+EXAMPLES:
+3! = 3x2x1 = 6
+4! = 4x3x2x1 = 24
+5! = 5x4x3x2x1 = 120
+
+According to the convention for an empty product, the value of 0! is 1
+
+** Σ greek capital sigma means SUMMATION
+* MACHINE LEARNING GLOSSARY
+** GA = Genetic Algorithm
+** NE = NeuroEvolution
+** NEAT = NeuroEvolution of Augmenting Topologies
+** TWEANN = Topology and Weight Evolving Artificial Neural Networks
+** GNARL = GeNeralized Acquisition of Recurrent Links
+** PDGP = Parallel Distributed Genetic Programming
+** CE = Cellular Encoding
+** ESP = Enforced Subpopulations
+** SANE = Symbiotic Adaptive NeuroEvolution
+** GAN = Generative Adversarial Network
+** DPV = Double Pole balancing with Velocity information
+** DPNV = Double Pole balancing without Velocity information
+** ANOTHER LIST FORM THE WEB
+
+AE Auto encoder
+
+AD Automatic differentiation
+
+ANN Artificial Neural Network
+
+API Application Programming Interface
+
+ARD Automatic Relevance Determination
+
+ASR Automatic Speech Recognition ASR
+
+BPTT Back Propagation Through Time
+
+BPTS Back Propagation Through Structure
+
+BNN Binary Neural Net
+
+COCO Common Objects in Context
+
+CPPN Compositional Pattern-Producing Network
+
+CTC Connectionist Temporal Classification
+
+CNN Convolutional Neural network
+
+CRF Conditional Random Field
+
+CV Cross Validation
+
+DBN Deep Belief Network
+
+DCGAN deep convolutional generative adversarial networks
+
+DNN Deep Neural Network
+
+DT Decision tree
+
+EBM Energy Based Model
+
+ESP Enforced SubPopulations
+
+ELU Exponential Linear Unit
+
+ERF Extremly random forest
+
+GAN Generative Adversarial Network
+
+GBM Gradient Boosting Machine
+
+GMM Gaussian Mixture Model
+
+GRU Gated Recurrent Unit GRU
+
+HMM Hidden Markov Model
+
+NB Naive Bayes
+
+NN Neural Network
+
+KPCA Kernel Principal Component Analysis
+
+KSVM Kernel Support Vector Machine
+
+GA Genetic algorithm GA
+
+HTM Heirarchal temporal memory
+
+HMM Hidden Markov Model
+
+HAM Hierarchical Attentive Memory
+
+KNN k-Nearest Neighbors
+
+LOOCV Leave one out cross validation
+
+LReLU Leaky ReLU
+
+LTU Linear Threshold Unit
+
+LSTM Long Short Term memory
+
+MCMC Markov chain Monte Carlo
+
+MDP Markov Decision Processes
+
+ML Machine Learning
+
+MLP Multi-layer Perceptrons
+
+NLP Natural Language Processing
+
+NTM Neural Turing Machine
+
+NEAT NeuroEvolution of Augmenting Topologies
+
+OLS Ordinary Least Squares Regression
+
+PReLU Paramaterized ReLU
+
+OCR Optical Character Recognition.
+
+PCA Principal Component Analysis.
+
+PAC-MDP Probably Approximately Correct in Markov Decision Processes
+
+RTRL Real Time Recurrent Learning
+
+ReLU Rectified Linear Unit
+
+RNN Recurrent Neural Network
+
+RNTN Recursive Neural Tensor Network
+
+RL Reinforcement Learning
+
+RVM Relevance Vector Machine
+
+ResNet Residual Neural Network
+
+RF Random Forest
+
+RBM Restricted Boltzmann Machines
+
+SIFT Scale-Invariant Feature Transform
+
+SRN Simple Recurrent Network
+
+SVD singular value decomposition
+
+SGD Stochastic Gradient Descent
+
+SVM Support Vector Machine
+
+SANE Symbiotic Adaptive NeuroEvolution
+
+TDA Topological Data Analysis
+
+TF TensorFlow
+
+TFIDF Term Frequency Inverse Document Frequency
+
+VLAD Vector of Locally Aggregated Descriptors
+
+WFST Weighted Finite-State Transducers
+
+* NEAT (Neuroevolution of augmenting topologies)
+NeuroEvolution of Augmenting Topologies (NEAT) is a genetic algorithm (GA) for
+the generation of evolving artificial neural networks (a neuroevolution
+technique) developed by Ken Stanley in 2002 while at The University of Texas at
+Austin. It alters both the weighting parameters and structures of networks,
+attempting to find a balance between the fitness of evolved solutions and their
+diversity. It is based on applying three key techniques: tracking genes with
+history markers to allow crossover among topologies, applying speciation (the
+evolution of species) to preserve innovations, and developing topologies
+incrementally from simple initial structures ("complexifying").
+
+Described in the paper:
+
+Evolving Neural Networks through Augmenting Topologies
+
+Kenneth O. Stanley & Risto Miikkulainen, 2002
+
+
+
+P16: 4.3 Pole Balancing as a Benchmark Task
+
+P22: 5.8 Visualizing Speciation
+
+** Competing Conventions is one of the main problems for NE
+
+** NEAT implementations
+*** java --> JNEAT
+**** intro
+
+I downloaded JNEAT from here:
+
+http://nn.cs.utexas.edu/?neat-java
+
+Got the GUI running by following the instructions in QUICKTART.txt and README.EN.txt
+
+* ONLINE COURSE: Machine Learning - Andrew Ng - Coursera

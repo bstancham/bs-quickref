@@ -1,0 +1,97 @@
+EXCEL AND SIMILAR SPREADSHEET PROGRAMS E.G. LIBREOFFICE/OPENOFFICE CALC
+
+* CELL REFERENCES
+** BASIC CELL REFERENCES
+| =A1        | basic cell reference                            |
+| =$A$1      | absolute cell reference                         |
+| =$A1       | absolute column, relative row                   |
+| =A$1       | relative column, absolute row                   |
+| =sheet2.A1 | reference to another sheet in the same workbook |
+
+** NAMED CELLS
+You can give a cell a name by typing it into the cell name box (to the left of
+the formula bar). The cell name box displays the cell co-ordinates (e.g. A1).
+
+| =MY_CELL | reference to a named cell                  |
+| =MY_CELL | reference to a named cell in another sheet |
+
+Named cells can be referenced directly from any sheet in the workbook, therefore
+there is no special syntax to reference a named cell from a different sheet.
+
+** REFERENCE TO ANOTHER WORKBOOK/FILE?
+
+?
+
+* BUILTIN FUNCTIONS
+** SUM
+| = SUM(A1:A10)           | sum cells in range             |
+| = SUM(A1, B23, C14, D7) | sum these four arbitrary cells |
+
+** SUMIF(range, criteria, [sum_range])
+*** ARGUMENTS
+**** RANGE (required)
+The range of cells that you want evaluated by criteria. Cells in each range must
+be numbers or names, arrays, or references that contain numbers. Blank and text
+values are ignored. The selected range may contain dates in standard Excel
+format (examples below).
+**** CRITERIA (required)
+The criteria in the form of a number, expression, a cell reference, text, or a
+function that defines which cells will be added. Wildcard characters can be
+included - a question mark (?) to match any single character, an asterisk (*) to
+match any sequence of characters. If you want to find an actual question mark or
+asterisk, type a tilde (~) preceding the character.
+
+For example, criteria can be expressed as 32, ">32", B5, "3?", "apple*", "*~?",
+or TODAY().
+
+IMPORTANT: Any text criteria or any criteria that includes logical or
+mathematical symbols must be enclosed in double quotation marks ("). If the
+criteria is numeric, double quotation marks are not required.
+
+**** SUM_RANGE (optional)
+The actual cells to add, if you want to add cells other than those specified in
+the range argument. If the sum_range argument is omitted, Excel adds the cells
+that are specified in the range argument (the same cells to which the criteria
+is applied).
+
+Sum_range should be the same size and shape as range. If it isn't, performance
+may suffer, and the formula will sum a range of cells that starts with the first
+cell in sum_range but has the same dimensions as range. For example:
+
+*** EXAMPLES
+| =SUMIF(A1:A10,">5")          | sum cells in range which have numeric value of more than five                   |
+| =SUMIF(A1:A10,"Y",B1:B10)    | sum cells in col B for which the adjacent cell in col A contains the string "Y" |
+| =SUMIF(E4:E10, "", A4:A10)   | sum cells in col A if cell in col E is blank                                    |
+| =SUMIF(E4:E10, "<>", A4:A10) | sum cells in col A if cell in col E is NOT blank                                |
+** SUMIFS
+Like SUMIF, but can handle multiple criteria.
+Also, the order of the arguments is different.
+** IF
+| =IF(A1 <> "", "GUNK", "ZIP") | if A1 is NOT blank, return "GUNK", else return "ZIP" |
+* LOGICAL OPERATORS
+<> = not equal to
+* INDIRECT: getting cell references from strings
+
+=INDIRECT('A1')
+
+=INDIRECT(A1)
+
+indirect ref to another sheet
+
+=INDIRECT
+
+INDIRECT("jingle."&D3)
+* INDEX and MATCH
+
+INDEX(range, index)
+INDEX(B3:B11,4)
+INDEX(B3:B11,4,2)
+
+IMPORTANT: match-type -> 0=exact, 1=approximate -> 1 is default
+MATCH(value,range,match-type)
+MATCH("peach",B3:B9,0)
+
+* formulas cookbook
+** sum column values until blank cell
+
+=SUM(A1:INDEX(A1:A100,MATCH(TRUE,(A1:A100=""),0)))

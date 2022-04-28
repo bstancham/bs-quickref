@@ -1,0 +1,424 @@
+KOTLIN QUICKSTART GUIDE
+
+* BASICS
+** WHAT IS KOTLIN?
+- compiles to jvm (also to javascript/ecmascript)
+- functions are first-class
+- source files with .kt extension
+
+** HELLO WORLD
+INSTALL KOTLIN:
+$ sdk install kotlin
+
+HELLO WORLD PROGRAM: Source code in file named hello.kt
+
+#+BEGIN_SRC kotlin
+fun main(args: Array<String>) {
+    println("Hello, World!")
+}
+#+END_SRC
+
+COMPILE:
+$ kotlinc hello.kt -include-runtime -d hello.jar
+
+RUN:
+$ java -jar hello.jar
+
+** COMPILATION
+
+COMPILE AN APPLICATION:
+    $ kotlinc hello.kt -include-runtime -d hello.jar
+
+    -d indicates what we want the output of the compiler to be called and may be either a directory name for class files or a .jar file name.
+    -include-runtime makes the resulting .jar file self-contained and runnable by including the Kotlin runtime library in it.
+
+COMPILE A LIBRARY:
+If you're developing a library to be used by other Kotlin applications, you can produce the .jar file without including the Kotlin runtime into it.
+
+    $ kotlinc hello.kt -d hello.jar
+
+Since binaries compiled this way depend on the Kotlin runtime you should make sure the latter is present in the classpath whenever your compiled library is used.
+
+*** GRADLE
+In order to build Kotlin with Gradle you should set up the kotlin-gradle plugin, apply it to your project and add kotlin-stdlib dependencies
+
+** RUNNING
+$ java -jar hello.jar
+
+** REPL
+Run the compiler without parameters to have an interactive shell...
+$ kotlinc
+
+* KOTLIN AND EMACS
+install these using M-x package-list-packages:
+- kotlin-mode
+- ob-kotlin (org-babel kotlin)
+* FUNCTIONS
+
+// returns the string "hello"
+fun getHello(): String = "hello"
+
+fun getGreeting(name: String): String {
+    return name + " hello"
+}
+
+
+
+DEFAULT VALUES AND NAMED PARAMETERS
+
+fun addOnTo(x:Int, b:Int = 3): Int = x + b
+
+val result = addOnTo(4)       // 7
+val result = addOnTo(4, b=10) // 14
+val result = addOnTo(4, 10)   // 14
+
+
+
+// notice if/else used like java ternary statement
+fun foo(name: String, number: Int = 42, toUpperCase: Boolean = false) =
+    (if (toUpperCase) name.toUpperCase() else name) + number
+
+foo("b", number = 1),
+foo("c", toUpperCase = true),
+foo(name = "d", number = 2, toUpperCase = true)
+
+
+
+HIGHER-ORDER FUNCTIONS AND LAMBDAS
+
+A higher-order function is a function that takes functions as parameters, or returns a function
+
+* STRINGS
+
+raw string is triple-quoted...
+... useful for writing regular expressions (don't have to escape backslash etc)
+fun getPattern() = """\d{2}\.\d{2}\.\d{4}"""
+
+* CLASSES
+
+// minimal class with no body
+class Empty
+
+** CONSTRUCTORS
+
+A class in Kotlin can have a PRIMARY CONSTRUCTOR and one or more SECONDARY CONSTRUCTORS.
+
+The primary constructor is part of the class header: it goes after the class name (and optional type parameters).
+
+class Person constructor(firstName: String) { ... }
+
+If the primary constructor does not have any annotations or visibility modifiers, the constructor keyword can be omitted:
+
+class Person(firstName: String) { ... }
+
+The primary constructor cannot contain any code. Initialization code can be placed in initializer blocks, which are prefixed with the init keyword.
+
+During an instance initialization, the initializer blocks are executed in the same order as they appear in the class body, interleaved with the property initializers:
+
+class InitOrderDemo(name: String) {
+    val firstProperty = "First property: $name".also(::println)
+
+    init {
+        println("First initializer block that prints ${name}")
+    }
+
+    val secondProperty = "Second property: ${name.length}".also(::println)
+
+    init {
+        println("Second initializer block that prints ${name.length}")
+    }
+}
+
+ 
+
+
+In fact, for declaring properties and initializing them from the primary constructor, Kotlin has a concise syntax:
+
+class Person(val firstName: String, val lastName: String, var age: Int) { ... }
+
+Much the same way as regular properties, the properties declared in the primary constructor can be mutable (var) or read-only (val).
+
+
+
+If the constructor has annotations or visibility modifiers, the constructor keyword is required, and the modifiers go before it:
+
+class Customer public @Inject constructor(name: String) { ... }
+
+  
+
+** DATA CLASSES
+
+Add the 'data' modifier to a class --> the compiler will generate various useful methods...
+... equals/hashCode, toString etc...
+
+data class Person(val name:String, val age:Int)
+
+// make an instance
+val person = Person("Bob", 27)
+// access properties
+person.name
+person.age
+
+* NULLABLE TYPES
+
+In Kotlin, the type system distinguishes between references that can hold null (nullable references) and those that can not (non-null references). For example, a regular variable of type String can not hold null:
+
+var a: String = "abc"
+
+a = null // compilation error
+
+Target platform: JVMRunning on kotlin v. 1.2.51
+
+To allow nulls, we can declare a variable as nullable string, written String?:
+
+var b: String? = "abc"
+
+b = null // ok
+
+print(b)
+
+Target platform: JVMRunning on kotlin v. 1.2.51
+
+Now, if you call a method or access a property on a, it's guaranteed not to cause an NPE, so you can safely say:
+
+val l = a.length
+
+But if you want to access the same property on b, that would not be safe, and the compiler reports an error:
+
+val l = b.length // error: variable 'b' can be null
+
+But we still need to access that property, right? There are a few ways of doing that.
+
+Checking for null in conditions
+
+First, you can explicitly check if b is null, and handle the two options separately:
+
+val l = if (b != null) b.length else -1
+
+The compiler tracks the information about the check you performed, and allows the call to length inside the if. More complex conditions are supported as well:
+
+val b = "Kotlin"
+
+if (b != null && b.length > 0) {
+
+    print("String of length ${b.length}")
+
+} else {
+
+    print("Empty string")
+
+}
+
+Target platform: JVMRunning on kotlin v. 1.2.51
+
+Note that this only works where b is immutable (i.e. a local variable which is not modified between the check and the usage or a member val which has a backing field and is not overridable), because otherwise it might happen that b changes to null after the check.
+Safe Calls
+
+Your second option is the safe call operator, written ?.:
+
+val a = "Kotlin"
+
+val b: String? = null
+
+println(b?.length)
+
+println(a?.length)
+
+Target platform: JVMRunning on kotlin v. 1.2.51
+
+This returns b.length if b is not null, and null otherwise. The type of this expression is Int?.
+
+SAFE CALL OPERATOR ?.
+
+Safe calls are useful in chains. For example, if Bob, an Employee, may be assigned to a Department (or not), that in turn may have another Employee as a department head, then to obtain the name of Bob's department head (if any), we write the following:
+
+bob?.department?.head?.name
+
+Such a chain returns null if any of the properties in it is null.
+
+#+BEGIN_SRC kotlin
+// use chained safe-call operator to get email property in one go, then check whether it's null
+fun sendMessageToClient(client: Client?, message: String?, mailer: Mailer){
+    val email:String? = client?.personalInfo?.email
+    if (message == null || email == null) return
+    mailer.sendMessage(email, message)
+}
+
+class Client (val personalInfo: PersonalInfo?)
+class PersonalInfo (val email: String?)
+interface Mailer {
+    fun sendMessage(email: String, message: String)
+}
+
+#+END_SRC
+
+* SMART CASTS
+In many cases, one does not need to use explicit cast operators in Kotlin, because the compiler tracks the is-checks and explicit casts for immutable values and inserts (safe) casts automatically when needed:
+
+fun demo(x: Any) {
+    if (x is String) {
+        print(x.length) // x is automatically cast to String
+    }
+}
+
+The compiler is smart enough to know a cast to be safe if a negative check leads to a return:
+
+if (x !is String) return
+
+print(x.length) // x is automatically cast to String
+
+or in the right-hand side of && and ||:
+
+// x is automatically cast to string on the right-hand side of `||`
+
+if (x !is String || x.length == 0) return
+
+​
+
+// x is automatically cast to string on the right-hand side of `&&`
+if (x is String && x.length > 0) {
+    print(x.length) // x is automatically cast to String
+}
+
+Such smart casts work for when-expressions and while-loops as well:
+
+when (x) {
+    is Int -> print(x + 1)
+    is String -> print(x.length + 1)
+    is IntArray -> print(x.sum())
+}
+
+* EXTENSIONS
+
+Kotlin, similar to C# and Gosu, provides the ability to extend a class with new functionality without having to inherit from the class or use any type of design pattern such as Decorator. This is done via special declarations called extensions. Kotlin supports extension functions and extension properties.
+
+** EXTENSION FUNCTIONS
+
+To declare an extension function, we need to prefix its name with a receiver type, i.e. the type being extended. The following adds a swap function to MutableList<Int>:
+
+fun MutableList<Int>.swap(index1: Int, index2: Int) {
+    val tmp = this[index1] // 'this' corresponds to the list
+    this[index1] = this[index2]
+    this[index2] = tmp
+}
+
+The this keyword inside an extension function corresponds to the receiver object (the one that is passed before the dot). Now, we can call such a function on any MutableList<Int>:
+
+val l = mutableListOf(1, 2, 3)
+l.swap(0, 2) // 'this' inside 'swap()' will hold the value of 'l'
+
+Of course, this function makes sense for any MutableList<T>, and we can make it generic:
+
+fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
+    val tmp = this[index1] // 'this' corresponds to the list
+    this[index1] = this[index2]
+    this[index2] = tmp
+}
+
+We declare the generic type parameter before the function name for it to be available in the receiver type expression. See Generic functions.
+* OBJECT EXPRESSIONS
+Sometimes we need to create an object of a slight modification of some class, without explicitly declaring a new subclass for it. Java handles this case with anonymous inner classes. Kotlin slightly generalizes this concept with object expressions and object declarations.
+
+To create an object of an anonymous class that inherits from some type (or types), we write:
+
+window.addMouseListener(object : MouseAdapter() {
+    override fun mouseClicked(e: MouseEvent) { ... }
+    override fun mouseEntered(e: MouseEvent) { ... }
+})
+
+If a supertype has a constructor, appropriate constructor parameters must be passed to it. Many supertypes may be specified as a comma-separated list after the colon:
+
+open class A(x: Int) {
+    public open val y: Int = x
+}
+
+interface B { ... }
+
+val ab: A = object : A(1), B {
+    override val y = 15
+}
+
+If, by any chance, we need "just an object", with no nontrivial supertypes, we can simply say:
+
+fun foo() {
+    val adHoc = object {
+        var x: Int = 0
+        var y: Int = 0
+    }
+    print(adHoc.x + adHoc.y)
+}
+
+
+
+EXAMPLE:
+Using object expression to create an ad-hoc comparator to sort list into DESCENDING order
+
+import java.util.*
+
+fun getList(): List<Int> {
+    val arrayList = arrayListOf(1, 5, 2)
+    Collections.sort(arrayList, object: Comparator<Int> {
+        override fun compare(a:Int, b:Int): Int {
+            if (a < b) return 1
+            if (a > b) return -1
+            return 0
+        }
+    })
+    return arrayList
+}
+
+* SAM Conversions
+
+SAM = Single Abstract Method
+
+Just like Java 8, Kotlin supports SAM conversions. This means that
+Kotlin function literals can be automatically converted into
+implementations of Java interfaces with a single non-default method,
+as long as the parameter types of the interface method match the
+parameter types of the Kotlin function.
+
+Note that this feature works only for Java interop; since Kotlin has
+proper function types, automatic conversion of functions into
+implementations of Kotlin interfaces is unnecessary and therefore
+unsupported.
+
+
+You can use this for creating instances of SAM interfaces:
+
+val runnable = Runnable { println("This runs in a runnable") }
+
+…and in method calls:
+
+val executor = ThreadPoolExecutor()
+
+// Java signature: void execute(Runnable command)
+executor.execute { println("This runs in a thread pool") }
+
+If the Java class has multiple methods taking functional interfaces, you can choose the one you need to call by using an adapter function that converts a lambda to a specific SAM type. Those adapter functions are also generated by the compiler when needed:
+
+executor.execute(Runnable { println("This runs in a thread pool") })
+
+Note that SAM conversions only work for interfaces, not for abstract classes, even if those also have just a single abstract method.
+
+
+EXAMPLE:
+Lambda expression in SAM conversion to Comparator.compare()...
+... because output is negative int/zero/positive int, we can reduce the whole method to a single arithmetic operation!
+
+import java.util.*
+fun getList(): List<Int> {
+    val arrayList = arrayListOf(1, 5, 2)
+    Collections.sort(arrayList, { x, y -> y - x } )
+    return arrayList
+}
+
+* EXTENSION FUNCTIONS ON COLLECTIONS
+
+Kotlin code can be easily mixed with Java code. Thus in Kotlin we don't introduce our own collections, but use standard Java ones (slightly improved). Read about read-only and mutable views on Java collections.
+
+In Kotlin standard library there are lots of extension functions that make the work with collections more convenient. Rewrite the previous example once more using an extension function sortedDescending.
+
+EXAMPLE: uses extension function sortedDescending...
+fun getList(): List<Int> {
+    return arrayListOf(1, 5, 2).sortedDescending()
+}

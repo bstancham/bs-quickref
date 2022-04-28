@@ -1,0 +1,112 @@
+* GETTING STARTED
+** Installation and setup
+GET PROCESSING: (update on 18/10/2021)
+
+Download latest version from processing web site (Linux 64 bit)
+
+Decompress the folder in HOME DIRECTORY:
+
+: $ tar xvfx processing-4.0b2-linux64.tgz
+
+tar options explained:
+x = extract
+v = verbose
+f = file
+z = gzip
+
+Thats it! No setup required!
+
+** RUN PROCESSING IDE
+Change into the proccessing directory:
+
+: $ cd processing-4.0b2-linux64
+
+Run the processing IDE:
+
+: ./processing
+
+** BASIC EXAMPLES/HELLO WORLD
+
+RUN PROGRAM: press the 'play' button
+STOP PROGRAM: press the 'stop' button
+EXPORT
+
+#+BEGIN_SRC java :classname example
+// Just draw an ellipse
+ellipse(50, 50, 50, 50);
+#+END_SRC
+
+#+BEGIN_SRC java :classname example
+// set window size and add basic mouse interaction
+
+void setup() {
+ size(500, 400);
+}
+
+void draw() {
+  if (mousePressed) {
+    fill(0); // set fill colour to black
+  } else {
+    fill(255); // set fill colour to white
+  }
+  ellipse(mouseX, mouseY, 50, 50);
+}
+#+END_SRC
+* PROCESSING AND EMACS
+processing-mode
+https://www.emacswiki.org/emacs/Processing
+* SERIAL COMMUNICATION WITH ARDUINO
+** ARDUINO SERIAL HELLO WORLD
+Simple Arduino program, just sends a message down the serial port once every second.
+
+#+BEGIN_SRC arduino
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  Serial.println("Here is a random number for you: " + String(random()));
+  delay(1000);
+}
+#+END_SRC
+
+We can test that this is working properly by opening up the Arduino IDE serial
+monitor, but make sure you shut it down before running the Processing sketch or
+else we will get an error message telling us that the serial port is already in
+use.
+
+Here is a basic minimal Processing sketch to listen on the serial port and print
+the message from the Arduino in the terminal.
+
+#+BEGIN_SRC java
+import processing.serial.*;
+
+String portName;
+Serial myPort; // a Serial object instance
+String val; // store message from serial here
+
+void setup() {
+  // Get the first listed serial port.
+  // This is usually the right one, otherwise change the 0 to a 1 or 2 etc, to match your port.
+  portName = Serial.list()[0];
+  myPort = new Serial(this, portName, 9600);
+}
+
+void draw() {
+  if (myPort.available() > 0) {
+    // if data is available, read it and store it in our variable
+    val = myPort.readStringUntil('\n');
+  }
+  // print last received message to the console
+  println("from serial port " + portName + ": " + val);
+}
+#+END_SRC
+* DRAWING TEXT
+#+BEGIN_SRC java
+text("hello", 50, 50);
+
+
+#+END_SRC
+
+* DOCUMENTATION
+https://processing.github.io/processing-javadocs/core/

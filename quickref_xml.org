@@ -1,0 +1,71 @@
+* DTD (Document Type Definition)
+
+file extension dtd
+
+#+BEGIN_SRC xml
+<!--
+    toothpick-program.dtd (Toothpick Program Document Type Definition)
+
+    xml notes:
+    PCDATA = parsed character data
+    CDATA = character data - not parsed i.e. cannot contain other xml elements
+  -->
+
+<!-- AN OBJECT INSTANCE -->
+<!ELEMENT instance (field*, method*, list-method*)>
+<!ATTLIST instance class CDATA #REQUIRED>
+
+<!-- TO SET UP OBJECT STATE -->
+
+<!-- FOR SETTING PUBLIC FIELDS -->
+<!ELEMENT field (instance|prim|point|line|rect|color)>
+<!ATTLIST field name CDATA #REQUIRED>
+<!ATTLIST field class CDATA #IMPLIED> <!-- ONLY RELEVENT FOR 'instance' OR 'list' ARGUMENTS: If class is not supplied, the class of the first child element will be used -->
+
+<!-- FOR SETTING PUBLIC METHODS -->
+<!--
+   NOTE: All methods have a single argument! If multiple child elements are present, the method will be applied once for EACH child element using that element as the argument...
+   TODO: For multi-arg methods, use <!ELEMENT args (class*)>
+  -->
+<!-- <!ELEMENT method (instance*, array*, prim*, pt2*, ln2*, rgb*)> -->
+<!ELEMENT method (instance*, prim*, list_method*)>
+<!ATTLIST method name CDATA #REQUIRED>
+<!ATTLIST method class CDATA #IMPLIED> <!-- ONLY RELEVENT FOR 'instance' OR 'list' ARGUMENTS: If class is not supplied, the class of the child element will be used -->
+
+<!-- <!ELEMENT list-method (instance*, prim*)> -->
+<!-- <!ATTLIST list-method name CDATA #REQUIRED> -->
+<!-- <!ATTLIST list-method class CDATA #IMPLIED> -->
+
+<!-- PRIMITIVE VALUES (yes, I know that string is not a java primitive) -->
+<!ELEMENT prim EMPTY>
+<!ATTLIST prim type (byte|boolean|char|double|float|int|long|short|string) #REQUIRED>
+<!ATTLIST prim value CDATA #REQUIRED>
+
+<!-- A 2D POINT (x & y co-ordinate values are double) -->
+<!ELEMENT point EMPTY>
+<!ATTLIST point x CDATA #REQUIRED>
+<!ATTLIST point y CDATA #REQUIRED>
+
+<!-- A 2D LINE (co-ordinate values are double) -->
+<!ELEMENT line EMPTY>
+<!ATTLIST line x1 CDATA #REQUIRED>
+<!ATTLIST line y1 CDATA #REQUIRED>
+<!ATTLIST line x2 CDATA #REQUIRED>
+<!ATTLIST line y2 CDATA #REQUIRED>
+
+<!-- A 2D RECTANGLE (co-ordinate values are int) -->
+<!-- A 2D LINE -->
+<!ELEMENT rect EMPTY>
+<!-- <!ATTLIST rect type (double) "double"> -->
+<!ATTLIST rect x1 CDATA #REQUIRED>
+<!ATTLIST rect y1 CDATA #REQUIRED>
+<!ATTLIST rect x2 CDATA #REQUIRED>
+<!ATTLIST rect y2 CDATA #REQUIRED>
+
+<!-- AN RGB COLOR OBJECT (0-255 (8-bit)) -->
+<!ELEMENT color EMPTY>
+<!-- <!ATTLIST color type (int) "int"> -->
+<!ATTLIST color r CDATA #REQUIRED>
+<!ATTLIST color g CDATA #REQUIRED>
+<!ATTLIST color b CDATA #REQUIRED>
+#+END_SRC

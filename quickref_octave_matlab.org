@@ -1,0 +1,486 @@
+* setup
+
+config file for the graphical interface:
+~/.config/octave/qt-settings
+
+* Emacs integration
+Octave support is built in to Emacs (since v19.35)
+
+For editing octave code
+  M-x octave-mode
+
+Octave REPL in Emacs
+  M-x run-octave
+
+Extensive INFO manual should be installed with emacs - search for octave in top level info dir.
+
+* basic usage
+- save files with .m extension
+
+* comments
+# single line comment
+
+#{
+block comment
+block comment
+block comment
+multi-line comment
+#}
+
+* data types
+typeinfo(x) % get type info for x
+* indexing matrices and vectors
+
+Indexing (subscripting) a matrix/vector
+(indexed from one - not zero)
+#+BEGIN_SRC octave
+% vector
+a = [1 2 3]
+a(1) == 1
+a(2) == 2
+a(3) == 3
+
+% matrices are indexed row first, then column
+B = [1  2  3  4  5;
+     6  7  8  9  10;
+     11 12 13 14 15]
+B(1,1) == 1
+B(1,3) == 11
+B(2,4) == 9
+% use : to select the whole row or column
+B(1,:) % first row
+B(:,1) % first column
+#+END_SRC
+
+
+VECTORIZED INDEXING OF A MATRIX
+>> a = eye(5)
+a =
+
+Diagonal Matrix
+
+   1   0   0   0   0
+   0   1   0   0   0
+   0   0   1   0   0
+   0   0   0   1   0
+   0   0   0   0   1
+
+>> a([2 2 2 5 1],:)
+ans =
+
+   0   1   0   0   0
+   0   1   0   0   0
+   0   1   0   0   0
+   0   0   0   0   1
+   1   0   0   0   0
+
+OR ALL IN ONE LINE
+
+>> eye(5)([5 5 5 1 1 2],:)
+ans =
+
+   0   0   0   0   1
+   0   0   0   0   1
+   0   0   0   0   1
+   1   0   0   0   0
+   1   0   0   0   0
+   0   1   0   0   0
+
+CAN PASS AN EXISTING VECTOR AS AN ARGUMENT
+
+>> a = [4 4 1];
+>> eye(5)(a,:)
+ans =
+
+   0   0   0   1   0
+   0   0   0   1   0
+   1   0   0   0   0
+
+* matrices and vectors
+
+# use comma to go to the next column, semicolon to go to the next row
+
+** initialization
+# init a row vector
+x = [1, 2, 3]
+
+    1 2 3
+
+# init a column vector
+x = [1; 2; 3]
+
+    1
+    2
+    3
+
+# init a matrix
+x = [1, 2, 3; 4, 5, 6]
+
+    1 2 3
+    4 5 6
+
+** operations
+
+A + B # add matrices
+A * B # multiply matrices
+
+A'    # single quote transposes a matrix
+* concatenation
+You can concatenate matrices using the usual matrix definition notation,
+provided that the dimensions are compatible:
+
+>> A = [1 2; 3 4];
+>> B = [5 6 7; 8 9 10];
+>> [A B] % concatenate matrices
+ans =
+
+    1    2    5    6    7
+    3    4    8    9   10
+
+>> [zeros(4,2) ones(4,4)]
+ans =
+
+   0   0   1   1   1   1
+   0   0   1   1   1   1
+   0   0   1   1   1   1
+   0   0   1   1   1   1
+
+>> [[zeros(4,2) ones(4,4)]' magic(6)]
+ans =
+
+    0    0    0    0   35    1    6   26   19   24
+    0    0    0    0    3   32    7   21   23   25
+    1    1    1    1   31    9    2   22   27   20
+    1    1    1    1    8   28   33   17   10   15
+    1    1    1    1   30    5   34   12   14   16
+    1    1    1    1    4   36   29   13   18   11
+
+* logical arrays
+Logical arrays in Octave/MATLAB are arrays which contain binary (0 or 1)
+elements. In Octave/MATLAB, evaluating the expression a == b for a vector a (of
+size m×1) and scalar b will return a vector of the same size as a with ones at
+positions where the elements of a are equal to b and zeroes where they are
+different. To see how this works for yourself, try the following code in
+Octave/MATLAB:
+
+>> a = 1:10
+ans =
+
+ 1 2 3 4 5 6 7 8 9 10
+
+>> b = 3;
+>> a == b
+ans =
+
+ 0 0 1 0 0 0 0 0 0 0
+
+
+
+Can also create a logical array by comparing two vectors:
+>> [1 2 3 4 5] == [5 4 3 2 1]
+>> ans =
+
+ 0 0 1 0 0
+
+
+
+>> [1 1 0 0 1] == [0 1 0 1 1]
+>> ans =
+
+ 0 1 1 0 1
+
+* strings
+A string is just a matrix
+
+Concatenate strings using the notation for defining matrices:
+[ "foo" , "bar" , "baz" ] => ‘foobarbaz’
+* getting subset
+get the indices of all instances of zero in vector y
+subset = find(y==0)
+
+* function handles
+
+A function handle is a MATLAB® data type that stores an association to a
+function. Indirectly calling a function enables you to invoke the function
+regardless of where you call it from. Typical uses of function handles include:
+
+- Passing a function to another function (often called function functions). For
+  example, passing a function to integration and optimization functions, such as
+  integral and fzero.
+
+- Specifying callback functions (for example, a callback that responds to a UI
+  event or interacts with data acquisition hardware).
+
+- Constructing handles to functions defined inline instead of stored in a
+  program file (anonymous functions).
+
+- Calling local functions from outside the main function.
+
+You can see if a variable, h, is a function handle using isa(h,'function_handle').
+
+
+EXAMPLE: reference to a function
+
+>> o = @ones;
+>> o(3, 5)
+ans =
+
+  1 1 1 1 1
+  1 1 1 1 1
+  1 1 1 1 1
+
+
+EXAMPLE: creating an anonymous function
+
+>> p = @(a, b)(a * 2 + b);
+>> p(4, 3)
+ans =  11
+
+* breakpoints
+
+>> dbstop("functionName")
+
+>> dbstop("functionName", line-number)
+
+
+
+dbclear
+dbstatus
+dbwhere
+
+* stanford octave tutorial
+** displaying/printing
+
+A semicolon at the end of the line suppresses output.
+By default, the result of any expression is printed.
+
+a = 5 + 6  % prints result like this: a = 11
+a = 5 + 6; % no output
+
+disp(a); % prints out just the value i.e. "11" rather than "a = 11"
+
+sprintf
+like printf, except that output is returned as a string.
+
+printf
+like sprintf, except a suitably sized string must be provided as an argument.
+
+scanf
+
+fprintf
+
+*** FORMAT CODES:
+
+numbers
+%d = decimal (general multipurpose number usage)
+
+unsigned integers can also be formatted as...
+%o = octal
+%u = decimal
+%x = hexadecimal
+%c = charater
+
+floating point numbers
+%f = fixed point notation
+%e = exponential notation
+%g = uses %f or %g depending on which is most appropriate for the magnitude of the number
+
+%s = string
+
+*** FORMAT CONVERSION FOR MATRICES
+
+When given a matrix value, Octave’s formatted output functions cycle
+through the format template until all the values in the matrix have been
+printed.  For example:
+
+     printf ("%4.2f %10.2e %8.4g\n", hilb (3));
+
+          ⊣ 1.00   5.00e-01   0.3333
+          ⊣ 0.50   3.33e-01     0.25
+          ⊣ 0.33   2.50e-01      0.2
+
+   If more than one value is to be printed in a single call, the output
+functions do not return to the beginning of the format template when
+moving on from one value to the next.  This can lead to confusing output
+if the number of elements in the matrices are not exact multiples of the
+number of conversions in the format template.  For example:
+
+     printf ("%4.2f %10.2e %8.4g\n", [1, 2], [3, 4]);
+
+          ⊣ 1.00   2.00e+00        3
+          ⊣ 4.00
+
+   If this is not what you want, use a series of calls instead of just
+one.
+
+** basic operations
+exit
+quit
+
+help
+
+% comment to end of line
+
+5+6
+
+1 == 2 % logical comparison (false)
+
+change command prompt
+PS1('>> ');
+
+indices = 1:10; % range 1 to 10
+
+size
+
+hist
+
+COMMA-CHAINING COMMANDS
+a=1, b=2, c=3
+
+** moving data around
+pwd
+ls
+cd
+load
+who
+whos
+clear
+save
+save hello.mat % save as binary
+save hello.txt % save as text
+
+INDEX MATRIX
+A(n,n)
+A(n,:) % colon is shortcut for ALL
+A(:,n)
+A([1 3,:])
+A(:,2) = [1; 2; 3] % assign new column vector to row 2 of matrix A
+... append column to matrix
+A(:) % put all elements into single vector
+C = [A B] % make new matrix C by conatenating matrices A & B
+C = [A; B] % same but combine them the other way
+
+MATRIX SLICE
+A(n:n)
+
+** computations on data
+
+max
+magic(4) % 
+A' % 
+[r,c] = find(A >= 7)
+sum(a)
+prod(a)
+floor
+ceil
+rand
+flipup
+flipud
+pinv % pseudo-inverse
+inv  % inverse (use pinv instead)
+
+** plotting data
+
+figure(1);
+figure(2); % make figure n the current
+
+axis([0.5 1 -1 1]); % change axis scale
+
+clf; % clear figure
+
+A = magic(9);
+imagesc(A);
+imagesc(A), colorbar, colormap gray;
+
+
+
+USAGE EXAMPLES:
+#+BEGIN_SRC octave
+%% PLOT SINE & COSINE OVERLAID
+t = [0:0.01:0.98];
+y1 = sin(2*pi*4*t);
+y2 = cos(2*pi*4*t);
+plot(t,y1);
+hold on; % keep existing plot rather than discard when new plot is done
+plot(t,y2,'r'); % 'r' for red colour
+%% ADD LABELS ETC
+xlabel('time');
+ylabel('value');
+legend('sin','cos');
+title('my plot');
+%% SAVE PLOT
+print -dpng 'my_plot.png';
+close; % close plot
+
+%% PLOT SINE & COSINE SIDE BY SIDE
+subplot(1,2,1); % divides plot into 1x2 grid, access 1st element
+plot(t,y1);
+subplot(1,2,2); % access 2nd element
+plot(t,y2);
+#+END_SRC
+** control statements etc
+
+FOR LOOP
+
+v = zeros(10,1);
+for i=1;10,
+  v(i) = 2^i;
+end;
+
+for a = [3 4 5]
+  a
+end
+
+
+
+break
+continue
+
+while ... end;
+
+if ... end;
+elseif
+else
+
+*** FUNCTIONS
+make a file with .m extension
+
+file named squareThisNumber.m
+
+#+BEGIN_SRC 
+function y = squareThisNumber(x)
+y = x^2;
+#+END_SRC
+
+... octave should be able to find the function if you are in same directory
+
+more complex function
+#+BEGIN_SRC 
+function J = costFunctionJ(X, y, theta)
+
+% X is the "design matrix" containing our training examples
+% y is the class labels
+
+m = size(X,1);                  % number of training examples
+predictions = X*theta;          % predictions of hypothesis on all m examples
+sqrErrors = (predictions-y).^2; % squared errors (element-wise power of two)
+
+J = 1/(2*m) * sum(sqrErrors);
+#+END_SRC
+
+*** function with multiple return values
+
+#+BEGIN_SRC 
+function [y1,y2] = squareAndCubeThisNumber(x)
+y1 = x^2;
+y1 = x^3;
+#+END_SRC
+
+*** OCTAVE SEARCH PATH
+
+path
+
+addpath('~/Desktop');
+
+** vectorization
+use linear algebra libraries to make your computations more efficient and your code more concise

@@ -1,0 +1,72 @@
+MICRO:BIT
+
+* HELLO WORLD
+
+#+BEGIN_SRC python
+# scrolls text across the display
+from microbit import *
+display.show("Hello, World!")
+#+END_SRC
+
+#+BEGIN_SRC python :classname happy_and_sad
+# displays animated happy/sad face
+
+from microbit import *
+
+frames = [Image.HAPPY, Image.SAD]
+
+display.show(frames, delay=400, loop=True)
+#+END_SRC
+
+* ONLINE EDITORS
+
+The python editor doesn't have a simulator attached, but Pete Dring has made one which works on createwithcode:
+
+https://create.withcode.uk/
+
+Press Ctrl+ENTER to run program
+
+* PYTHON REPL
+
+It is possible to interact with a micropython REPL via USB:
+http://microbit-micropython.readthedocs.io/en/latest/devguide/repl.html
+
+
+
+ACCESSING THE REPL ON THE MICRO:BIT REQUIRES:
+
+        Using a serial communication program
+        Determining the communication port identifier for the micro:bit
+        Establishing communication with the correct settings for your computer
+
+
+
+
+SERIAL COMMUNICATION
+
+To access the REPL, you need to select a program to use for serial communication. Some common options are picocom and screen. You will need to install program and understand the basics of connecting to a device.
+
+
+DETERMINING PORT
+
+The micro:bit will have a port identifier (tty, usb) that can be used by the computer for communicating. Before connecting to the micro:bit, we must determine the port identifier.
+
+
+ESTABLISHING COMMUNICATION WITH THE MICRO:BIT
+
+Debian/Ubuntu
+
+sudo add-apt-repository -y ppa:team-gcc-arm-embedded
+sudo add-apt-repository -y ppa:pmiller-opensource/ppa
+sudo apt-get update
+sudo apt-get install cmake ninja-build gcc-arm-none-eabi srecord libssl-dev
+pip3 install yotta
+
+... some of this didn't want to work for me...
+
+NOTES:
+add apt repos...
+... team-gcc-arm-embedded - gnu c compiler for embedded ARM
+... pmiller-opensource/ppa - open source software by peter miller...
+pip - package management tool for python (pip3 for python 3)
+yotta - package of re-usable components for embedded software

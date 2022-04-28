@@ -1,0 +1,20 @@
+* tools
+b4s - beautiful soop
+
+* guides/advice
+
+The Alternative to Web Scraping
+The “lazy” programmer’s guide to faster, more efficient retrieval of web data
+https://towardsdatascience.com/the-alternative-to-web-scraping-8d530ae705ca
+
+HACK THE WEB WITHOUT A BROWSER
+https://hackaday.com/2022/01/17/hack-the-web-without-a-browser/
+using WOOB (Web Outside Of Browsers)
+https://woob.tech/
+
+
+
+
+more tutorials etc
+https://hackaday.com/2012/12/10/web-scraping-tutorial/
+

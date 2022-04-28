@@ -1,0 +1,22 @@
+#+TITLE: Eagle: Circuit Schematics, Board Design etc
+
+* Jeremy Blum tutorial #1: make a schematic
+
+right-click on Projects:
+- New Project
+
+edit description
+
+let's make a schematic:
+- right click on project
+  - new schematic
+
+* Add a library
+
+github - adafruit/Adafruit-Eagle-Library
+
+https://github.com/adafruit/Adafruit-Eagle-Library
+
+download zip file
+
+

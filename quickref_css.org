@@ -1,0 +1,460 @@
+* CSS BASIC CONCEPTS
+
+- CSS (Cascading Style Sheets) is used to add style information to HTML pages.
+- In the old days there were quite a lot of 'style' elements used in HTML, but these are mostly deprecated in HTML 5. This is in order to acchieve separation of style and content.
+- Some formatting elements, such as <strong>, <mark> and <em> are retained in HTML, because they denote some special meaning, rather than being simply text decoration.
+
+* DEBUGGING CSS
+
+http://blog.teamtreehouse.com/tips-debugging-html-css
+
+* ADDING CSS TO AN HTML DOCUMENT
+
+CAN BE DONE THREE WAYS (in order of precedence):
+ * INLINE   - using a style attribute in HTML elements (SEE EXAMPLES ABOVE).
+ * INTERNAL - using a <style> element in the HTML <head> section.
+ * EXTERNAL - using one or more external CSS files.
+
+** LINK TO EXTERNAL STYLE SHEET:
+ * This is almost always the best way to do it.
+
+<head>
+  <title>BS Art Prize</title>
+  <link rel="stylesheet" type="text/css" href="bs_style.css"></link>
+</head>
+
+** INTERNAL STYLE SHEET (inside <head>):
+ * Why would you want to? Perhaps to just override some elements of the main style sheet for a single page...?
+
+<head>
+  <style>
+    body { background-color:#d0e4fe; }
+    h1 { color:orange; text-align:center; }
+    p { text-align:center; font-family:"Times New Roman"; font-size:20px; }
+  </style>
+</head>
+
+** INLINE STYLE PROPERTIES:
+ * I occaisionally use this just to try things out, or to hilight something for debugging purposes.
+
+<body style="background-color:lightgrey">
+<h1 style="font-family:verdana">This is a heading</h1>
+<p style="font-size:160%">This is a paragraph.</p>
+<h1 style="text-align:center">Centered Heading</h1>
+<p style="font-family:courier; font-size:200%">Paragraph with multiple style properties!</p>
+
+* CSS SYNTAX
+
+/* This is a comment */
+element {
+    property:value;
+    property:value
+}
+
+* SELECTORS
+
+div {} --- selects all instances of a standard html element
+
+CLASS SELECTORS: (Use class to address groups of elements.)
+p.error {} --- html element with specific CLASS i.e. <p class="error">Oops!</p> 
+
+ID SELECTORS: (Use id to address single elements.)
+p#special {} --- html element with specific ID i.e. <p id="special">Hello!</p> 
+
+PSEUDO-CLASS SELECTORS:
+a:hover {} --- <a> element when mouse is hovering over
+
+PSEUDO-ELEMENT SELECTORS:
+p::first-letter  --- Selects the first letter of each <p> element
+p::before { content: "READ THIS:"; }   --- INSERTS something before the content of each <p> element
+
+ATTRIBUTE SELECTORS:
+a[target] {}          --- select elements with a specific attribute
+a[target="_blank"] {} --- select elements with a specific attribute AND value
+
+GROUPING SELECTORS (separate selectors with comma):
+header.site-header, .pagination { color: white; }
+
+
+AT-RULES:
+@import
+@page
+@media
+@font-face
+@charset
+@namespace
+
+* PROPERTIES
+
+SOME COMMON PROPERTIES:
+display ------- controls how the element is displayed e.g. inline, block, inline-block, list-item, table-cell
+position ------
+color --------- text or element colors
+font-family --- text fonts
+font-size ----- text sizes
+border -------- visible element borders
+padding ------- space inside the border
+margin -------- space outside the border
+
+COLOR VALUES:
+#ffffff    --- white in hexadecimal
+#f00       --- red in hexadecimal
+white      --- named color
+rgb(0,0,0) --- black in RGB
+
+* UNITS OF MEASUREMENT:
+
+RELATIVE LENGTHS:
+ * TIP: 'em' and 'rem' are especially practical in creating scalable layouts.
+em     --- Relative to the font-size of the element (2em means 2 times the size of the current font)
+ex     --- Relative to the x-height of the current font (rarely used)
+ch     --- Relative to width of the "0" (zero)
+rem    --- Relative to font-size of the root element
+vw     --- Relative to 1% of the width of the viewport
+vh     --- Relative to 1% of the height of the viewport
+vmin   --- Relative to 1% of viewport's smaller dimension
+vmax   --- Relative to 1% of viewport's larger dimension
+%      --- Percentage: relative to size of the same property in the parent element
+
+ABSOLUTE LENGTHS:
+ * TIP: Absolute lengths NOT recommended for use on screen, because screen sizes vary so much. However, they can be used if the output medium is known, such as for print layout.
+ * NOTE: Pixels (px) are relative to the viewing device. For low-dpi devices, 1px is one device pixel (dot) of the display. For printers and high resolution screens 1px implies multiple device pixels.
+ * TECHNICAL: The “px” unit in CSS doesn't really have anything to do with screen pixels, despite the poorly chosen name. It's actually an non-linear angular measurement. The formulæ to convert between radians and px are as follows:
+... radians = arctan(px/5376) * 2
+... px = 5376 * tan(radians/2)
+px   --- Pixels
+in   --- Inches (1in = 96px = 2.54cm)
+pt   --- Points (72pt = 1in)
+pc   --- Picas (1pc = 12pt)
+cm   --- Centimeters (1cm = 37.8px)
+mm   --- Millimeters (1mm = 0.1cm)
+
+* PSEUDO-CLASSES
+These are special classes which define a state of an element...
+
+EXAMPLE (hyperlink states):
+a:link    {color:green; background-color:transparent; text-decoration:none}
+a:visited {color:pink; background-color:transparent; text-decoration:none}
+a:hover   {color:red; background-color:transparent; text-decoration:underline}
+a:active  {color:yellow; background-color:transparent; text-decoration:underline}
+
+NOTE: a:hover MUST come after a:link and a:visited in the CSS definition in order to be effective! a:active MUST come after a:hover in the CSS definition in order to be effective! Pseudo-class names are not case-sensitive.
+
+PSEUDO-CLASSES CAN BE COMBINED WITH CSS CLASSES:
+a.highlight:hover { color: #ff0000; }
+
+
+
+MORE PSEUDO-CLASS EXAMPLES:
+p:first-child { color: blue; } --- Matches any <p> element that is the first child of any element
+p i:first-child { color: blue; } --- Matches the first <i> element in all <p> elements:
+p:first-child i { color: blue; } --- Matches all <i> elements in <p> elements that are the first child of another element:
+
+
+
+SELECTOR               EXAMPLE                 EXAMPLE DESCRIPTION
+:active                a:active                Selects the active link
+:checked               input:checked           Selects every checked <input> element
+:disabled              input:disabled          Selects every disabled <input> element
+:empty                 p:empty                 Selects every <p> element that has no children
+:enabled               input:enabled           Selects every enabled <input> element
+:first-child           p:first-child           Every <p> elements that is the first child of its parent
+:first-of-type         p:first-of-type         Every <p> element that is the first <p> element of its parent
+:focus                 input:focus             Selects the <input> element that has focus
+:hover                 a:hover                 Selects links on mouse over
+:in-range              input:in-range          Selects <input> elements with a value within a specified range
+:invalid               input:invalid           Selects all <input> elements with an invalid value
+:lang(language)	       p:lang(it)              Every <p> element with a lang attribute value starting with "it"
+:last-child            p:last-child            Every <p> elements that is the last child of its parent
+:last-of-type          p:last-of-type          Every <p> element that is the last <p> element of its parent
+:link                  a:link                  Selects all unvisited links
+:not(selector)         :not(p)                 Every element that is not a <p> element
+:nth-child(n)          p:nth-child(2)          Every <p> element that is the second child of its parent
+:nth-last-child(n)     p:nth-last-child(2)     Every <p> element that is the second child of its parent, counting from the last child
+:nth-last-of-type(n)   p:nth-last-of-type(2)   Every <p> element that is the second <p> element of its parent, counting from the last child
+:nth-of-type(n)        p:nth-of-type(2)        Every <p> element that is the second <p> element of its parent
+:only-of-type          p:only-of-type          Every <p> element that is the only <p> element of its parent
+:only-child            p:only-child            Every <p> element that is the only child of its parent
+:optional              input:optional          Selects <input> elements with no "required" attribute
+:out-of-range          input:out-of-range      Selects <input> elements with a value outside a specified range
+:read-only             input:read-only         Selects <input> elements with a "readonly" attribute specified
+:read-write            input:read-write        Selects <input> elements with no "readonly" attribute
+:required              input:required          Selects <input> elements with a "required" attribute specified
+:root                  :root                   Document's root element (in html this is always <html>)
+:target                #news:target            Selects the current active #news element (clicked on a URL containing that anchor name)
+:valid                 input:valid             Selects all <input> elements with a valid value
+:visited               a:visited               Selects all visited links
+
+* PSEUDO-ELEMENTS
+A CSS pseudo-element is used to style specified parts of an element.
+For example, it can be used to:
+ * Style the first letter, or line, of an element
+ * Insert content before, or after, the content of an element
+
+SYNTAX: selector::pseudo-element { property:value; }
+
+SELECTOR         EXAMPLE           EXAMPLE DESCRIPTION
+::after          p::after          Insert something after the content of each <p> element
+::before         p::before         Insert something before the content of each <p> element
+::first-letter   p::first-letter   Selects the first letter of each <p> element
+::first-line     p::first-line 	   Selects the first line of each <p> element
+::selection      p::selection      Selects the portion of an element that is selected by a user
+
+INSERTING CONTENT EXAMPLE:
+p::before {
+   content: "READ THIS:";
+ }
+
+* ATTRIBUTE-SELECTORS
+
+a[target] { color: blue; } --- Select <a> elements with specific attribute.
+[target] { color: blue; }  --- Select ALL elements with specific attribute.
+
+MATCHING WHOLE-WORD VALUES
+[target="_blank"] --- Select elements with specific attribute AND value.
+[title~="flower"] --- Value containing the word 'flower' (matches COMPLETE WORD, in space-separated list).
+[class|="top"]    --- Value that begins with 'top' (EITHER, the standalone word, 'top', or followed by a hyphen, e.g. class="top-text")
+
+PATTERN-MATCHING VALUES:
+ * The value here doesn't have to be a whole word.
+[class^="top"]  --- Starts with 'top' e.g. top, top-content, topcontent...
+[class$="test"] --- Ends with 'test' e.g. test, mytest, my-test...
+[class*="te"]   --- Contains 'te' e.g. te, my-test, testosterone, geste...
+
+
+
+EXAMPLE: STYLING A FORM WITHOUT USING CLASS OR ID:
+#+BEGIN_SRC css
+input[type="text"] {
+    width: 150px;
+    display: block;
+    margin-bottom: 10px;
+    background-color: yellow;
+}
+input[type="button"] {
+    width: 120px;
+    margin-left: 35px;
+    display: block;
+}
+#+END_SRC
+
+* AT-RULES
+
+Instructions or directives to the CSS parser...
+
+@media     --- target rules to the media types we specify
+@font-face --- import a non-standard font
+@charset   --- specify the character encoding of an external style sheet (must appear before anything else in the file)
+@import    --- import one stylesheet into another
+@page      --- specify margins for paged media
+@namespace --- (in CSS3) lets us declare an XML namespace
+
+* TABLE BORDERS AND PADDING
+
+/* Use border-collapse, otherwise separate elements have their own
+ *  borders and we will have multiple borders visible... */
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+/* Cell padding */
+th, td { padding: 15px; }
+
+* BORDERS
+
+ROUNDED CORNERS:
+border-radius: 4px 4px 0 0; /* top two corners rounded */
+
+* POSITION PROPERTY:
+
+VALUE      DESCRIPTION
+static     Default value. Elements render in order, as they appear in the document flow.
+relative   Relative to normal position, so "left:20" adds 20 pixels to the element's LEFT position.
+absolute   Relative to its first positioned (not static) ancestor element (often, the document body).
+fixed      Relative to the browser window. Doesn't move when window scrolled).
+
+EXAMPLES:
+h2.pos_left {
+    position: relative;
+    left: -20px;
+}
+
+
+
+OVERLAPPING ELEMENTS:
+ * When elements are positioned, they can overlap other elements.
+ * The z-index property specifies the stack order of an element (which element should be placed in front of, or behind, the others).e
+
+EXAMPLE:
+img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: -1; /* An element can have a positive or negative stack order */
+}
+
+* ALIGNMENT
+
+| PROPERTY         | VALUES                | NOTES                                                        |
+|------------------+-----------------------+--------------------------------------------------------------|
+| text-align       | centre/left/right/... |                                                              |
+| vertical-align   | middle/top/...        | How elements set next to one-another on a line are lined up. |
+| horizontal-align | ...                   |                                                              |
+
+* RESIZE IMAGES MAINTAINING PROPORTIONS/ASPECT RATIO
+
+/* This will shrink oversized images, but not enlarge... */
+img {
+  display:    block;
+  max-width:  230px;
+  max-height: 95px;
+  width:      auto;
+  height:     auto;
+}
+
+/* For an image inside a fixed-size container - should shrink or enlarge, whilst maintaining aspect ratio. */
+img {
+  max-width:  100%;
+  max-height: 100%;
+  width:      auto;
+  height:     auto;
+}
+
+* ANIMATION/ANIMATING ELEMENTS
+
+Many properties can be animated!
+
+EXAMPLE: (changing BG colour from red to blue)
+/* Code for Chrome, Safari and Opera */
+@-webkit-keyframes mymove {
+    from {background-color: red;}
+    to {background-color: blue;}
+}
+/* Standard syntax */
+@keyframes mymove {
+    from {background-color: red;}
+    to {background-color: blue;}
+}
+
+* RESPONSIVE LAYOUTS:
+
+MEDIA QUERIES:
+
+EXAMPLE:
+ * This is used to alter the amount of padding at top of page (for fixed top nav-bar) depending on size of screen...
+body { padding-top: 40px; }
+@media screen and (max-width: 768px) {
+    body { padding-top: 0px; }
+}
+
+* EXAMPLE: NAVIGATION BAR/MENUS DEMO
+
+Examples use this list of links:
+#+BEGIN_SRC html
+<ul >
+  <li><a href="default.asp">Home</a></li>
+  <li><a href="news.asp">News</a></li>
+  <li><a href="contact.asp">Contact</a></li>
+</ul> 
+#+END_SRC
+
+VERTICAL NAVIGATION BAR:
+#+BEGIN_SRC css
+ul {
+  list-style-type: none; /* remove bullet points */
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* don't allow text to go outside of block (see below) */
+}
+a {
+  display: block; /* makes the whole area clickable (not just the text) */
+  width: 60px; /* ... using 'block' also means we can specify the width */
+  background-color: #dddddd; */ add BG colour, so we can see the area of the block */
+}
+#+END_SRC
+
+SIMPLE HORIZONTAL NAVIGATION BAR:
+#+BEGIN_SRC css
+ul {
+  list-style-type: none; /* removes bullet points */
+  margin: 0;
+  padding: 0;
+}
+li { display: inline; } /* removes line breaks and displays list items all on one line */
+#+END_SRC
+
+HORIZONTAL NAVIGATION BAR (equal-width menu items):
+#+BEGIN_SRC css
+ul {
+    list-style-type: none; /* remove bullet points */
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* don't allow text to go outside of block (see below) */
+}
+li { float: left; }
+a {
+    display: block;
+    width: 60px;
+    background-color: #dddddd;
+}
+#+END_SRC
+
+* EXAMPLE: IMAGE GALLERY
+
+NOTE: use of <div> to make little boxes for the images and their
+descriptions. Kind of neater, and easier than using <table>...
+
+#+BEGIN_SRC html
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      div.img {
+        margin: 5px;
+        padding: 5px;
+        border: 1px solid #0000ff;
+        height: auto;
+        width: auto;
+        float: left;
+        text-align: center;
+      }
+      div.img img {
+        display: inline; /* remove newlines, making for horizontal layout */
+        margin: 5px;
+        border: 1px solid #ffffff;
+      }
+      div.img a:hover img {
+        border: 1px solid #0000ff;
+      }
+      div.desc {
+        text-align: center;
+        font-weight: normal;
+        width: 120px;
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="img">
+      <a target="_blank" href="klematis_big.htm"><img src="klematis_small.jpg" alt="Klematis" width="110" height="90"></a>
+      <div class="desc">Add a description of the image here</div>
+    </div>
+    <div class="img">
+      <a target="_blank" href="klematis2_big.htm"><img src="klematis2_small.jpg" alt="Klematis" width="110" height="90"></a>
+      <div class="desc">Add a description of the image here</div>
+    </div>
+    <div class="img">
+      <a target="_blank" href="klematis3_big.htm"><img src="klematis3_small.jpg" alt="Klematis" width="110" height="90"></a>
+      <div class="desc">Add a description of the image here</div>
+    </div>
+  </body>
+</html>
+#+END_SRC
+
+* TROUBLESHOOTING
+
+** '!important' modifier changes the rules of precedence
+- sometimes this is why the stylesheet won't work
+- important should NOT be used in any normal circumstances - it makes things hard to maintain
+- E.G. body { background: none !important; }

@@ -1,0 +1,500 @@
+WORDPRESS QUICKSTART GUIDE -- inc theme & plugin development
+
+* PERSONAL WEBSITE DETAILS
+
+BEN'S LOCALHOST WP SITE LOGIN DETAILS
+Thu Mar  3 21:43:27 2016
+
+SITE: bstancham
+USERNAME: bst
+PASSWORD: bstpw
+MYSQL USER: bstdbuser
+MYSQL PW: bstpw
+
+SITE: bsartprize
+USERNAME: bsc
+PASSWORD: bscpw
+MYSQL DATABASE NAME: bsartprize
+MYSQL USER: bsap
+MYSQL PW: bsappw
+
+SITE: bschambers
+USERNAME: bsc
+PASSWORD: bscpw
+MYSQL USER: bschambers
+MYSQL PW: bscpw
+
+KAREN'S LOCALHOST DETAILS
+DATABASE NAME: karentang
+DATABASE USER: karentang_wp_user
+DATABASE USER PW: plip^_DINGLE
+WP USER NAME: karen
+WP USER PASSWORD: karenpw
+
+* INSTALLATION AND BASICS
+** BASICS
+Wordpress Codex
+https://codex.wordpress.org
+https://codex.wordpress.org/Theme_Development
+
+Wordpress is a blogging platform which is also often used as a content management system for all sorts of websites. I is built using all of the following:
+- HTML
+- CSS
+- PHP
+- MySQL
+- Javascript
+
+** ON WEBSITE:
+- Create an SQL database on web server
+- Create a database user with all priviledges
+- Download latest Wordpress version
+- Decompress
+- if installing an existing site...
+  - rename wp-config-sample.php to wp-config.php
+    - alter the following values in wp-config.php:
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD <--- DB user's password
+      - DB_HOST     <--- on vidahost, find it in (cloud hosting platform/manage websites/mysql databases/database server column)
+- Move entire contents of Wordpress dir into...
+... public/www dir
+... or a sub-page if that's where you want your blog to be located
+- Navigate to your website to trigger the php installation script...
+
+** UNINSTALL WORDPRESS
+... delete files AND database...
+
+** INSTALL OFFLINE FOR TESTING OR DEVELOPMENT
+- Wordpress runs on the web server, so you need to install a localhost server on your computer
+*** XAMPP - linux
+**** XAMPP SERVER FOR OFFLINE TESTING (Fri Sep 18 14:08:26 2015)
+================================
+
+INSTALLATION:
+Download XAMPP linux installer, then:
+$ chmod 755 xampp-linux-*-installer.run # make installer executable
+$ sudo ./xampp-linux-*-installer.run # run installer
+XAMPP is now installed in /opt/lampp/
+
+BASIC OPERATION:
+$ sudo /opt/lampp/lampp start # start server
+$ sudo /opt/lampp/lampp stop # stop server
+$ sudo /opt/lampp/lampp status # print status info
+
+GRAPHICAL TOOL TO MANAGE SERVERS
+$ cd /opt/lampp
+$ sudo manager-linux-x64.run
+
+TEST THAT EVERYTHING IS WORKING
+In web browser: http://localhost
+
+**** XAMPP BASICS:
+- put website files in /opt/lampp/htdocs
+- htdocs = Document-Root for Apache server - equivalent to the www folder
+- http://localhost redirects to dashboad (with links to phpmyadmin and useful info)
+- http://localhost/phpmyadmin - database admin etc...
+
+**** INSTALL WORDPRESS ON LOCALHOST
+- phpmyadmin: create new database
+- create a database user with all privileges...
+  ... in phpmyadmin: in database: 'privileges' tab: 'Add user account'
+  ... host = localhost
+  ... global privileges = NONE
+  ... database-specific priviladges = all except for GRANT
+- download latest version of wordpress and extract from zip
+- change name of 'wordpress' dir to whatever you want site name to be
+- change name of wp-config-sample.php to wp-config.php
+- alter contents of wp-config.php adding database details
+  - DB_NAME = database_name
+  - DB_USER = 'user-name'
+  - DB_PASSWORD = 'password'
+  - DB_HOST = 'localhost'
+  - - ... can also do DB_USER='root', DB_PASSWORD=''
+- move entire contents of folder into a subdirectory of /opt/lampp/htdocs
+- replace wp-content dir with backed up wp-content dir
+- web browser: navigate to http://localhost/FOLDER-NAME (... enter setup info as prompted...)
+  ... NOTE: shouldn't have to go through the installation process - it should just work.
+  - TROUBLESHOOTING:
+  - 'Error establishing a database connection'
+    - ... check details in wp-config match database user details
+    - ... check database user is set up correctly (SEE ABOVE)
+  - White Screen of Death
+    - ... check that backed-up wp-content has been put back... this includes themes dir (missing theme is a recognized cause of the white screen of death)... if you don't have the theme, or you don't have the wp-content dir, you can try manually setting the theme by altering database values in phpmyadmin (SEE ABOVE)
+
+*** XAMPP - Windows 
+https://www.apachefriends.org/faq_windows.html
+
+? issues with antivirus
+
+? issues with UAC (User Account Control)
+
+default install location:
+C:\xampp
+
+install websites at:
+C:\xampp\htdocs
+
+
+START LOCALHOST SERVER
+- open xampp
+- Apache --> click on Start
+- MySQL  --> click on Start
+- navigate to http://localhost --- (just put localhost into web browser address bar)
+
+**** INSTALLATION ISSUSES:
+
+Attempt to create MySQL database user:
+ERROR:
+SOLUTION:
+- check that folder exists (if not, create it)
+- give permission to access folder (right click...)
+
+** ACCESS WORDPRESS INSTALLATION + INSTALL DEVELOPMENT THEMES:
+http://localhost/site_name
+http://localhost/site_name/wp-admin
+
+WORDPRESS THEMES ARE STORED HERE:
+/opt/lampp/htdocs/FOLDER-NAME/wp-content/themes
+
+... for offline theme development, it may be easier to just copy the theme
+folder into here... when I tried to upload the .zip, it wanted ftp details...
+
+** MULTI-SITE INSTALLATION:
+- simply repeat installation process in a different subdirectory of /opt/lampp/htdocs...
+
+* BASIC USAGE
+
+Log in via: wesite_url/wp-login.php
+
+** POSTS vs PAGES
+post is a post...
+page is for a static page like 'about'...
+** EDITING POSTS
+*** insert 'Read More' tag
+Use the button in the editor, or manually insert this tag:
+<!--more-->
+*** categories
+*** separators
+* DOWNLOAD ARCHIVE/BACKUP COPY OF WEBSITE
+** FULL SITE BACKUP:
+https://codex.wordpress.org/WordPress_Backups
+- 2 parts to backup:
+  - DATABASE (all text, plus structural information)
+  - FILES (images & other media, themes, etc...)
+
+DATABASE:
+- login to phpmyadmin (web host's control panel)
+- Databases-->[select database]-->Export
+
+FILES:
+- using FTP client (eg FileZilla)
+- make copy of wp-content directory
+
+** RESTORE FROM BACKUP
+
+DATABASE:
+- set up database
+  - log in to phpMyAdmin & create new empty database then import saved database.
+- check wp-options table
+  - make sure that 'siteurl' and 'home' are both set to correct address
+    e.g. http://www.bschambers.info or http://localhost/bschambers
+
+FILES:
+- make new wordpress install in desired location (see instructions above) making
+  sure to edit wp_config.php to link to database.
+- copy files into wp-content
+
+*** TROUBLESHOOTING
+
+- in site database ---> in wp-options table: check that 'home' and 'siteurl' are both pointing to correct URL...
+
+- in site files: wp-config.php file must be readable by all groups.
+
+- 404 OBJECT NOT FOUND (or post not found):
+Perhaps .htaccess isn't writable:
+- log into site admin
+- Dashboard-->Settings-->Permalinks
+- look at bottom of page - if .htaccess isn't writable, a script will be provided which can be copied & pasted manually (if .htaccess file does not exist then create it in the home directory of the site and paste script into it).
+
+- WHITE SCREEN OF DEATH:
+- specified theme not found... go in your phpMyAdmin and update the database tables in wp_options table. The following table names would have to be updated: template, stylesheet, and current_theme. Change the value to twentyeleven
+
+WARNING! NEVER alter values in the GUID (Globally Unique IDentifier) column of the wp_posts database table... guid should NEVER change, even if website URL changes...
+
+* THEME DEVELOPMENT
+** MAKING A WORDPRESS THEME FROM SCRATCH
+
+2 files required for the most simple theme:
+- style.css
+- index.php
+
+** WORDPRESS FUNCTION REFERENCE
+https://codex.wordpress.org/Function_Reference
+
+** POST FORMATS:
+... specify format for different types of posts with radio buttons...
+https://codex.wordpress.org/Post_Formats
+
+** CORE WORDPRESS FILES
+
+*** INDEX.PHP:
+
+# THE LOOP:
+
+# GET_TEMPLATE_PART:
+USAGE: get_template_part("generic_template_name", "optional_specific_template_name")
+EXAMPLE: get_template_part("content", get_post_format())
+EXAMPLE: get_template_part("content", "gallery")
+# ... HOW IT WORKS:
+# ... Wordpress will look for "content-gallery.php"
+# ... if it can't find that, then "content.php"
+
+# - GET_POST_FORMAT:
+!!!! get_post_format() returns FALSE if no format is set --- this might also be though of as 'standard' format...
+
+*** CONTENT.PHP: (displaying post content)
+
+Controls how the content of a post is displayed...
+... use the following boolean functions to control how the post is displayed in different contexts:
+
+is_home()       - the blog posts index
+is_front_page() - the front page (if a static front page is set then this will not be the same as home)
+
+is_single()     - returns false when post is being displayed on index page/search results or any page which displays multiple posts, therefore can be used to determine whether or not to make title link to single page...
+
+is_search()     - search results page
+
+is_page()       - is a page (rather than a post)
+
+is_archive()    - an Archive is a Category, Tag, Author, Date, Custom Post Type or Custom Taxonomy based pages...
+
+** GET_TEMPLATE_PART
+
+<?php get_template_part( $slug ); ?> 
+<?php get_template_part( $slug, $name ); ?> 
+
+
+$slug
+    (string) (required) The slug name for the generic template.
+
+        Default: None 
+
+$name
+    (string) (optional) The name of the specialized template.
+
+        Default: None 
+
+WARNING: get_template_part doesn't return a value and doesn't warn if it fails to find a matching template file. 
+
+** TEMPLATE TAGS
+Template tags files are stored in the wp-includes directory. The files have the suffix of "-template.php" to distinguish them from other WordPress files. There are 9 template tags files:
+
+    wp-includes/general-template.php
+    wp-includes/author-template.php
+    wp-includes/bookmark-template.php
+    wp-includes/category-template.php
+    wp-includes/comment-template.php
+    wp-includes/link-template.php
+    wp-includes/post-template.php
+    wp-includes/post-thumbnail-template.php
+    wp-includes/nav-menu-template.php
+
+*** PUBLICATION DATE AND TIME
+Use the Template Tag the_time() or get_the_date() (maybe with format string) e.g:
+<?php the_time(); ?>          // just the time of day
+<?php the_time('F j, Y'); ?>  // DATE in format 'Month date, Year'
+<?php the_time('F jS, Y'); ?> // same, with english style suffix on date
+... full format string specs: https://codex.wordpress.org/Formatting_Date_and_Time
+
+** SCREENSHOT IMAGE IN THEME BROWSER:
+Include a file called 'screenshot.png' in root dir of theme.
+
+** MENUS/SIDEBARS etc
+
+get_sidebar() --- gets content of sidebar.php
+
+get_header() --- gets content of header.php
+
+
+
+HORIZ MENU-BAR FIXED AT TOP OF SCREEN:
+- in CSS, can't use just 'header' for positioning, coz this also affects the titles of all the posts so that they're all on top of oneanother at the top of the page...
+--- header.site-header {}
+--- header#masthead {}
+
+** ADDING STYLESHEET
+
+Add stylesheet by using wp_enqueue_style like so:
+
+#+BEGIN_SRC php
+function enqueue_style_bsportfolio() {
+    wp_enqueue_style('bsportfolio-style', get_stylesheet_uri());
+}
+
+add_action('wp_enqueue_scripts', 'enqueue_style_bsportfolio');
+#+END_SRC
+
+WARNING: don't add stylesheet in <head> - it won't work...
+
+** IMAGE EDITING...
+
+wp-includes/class-wp-image-editor.php
+
+** MISCELANEOUS HANDY FUNCTIONS:
+
+esc_attr_e($text)
+Displays translated text that has been escaped for safe use in an attribute. Encodes < > & " ' (less than, greater than, ampersand, double quote, single quote). Will never double encode entities. 
+
+wp_count_posts()
+Returns an object with all number of different types of posts...
+... it's an object, so to display the value on web page try one of these:
+var_dump(wp_count_posts());
+print_r(wp_count_posts());
+... or reference an individual property:
+echo wp_count_posts()->publish; // number of PUBLISHED posts
+
+* WORDPRESS USER TROUBLESHOOTING
+** USER SETTINGS
+
+NUMBER OF POSTS SHOWN ON A PAGE:
+Dashboard-->Settings-->Reading...
+
+** SET FAVICON:
+...
+
+** LINK THUMBNAIL TO FULL SIZED IMAGE:
+When you insert an image, but before pressing "insert into post"...
+... go to 'attachment display options'...
+... select link to media file
+
+* MANAGE USERS FROM PHPMYADMIN
+
+CHANGE PASSWORD FROM PHPMYADMIN
+in wp_users ---> edit value of user_pass...
+... NOTE: password is stored as MD5 Hash rather than plain text (can use an online MD5 generator).
+
+* PLUGIN DEVELOPMENT
+...
+
+* CUSTOM EDITOR BUTTONS...
+Wordpress uses the TinyMCE WYSIWYG editor control
+
+... create TinyMCE plugin...
+
+* AUTOMATING...
+... gulp (or grunt)...
+
+* CUSTOM DASHBOARD WIDGETS:
+...
+
+* CUSTOM DASHBOARD MENU ITEMS:
+...
+* STYLING CATEGORIES
+
+Assume that we want to style a category named 'news'...
+
+METHOD 1:
+
+Add a template to your theme --> add template file called news.php
+
+METHOD 2:
+
+Use CSS --> wordpress automatically adds categories to html elements as class attributes...
+... inspect page in browser to be sure of the class name - will be something like 'category-news'...
+
+* CUSTOM ADMINISTRATION MENUS:
+...
+
+* ADD CUSTOMIZER SUPPORT TO THEME
+CUSTOMIZATION - COLOURS ETC:
+SEE:
+- Theme Customization API
+- http://themefoundation.com/wordpress-theme-customizer/
+
+
+
+NOTES:
+- add code to functions.php
+- adding settings
+  - before a section is visible, it must contain at least one setting
+  - before a setting is visible, it must have an associated control
+- access customized variables using get_theme_mod(NAME, DEFAULT)
+- can add customized CSS using method shown below
+
+
+
+
+
+EXAMPLE:
+
+    /*
+       NOTE:
+       - before a section is visible, it must contain at least one setting
+       - before a setting is visible, it must have an associated control
+     */
+    function bsportfolio_theme_customize_register($wp_customize) {
+
+        $wp_customize->add_section('bs_theme_colors', array(
+            'title' => 'Colors',
+            'description' => 'Change colors for BS Portfolio theme.',
+            'priority' => 35,
+        ));
+
+        $wp_customize->add_setting('menu_bar_color', array(
+            'default'           => '#888',
+            'sanitize_callback' => 'sanitize_hex_color',
+        ));
+
+        $wp_customize->add_control('menu_bar_color', array(
+            'label' => 'Menu Bar Color',
+            'section' => 'bs_theme_colors',
+            'type' => 'text',
+            ));
+
+        /* $wp_customize->('colors', array(
+         *     'title'    => __('Colors', 'bsportfolio-beta'),
+         *     'priority' => '30',
+         *     ));
+         */
+        
+        /* $wp_customize->add_control(
+	   new WP_Customize_Color_Control(
+	   $wp_customize,
+	   'link_color',
+	   array(
+	   'label'      => __( 'Header Color', 'mytheme' ),
+	   'section'    => 'colors',
+	   'settings'   => 'bs_menu_bar_bg_color',
+	   ))
+         * );
+         */
+    }
+    add_action('customize_register', 'bsportfolio_theme_customize_register');
+
+    
+
+    function bsportfolio_theme_customize_css() {
+    ?>
+      <style type="text/css">
+       header.site-header {
+           Background: #<?php echo get_theme_mod('menu_bar_bg_color', '888'); ?>;
+       }
+      </style>
+    <?php
+    }
+    add_action('wp_head', 'bsportfolio_theme_customize_css');
+* PLUGINS
+** Easy Footnotes
+A very easy way to add footnotes throughout your WordPress posts by using
+the shortcode [efn_note]Footnote content.[/efn_note].
+
+- 
+- footnotes are automatically numbered
+- hover over the footnote label and full footnote text is displayed
+
+EXAMPLE:
+
+BSTPG generates highly randomized and unique sculptures which are also
+functional teapots[efn_note]The 3D printing method currently used is not
+designated as food-safe.[/efn_note] and produces them via 3D printing in an
+(almost) completely automated process.

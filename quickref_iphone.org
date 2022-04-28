@@ -1,0 +1,94 @@
+* transfer files from iphone to linux using owncloud
+
+https://beebom.com/how-use-iphone-with-linux/
+
+I didn't do this because it requires me to upgrade XAMPP and that seems to be a massive hassle
+
+* using libimobiledevice
+
+$ sudo apt-get install libimobiledevice-util
+
+$ sudo apt-get install libimobiledevice usbmuxd
+
+plug in via usb, then
+
+$ ideviceinfo
+
+
+
+
+
+on plugin:
+unhandled lockdown error (-2)
+
+
+
+
+$ sudo ideviceinfo
+[sudo] password for bsc: 
+ERROR: Could not connect to lockdownd, error code -2
+
+
+
+
+
+Failed to get folder list: -1: Unspecified error
+
+
+
+https://www.maketecheasier.com/easily-mount-your-iphone-as-an-external-drive-in-ubuntu/
+
+* IFUSE
+DESCRIPTION-EN: FUSE module for iPhone and iPod Touch devices
+ iFuse is a FUSE filesystem driver which uses libiphone to connect to iPhone
+ and iPod Touch devices without needing to "jailbreak" them. iFuse uses the
+ native Apple AFC protocol over a normal USB cable in order to access the
+ device's media files.
+ .
+ Although iFuse is now in a working state it is still under heavy
+ development and should be considered experimental.
+Description-md5: f98578e76fc102c53d3c118fa494c4f0
+Task: ubuntu-mate-core, ubuntu-mate-desktop
+
+* THIS WORKED!
+** STEP-BY-STEP
+install required software
+
+ $ sudo apt-get install libimobiledevice libimobiledevice-util
+ $ sudo apt-get install usbmuxd
+ $ sudo apt-get install ifuse
+
+NOTE (25/10/2021): I tried install today and computer says unable to locate libimobiledevice
+... install libimobiledevice6 instead
+ $ sudo apt-get install libimobiledevice6
+
+plug in iphone via usb
+and unlock screen
+
+ $ ideviceinfo
+
+... this should show loads of info if things are working properly
+
+now try to pair the iphone with computer
+
+ $ idevicepair pair
+
+... iphone screen needs to be unlocked
+... iphone may ask you to trust this computer - say yes, then attempt to pair again
+
+now try to mount the iphone
+
+ $ mkdir ~/iphone
+ $ ifuse ~/iphone
+
+... should mount the iphone filesystem at ~/iphone
+
+unmount like this
+
+ $ ifuse -u ~/iphone
+
+** TROUBLESHOOTING
+MAKE SURE THAT IPHONE SCREEN IS UNLOCKED!
+
+MAKE SURE THAT YOU ACCEPT ANY 'TRUST TNIS DEVICE' MESSAGAES!
+

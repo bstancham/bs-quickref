@@ -1,0 +1,13 @@
+WINDOWS QUICKSTART GUIDE
+
+* COMMAND PROMPT
+
+dir --- list directory contents
+cd  --- change dir
+help --- print list of commands
+exit --- 
+
+
+* FILE PERMISSIONS
+
+right-click-->Security-->...

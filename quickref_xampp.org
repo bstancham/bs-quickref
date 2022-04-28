@@ -1,0 +1,34 @@
+XAMPP
+* ABOUT
+XAMPP
+
+
+
+(X Apache Mysql Php Perl)
+
+* INSTALLATION
+Download XAMPP linux installer, then:
+$ chmod 755 xampp-linux-*-installer.run # make installer executable
+$ sudo ./xampp-linux-*-installer.run # run installer
+XAMPP is now installed in /opt/lampp/
+
+* BASICS
+
+- put website files in /opt/lampp/htdocs
+- htdocs = Document-Root for Apache server - equivalent to the www folder
+- http://localhost redirects to dashboad (with links to phpmyadmin and useful info)
+- http://localhost/phpmyadmin - database admin etc...
+
+In web browser: http://localhost
+
+** start and stop the server
+$ sudo /opt/lampp/lampp start # start server
+$ sudo /opt/lampp/lampp stop # stop server
+$ sudo /opt/lampp/lampp status # print status info
+
+** GRAPHICAL TOOL TO MANAGE SERVERS
+$ cd /opt/lampp
+$ sudo manager-linux-x64.run
+
+* UPGRADING PHP
+

@@ -1,0 +1,226 @@
+WIRESHARK - NETWORK ANALYSER TOOL
+
+* INSTALL AND SETUP
+
+  $ sudo apt-get install wireshark
+
+I said NO to the dialog asking if I wanted to allow non-superusers to capture packets
+
+* BASIC USAGE
+
+Need to run as superuser:
+
+  $ sudo wireshark
+
+* NETWORKING CONCEPTS
+
+IP ADDRESSES
+
+PORTS
+
+COMMON PORTS
+21   - File Transfer (FTP)
+22   - Secure Shell (SSH)
+23   - Telnet
+25   - Mail (SMTP)
+80   - Web (HTTP)
+110  - Mail (POP3)
+143  - Mail (IMAP)
+443  - SSL/TLS (HTTPS)
+445  - Microsoft (SMB)
+3389 - Remote (RDP)
+     - DNS
+
+
+MAC (Media Access Control) ADDRESS
+... like IP address, but for individual components e.g. network card (every device has a MAC address)
+
+THE OSI (Open System Interaction) MODEL
+seven layers:
+1: physical
+2: data link - encoding/decoding packets & handle error (MAC/LLC (Logical Link Control))
+3: network - switching/routing/addressing/packet sequencing
+4: transport - recovery of errors & make sure packets are in same order (TCP)
+5: session
+6: presentation - formatting & encryption of data
+7: application - (HTTP/TELNET/FTP/etc)
+
+FIND IP ADDRESS & BASIC INTERFACES INFO
+  $ ip a
+
+* WIRESHARK BASICS
+
+** HOME SCREEN
+
+DDM: Capture->Refresh Interfaces
+
+** PREFERENCES
+
+DDM: Edit->Preferences
+
+LAYOUT
+
+COLUMNS:
+
+click on '+' button to add a new column
+... set name
+... choose 'type' from long drop-down list
+
+FILTER BUTTONS:
+- set up custom filters attached to buttons
+
+** PROFILES
+
+set up multiple profiles set up for different jobs
+
+- custom filters & defaults etc
+
+** LIVE-CAPTURE SCREEN
+
+MENUS:
+- View
+  - Colouring Rules
+
+BUTTONS:
+- start/stop/restart
+- capture options
+- open/save/close/re-open a capture file
+
+FILTER BAR:
+- type in then press enter
+- 'Expression' button
+
+* FILTERS
+
+NOTE: See bottom bar for basic stats on number of packets captured and shown
+
+src = source
+dst = destination
+
+** EXAMPLES:
+
+tcp
+udp
+dns
+
+udp.port == 53
+udp.port == 53 || tcp.port == 53
+
+ip.src == IP-ADDRESS
+ip.dst == IP-ADDRESS
+ip.addr == IP-ADDRESS --> all packets to or from IP-ADDRESS
+
+tcp.srcport == 80 -->
+tcp.dstport == 80 -->
+tcp.port == 80 -->
+
+upd.port == PORT
+
+ip address of local machine AND (tcp on port 53 OR udp on port 53)
+ip.addr == 192.168.1.2 && (tcp.port == 53 || udp.port == 53)
+
+http.request.method == "POST"
+http.request.method == "GET" or http.request.method == "POST"
+
+* PACKET ANALYSIS
+
+Click on packet in PACKET-LIST, then look at PACKET-DETAILS area...
+
+PACKET DETAILS:
+details of different layers are listed in order...
+
+* PROTOCOLS
+** TCP (Transport Control Protocol)
+** UDP (User Datagram Protocol)
+*** USED BY:
+- dns
+*** NOTES:
+- very fast
+- doesn't guarantee delivery
+** ICMP (Internet Control Message Protocol)
+*** USED BY
+- ping
+** SSL/TLS
+- tls has completely replaced ssl as the standard and should always be used
+  since ssl is no longer considered secure enough, for historic reasons SSL can
+  refer to both or either of them (in order to filter tls traffic, still use the
+  ssl keyword)
+- https
+* CAPTURING INFO FROM UNENCRYPTED CONNECTION
+
+plain http is unencrypted, so all info including login attempts (username and
+password) are sent unencrypted and easily sniffed by someone monitoring the
+network with wireshark...
+
+* OTHER SOFTWARE FOR NETWORK ANALYSIS
+** FIREFOX DEVELOPER TOOLS
+
+  Tools-->Web Developer-->Toggle Tools
+
+*** NETWORK TAB:
+To examine http requests made in browser:
+
+** TCPDUMP
+
+FIRST THE BASICS
+
+Breaking down the Tcpdump Command Line
+
+The following command uses common parameters often seen when wielding the tcpdump scalpel.
+
+  $ sudo tcpdump -i eth0 -nn -s0 -v port 80
+
+  -i  : Select interface that the capture is to take place on, this will often be an ethernet card or wireless adapter but could also be a vlan or something more unusual. Not always required if there is only one network adapter.
+  -nn : A single (n) will not resolve hostnames. A double (nn) will not resolve hostnames or ports. This is handy for not only viewing the IP / port numbers but also when capturing a large amount of data, as the name resolution will slow down the capture.
+  -s0 : Snap length, is the size of the packet to capture. -s0 will set the size to unlimited - use this if you want to capture all the traffic. Needed if you want to pull binaries / files from network traffic.
+  -v  : Verbose, using (-v) or (-vv) increases the amount of detail shown in the output, often showing more protocol specific information.
+  port 80 : this is a common port filter to capture only traffic on port 80, that is of course usually HTTP.
+
+Display ASCII text
+
+Adding -A to the command line will have the output include the ascii strings from the capture. This allows easy reading and the ability to parse the output using grep or other commands. Another option that shows both hexadecimal output and ASCII is the -X option.
+
+  $ sudo tcpdump -A -s0 port 80
+
+Capture on Protocol
+
+Filter on UDP traffic. Another way to specify this is to use protocol 17 that is udp. These two commands will produce the same result. The equivalent of the tcp filter is protocol 6.
+
+  $ sudo tcpdump -i eth0 udp
+  $ sudo tcpdump -i eth0 proto 17
+
+Capture Hosts based on IP address
+
+Using the host filter will capture traffic going to (destination) and from (source) the IP address.
+
+  $ sudo tcpdump -i eth0 host 10.10.1.1
+
+Alternatively capture only packets going one way using src or dst.
+
+  $ sudo tcpdump -i eth0 dst 10.10.1.20
+
+Write a capture file
+
+Writing a standard pcap file is a common command option. Writing a capture file to disk allows the file to be opened in Wireshark or other packet analysis tools.
+
+  $ sudo tcpdump -i eth0 -s0 -w test.pcap
+
+Line Buffered Mode
+
+Without the option to force line (-l) buffered (or packet buffered -C) mode you will not always get the expected response when piping the tcpdump output to another command such as grep. By using this option the output is sent immediately to the piped command giving an immediate response when troubleshooting.
+
+  $ sudo tcpdump -i eth0 -s0 -l port 80 | grep 'Server:'
+
+Combine Filters
+
+Throughout these examples you can use standard logic to combine different filters.
+
+  and or &&
+  or or ||
+  not or !
+
+** NMAP
+
+Network exploration tool and security / port scanner
+
+  $ nmap localhost

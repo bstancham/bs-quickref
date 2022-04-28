@@ -1,0 +1,386 @@
+* JAVASCRIPT INTRO
+** CHARACTERISTICS
+ECMAScript:
+- Dynamic Typing
+- Duck Typing (i.e. if an object has the desired method, it passes...)
+- Statements end with semicolon;
+
+** HISTORY
+- ECMAScript is the standard scripting language for the web.
+- ECMA-262 is the official name. ECMAScript 6 (released in June 2015) is the latest official version.
+- JavaScript is one of many implementations of ECMAScript.
+- JavaScript was first designed by Brendan Eich in 1995...
+- ... it was later submitted to ECMA for standardization, becoming an ECMA standard in 1997.
+- JavaScript has nothing to do with Java!
+- ECMA (European Computer Manufacturers Association) changed their name to Ecma International to reflect their global reach.
+
+* EDITING AND DEBUGGING
+** EMACS
+javascript-mode : For standalone JavaScript files.
+web-mode        : For HTML with inline JavaScript.
+
+** WEB CONSOLE
+Some web browsers have a built-in JavaScript REPL
+
+Chrome - More Tools-->Developer Tools
+Firefox - ...
+
+Try evaluating some of these:
+
+>> a = 104
+>> a + 30
+>> "hello".toUpperCase()
+>> document.activeElement
+>> document.activeElement.innerHTML
+>> document.activeElement.innerText
+
+* STYLE
+NAMING CONVENTIONS:
+- Variable names in camelCase
+- Function names in camelCase
+- Global variables in UPPERCASE
+- Constants (like PI) in UPPERCASE
+
+* THE BASICS:
+** adding a script to a web page
+- In HTML, scripts can go anywhere in <head> or <body>
+- Internal scripts are placed inside 'script' tags: <script>...</script>
+- GOOD PRACTICE is to put all your code in one place (probably in external file)
+- Save EXTERNAL SCRIPTS with .js file extension
+
+** IMPORTING AND USING AN EXTERNAL SCRIPT
+
+BASIC EXAMPLE:
+
+<head>
+  <!-- Import script into HTML document... -->
+  <script type="text/javascript" src="funcs.js"></script>
+</head>
+
+<body>
+  <!-- Using a function from the imported script... -->
+  <a href="javascript:changeImage('new-image.jpg')">Click to change image</a>
+</body>
+
+** HELLO WORLD
+<body>
+  <p id="demo"></p>
+  <script>
+    document.getElementById("demo").innerHTML = "Hello JavaScript!";
+  </script>
+</body>
+
+* CHANGING HTML CONTENT INTERACTIVELY
+
+** NOTE: When using 'onclick' HTML attribute:
+
+Using 'onclick', unlike <a>, the pointer won't turn into the hand symbol, so
+you'll have to use CSS to let the user know that they're pointing at an
+interactive element...
+
+** CHANGING TEXT BETWEEN HTML ELEMENT TAGS:
+<body>
+  <p id="demo">JavaScript can change HTML content.</p>
+  <button type="button" onclick="document.getElementById('demo').innerHTML = 'Hello JavaScript!'">Click Me!</button>
+</body>
+
+** CHANGING ATTRIBUTES OF AN HTML ELEMENT (to change a picture):
+<body>
+  <img id="myImage" onclick="changeImage()" src="pic_bulboff.gif" width="100" height="180">
+  <p>Click the light bulb to turn on/off the light.</p>
+  <script>
+    function changeImage() {
+      var image = document.getElementById('myImage');
+      if (image.src.match("bulbon")) {
+        image.src = "pic_bulboff.gif";
+      } else {
+        image.src = "pic_bulbon.gif";
+      }
+    }
+  </script>
+</body>
+
+** CHANGING STYLE (CSS PROPERTIES):
+<body>
+  <p id="demo">JavaScript can change the style of an HTML element.</p>
+  <script>
+    function myFunction() {
+      var x = document.getElementById("demo");
+      x.style.fontSize = "25px";
+      x.style.color = "red";
+    }
+  </script>
+  <button type="button" onclick="myFunction()">Click Me!</button>
+</body>
+
+* VALIDATING DATA
+This script checks that the user has input a valid number within a set range:
+
+<body>
+  <p>Please input a number between 1 and 10:</p>
+  <input id="numb" type="number">
+  <button type="button" onclick="myFunction()">Submit</button>
+  <p id="demo"></p>
+  <script>
+    function myFunction() {
+      var x, text;
+      // Get the value of the input field with id="numb"
+      x = document.getElementById("numb").value;
+      // If x is Not a Number or less than one or greater than 10
+      if (isNaN(x) || x < 1 || x > 10) {
+        text = "Input not valid";
+      } else {
+        text = "Input OK";
+      }
+      document.getElementById("demo").innerHTML = text;
+    }
+  </script>
+</body>
+
+* OUTPUT
+There are NO built-in print or display functions
+
+Can "display" data in different ways:
+- Writing into an alert box, using window.alert().
+- Writing into the HTML output using document.write().
+- Writing into an HTML element, using innerHTML.
+- Writing into the browser console, using console.log().
+* FUNCTIONS
+** higher order/lambda functions etc
+
+THIS DOES NOT WORK!
+var osc1Func = osc1.saw;
+return osc1Func(440) * 0.4;
+
+THIS DOES!
+var osc1Func = (x) => { return osc1.triangle(x); }
+return osc1Func(440) * 0.4;
+
+* ARRAYS
+
+// an array literal
+const cars = ["Saab", "Volvo", "BMW"];
+
+// does the same as above
+const cars = new Array("Saab", "Volvo", "BMW");
+
+// you can define an array and then add elements later
+const cars = [];
+cars[0]= "Saab";
+cars[1]= "Volvo";
+cars[2]= "BMW";
+
+// array properties
+cars.length; // returns 3
+
+// array methods
+cars.sort();
+
+* VAR/LET/CONST
+
+var and let are both used for variable declaration in javascript but the difference between them is that var is function scoped and let is block scoped.
+It can be said that a variable declared with var is defined throughout the program as compared to let.
+An example will clarify the difference even better
+
+Example of var:
+
+Input:
+console.log(x);
+var x=5;
+console.log(x);
+Output:
+undefined
+5
+
+Example of let:
+
+Input:
+console.log(x);
+let x=5;
+console.log(x);
+Output:
+Error
+
+* CLASSES AND OBJECTS
+** Basics
+*** Define a class in one file and use it in another?
+Say we defined a class in file1.js and we want to use it in file2.js.
+
+Just make sure that file1.js is loaded before file2.js:
+#+BEGIN_SRC html
+<script src="file1.js"></script>
+<script src="file2.js"></script>
+#+END_SRC
+
+** further study
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
+https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Basics
+** basic class declaration
+#+BEGIN_SRC javascript
+class Rectangle {
+  constructor(height, width) {
+    this.height = height;
+    this.width = width;
+  }
+}
+#+END_SRC
+** object literals
+#+BEGIN_SRC javascript
+
+// DECLARING OBJECTS
+
+// OBJECT LITERALS
+
+// simplest possible object (empty object with no members)
+const doodah = {};
+
+// simple object with multiple members
+const person = {
+  firstName: "John",
+  lastName: "Doe",
+  id: 5566,
+  fullName: function() {
+    return this.firstName + " " + this.lastName;
+  }
+};
+
+// can use bracket notation to add new members to an existing object
+// NOTE: seems to work with dot notation also when I try it
+person["height"] = "1.75m";
+// height is now a new member of the object, person
+person.height;
+
+// nested objects (sub-namespaces)
+const person = {
+  name: "Bill",
+  phone: {
+    manufacturer: "Samsung",
+    model: "Galaxy S7",
+    number: 07950332675
+  }
+}
+
+
+
+// create and object instance
+let myPerson = new person();
+
+// access a parameter using dot notation
+myPerson.firstName;
+
+// access a parameter using bracket notation
+myPerson["firstName"];
+
+// call a method
+myPerson.fullName();
+
+#+END_SRC
+
+** constructor functions (classes)
+#+BEGIN_SRC javascript
+
+// The constructor function is JavaScript's version of a class. Notice that it
+// has all the features you'd expect in a function, although it doesn't return
+// anything or explicitly create an object — it basically just defines
+// properties and methods. Notice also the this keyword being used here as well
+// — it is basically saying that whenever one of these object instances is
+// created, the object's name property will be equal to the name value passed to
+// the constructor call, and the greeting() method will use the name value
+// passed to the constructor call too.
+
+function Person(name) {
+    this.name = name;
+    this.greeting = function() {
+      alert('Hi! I\'m ' + this.name + '.');
+    };
+  }
+
+// lets create some instances
+let person1 = new Person('Bob');
+let person2 = new Person('Sarah');
+
+
+
+// we could also make a normal function which returns a new object
+function createNewPerson(name) {
+  const obj = {};
+  obj.name = name;
+  obj.greeting = function() {
+    alert('Hi! I\'m ' + obj.name + '.');
+  };
+  return obj;
+}
+
+const bob = createNewPerson("Bob");
+bob.name;
+bob.greeting();
+
+#+END_SRC
+** other ways to create an object
+The Object() constructor creates a new empty object:
+
+  let obj = new Object();
+
+The create() method makes a new object using an input object instance as the prototype.
+Is this a deep copy?
+
+  let obj = create(objectInstance);
+
+** object prototypes
+** inheritance
+
+* UAL CREATIVE JAVASCRIPT CRASH COURSE
+** introduction
+https://github.com/ual-cci/Creative-JavaScript-Crash-Course
+** basic building blocks
+5 words:
+*** 1) variables
+- var/let
+- strings
+- bool
+- arrays
+*** 2) conditionals
+- if
+*** 3) loops
+for (let i = 0; i < 10; i++) {
+  console.log(i);
+}
+*** 4) functions
+function countToTen() {
+  for (let i = 0; i < 10; i++) {
+    console.log(i);
+  }
+}
+*** 5) objects
+*** comments
+// this is a comment
+* DOCSTRINGS (JSDoc)
+** simple example
+/**
+ * Multiple lines of JSDoc text are written here,
+ * wrapped normally.
+ * @param {number} arg A number to do something to.
+ */
+function doSomething(arg) { return arg + 1; }
+** JSDoc uses MARKDOWN, but can include HTML as well
+* CANVAS
+
+example for basic 2d graphics
+#+BEGIN_SRC javascript
+  var canvas = document.querySelector("canvas");
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+  var context = canvas.getContext("2d");
+  canvas.width = width;
+  canvas.height = height;
+
+    // clear screen to BLUE
+    context.fillStyle = "rgb(0,0,255)";
+    context.fillRect(0, 0, width, height);
+
+// set line colour to YELLOW
+context.strokeStyle = "#FFFF00";
+
+
+
+#+END_SRC

@@ -1,0 +1,8 @@
+* DRAW
+** modifier keys
+SHIFT - snap to perpendicular - horizontal/vertical/45 degrees diagonal
+ALT - work from center
+** snap to grid
+snap to top left usually
+
+hold ALT to snap to center

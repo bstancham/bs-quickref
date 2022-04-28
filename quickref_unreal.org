@@ -1,0 +1,272 @@
+* crash reports
+crash reports are saved here:
+- UnrealEngine/Engine/Saved/Crashes
+
+* Installation
+** intallation instructions
+Linux quickstart
+https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/Linux/BeginnerLinuxDeveloper/SettingUpAnUnrealWorkflow/
+
+another guide
+https://rhyce.dev/2019/05/02/compiling-unreal-engine-4-from-source/
+
+** (Feb 2022) installation
+
+Need to make an account with Epic Games
+
+To install on Linux, have to clone the code repo from Github an compile it yourself:
+- link my Epic account with my Github account to get access to the repo
+- can now clone the repo - it was over 16GB!
+- run Setup.sh - say yes to the popup asking "register uneal file types?"
+- should get a success message
+  - Unreal dir is now 65.7GB on my computer!
+- run GenerateProjectFiles.sh
+  - Unreal dir is now 65.9GB on my computer!
+- run make
+  - finished at 12:45 (started around 9:45?)
+  - Unreal dir is now 108.3GB on my computer!
+UnrealBuildTool.exe UnrealInsights.target
+Total time in Local executor: 525.36 seconds
+Total execution time: 530.63 seconds
+
+- run unreal engine editor
+  - compiling shaders since ~13:00
+    - crashed after a long time compiling shaders
+  - try again with vulkan disabled (use command line flag -opengl4)
+    - crashed again
+
+*** crashed at 13:10
+Fatal error:
+[File:/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanUtil.cpp]
+[Line: 958] VulkanRHI::vkQueueSubmit(Queue, 1, &SubmitInfo, Fence->GetHandle())
+failed, VkResult=-4 at
+/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71
+with error VK_ERROR_DEVICE_LOST 0x00007f20e94fcfef
+libUE4Editor-VulkanRHI.so!VulkanRHI::VerifyVulkanResult(VkResult, char const*,
+char const*, unsigned int)
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanUtil.cpp:957]
+0x00007f20e94d36ad
+libUE4Editor-VulkanRHI.so!FVulkanQueue::Submit(FVulkanCmdBuffer*, unsigned int,
+VkSemaphore_T**)
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71]
+0x00007f20e9465933
+libUE4Editor-VulkanRHI.so!FVulkanCommandBufferManager::SubmitUploadCmdBuffer(unsigned
+int, VkSemaphore_T**)
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanCommandBuffer.cpp:563]
+0x00007f20e95346ed
+libUE4Editor-VulkanRHI.so!FVulkanSurface::InternalLockWrite(FVulkanCommandListContext&,
+FVulkanSurface*, VkBufferImageCopy const&, VulkanRHI::FStagingBuffer*)
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanTexture.cpp:188]
+0x00007f20e953de73
+libUE4Editor-VulkanRHI.so!FRHICommand<FRHICommandLockWriteTexture,
+FUnnamedRhiCommand>::ExecuteAndDestruct(FRHICommandListBase&,
+FRHICommandListDebugContext&)
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/RHI/Public/RHICommandList.h:765]
+0x00007f21617b05f0
+libUE4Editor-RHI.so!FRHICommandListExecutor::ExecuteInner_DoExecute(FRHICommandListBase&)
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/RHI/Private/RHICommandList.cpp:372]
+0x00007f21618362dc
+libUE4Editor-RHI.so!FExecuteRHIThreadTask::DoTask(ENamedThreads::Type,
+TRefCountPtr<FGraphEvent> const&)
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/RHI/Private/RHICommandList.cpp:427]
+0x00007f2161835863
+libUE4Editor-RHI.so!TGraphTask<FExecuteRHIThreadTask>::ExecuteTask(TArray<FBaseGraphTask*,
+TSizedDefaultAllocator<32> >&, ENamedThreads::Type)
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/Core/Public/Async/TaskGraphInterfaces.h:886]
+0x00007f21671e395b
+libUE4Editor-Core.so!FNamedTaskThread::ProcessTasksNamedThread(int, bool)
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/Core/Private/Async/TaskGraph.cpp:710]
+0x00007f21671e1e3e
+libUE4Editor-Core.so!FNamedTaskThread::ProcessTasksUntilQuit(int)
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/Core/Private/Async/TaskGraph.cpp:601]
+0x00007f21619face3 libUE4Editor-RenderCore.so!FRHIThread::Run()
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/RenderCore/Private/RenderingThread.cpp:319]
+0x00007f21672b8167 libUE4Editor-Core.so!FRunnableThreadPThread::Run()
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/Core/Private/HAL/PThreadRunnableThread.cpp:25]
+0x00007f2167274a63
+libUE4Editor-Core.so!FRunnableThreadPThread::_ThreadProc(void*)
+[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/Core/Private/HAL/PThreadRunnableThread.h:185]
+0x00007f2167c25609 libpthread.so.0!UnknownFunction(0x9608) 0x00007f215e25d293
+libc.so.6!clone(+0x42)
+
+*** crashed with -opengl4
+Signal 11 caught.
+FUnixPlatformMisc::RequestExitWithStatus
+FUnixPlatformMisc::RequestExit
+[2022.02.24-13.27.55:115][  2]LogAudioMixer: Display: Audio Buffer Underrun (starvation) detected.
+
+Signal 11 is segmentation fault
+
+** weds 02/03/2022
+
+try running editor again
+
+in dir: UnrealEngine/Engine/Binaries/Linux
+ 
+ $ ./UE4Editor
+
+crashed again, as expected (see crash report):
+/home/bst/Software/UnrealEngine/Engine/Saved/Crashes/crashinfo--pid-87340-AC807E5728FB461AB884EAAE04437674
+
+try again with opengl option:
+
+ $ ./UE4Editor -opengl4
+
+/home/bst/Software/UnrealEngine/Engine/Saved/Crashes/crashinfo--pid-88879-49C54E43C7C54FE99C7E9166B8CF99D0
+
+maybe more clues in the terminal output
+*** term output
+erl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+        LANGUAGE = "",
+        LC_ALL = (unset),
+        LC_TIME = "en_GB.UTF-8",
+        LC_MONETARY = "en_GB.UTF-8",
+        LC_ADDRESS = "en_GB.UTF-8",
+        LC_TELEPHONE = "en_GB.UTF-8",
+        LC_NAME = "en_GB.UTF-8",
+        LC_MEASUREMENT = "en_GB.UTF-8",
+        LC_IDENTIFICATION = "en_GB.UTF-8",
+        LC_NUMERIC = "en_US",
+        LC_PAPER = "en_GB.UTF-8",
+        LANG = "en_GB.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to a fallback locale ("en_GB.UTF-8").
+Signal 11 caught.
+[2022.03.02-13.05.29:888][  0]LogSlate: Request Window 'Unreal Engine 4 Crash Reporter' being destroyed
+[2022.03.02-13.05.29:888][  0]LogSlate: Window 'Unreal Engine 4 Crash Reporter' being destroyed
+[2022.03.02-13.05.29:891][  0]LogCore: Engine exit requested (reason: OnRequestExit)
+[2022.03.02-13.05.29:894][  0]CrashReportCoreLog: Final state (Receiver) = Ready
+[2022.03.02-13.05.29:894][  0]CrashReportCoreLog: Final state (Receiver) = Unknown UploadState value
+[2022.03.02-13.05.29:910][  0]LogSlate: Slate User Destroyed.  User Index 0, Is Virtual User: 0
+[2022.03.02-13.05.29:910][  0]LogCore: Engine exit requested (reason: CrashReportClientApp RequestExit; note: exit was already requested)
+[2022.03.02-13.05.29:910][  0]LogExit: Preparing to exit.
+[2022.03.02-13.05.29:912][  0]LogExit: Object subsystem successfully closed.
+[2022.03.02-13.05.29:914][  0]LogModuleManager: Shutting down and abandoning module ImageWrapper (10)
+[2022.03.02-13.05.29:914][  0]LogModuleManager: Shutting down and abandoning module InputCore (8)
+[2022.03.02-13.05.29:914][  0]LogModuleManager: Shutting down and abandoning module CoreUObject (6)
+[2022.03.02-13.05.29:914][  0]LogModuleManager: Shutting down and abandoning module PakFile (4)
+[2022.03.02-13.05.29:914][  0]LogModuleManager: Shutting down and abandoning module RSA (3)
+[2022.03.02-13.05.29:915][  0]LogExit: Exiting.
+[2022.03.02-13.05.29:915][  0]LogInit: Tearing down SDL.
+Engine crash handling finished; re-raising signal 11 for the default handler. Good bye.
+Segmentation fault (core dumped)
+
+
+** try installing proprietory graphics drivers
+
+$ sudo lshw -c video
+
+       product: GP108M [GeForce MX150]
+       vendor: NVIDIA Corporation
+       physical id: 0
+       bus info: pci@0000:01:00.0
+
+       configuration: driver=nouveau latency=0
+ 
+$ sudo apt-get install nvidia-driver-470
+
+enter a password for secure boot
+ doggleDOOGLE@9
+
+try again
+
+ $ ./UE4Editor
+
+crash again
+
+crash report:
+/home/bst/Software/UnrealEngine/Engine/Saved/Crashes/crashinfo--pid-112271-06894B00708A4E019C0BB1C1EBB0ED26
+
+try again with opengl option:
+ $ ./UE4Editor -opengl
+
+warning: OpenGL is no longer supported for desktop platforms, Vulkan will be used instead 
+
+*** relevent terminal output
+
+[2022.03.02-14.34.20:073][  1]LogCollectionManager: Fixed up redirectors for 0 collections in 0.000013 seconds (updated 0 objects)
+MESA-INTEL: error: ../src/intel/vulkan/anv_device.c:3713: GPU hung on one of our command buffers (VK_ERROR_DEVICE_LOST)
+
+[2022.03.02-14.34.20:550][  2]LogVulkanRHI: Error: VulkanRHI::vkQueueSubmit(Queue, 1, &SubmitInfo, Fence->GetHandle()) failed, VkResult=-4                              
+ at /home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71                                                             
+ with error VK_ERROR_DEVICE_LOST                                                    
+Fatal error: [File:/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanUtil.cpp] [Line: 958]                                     
+VulkanRHI::vkQueueSubmit(Queue, 1, &SubmitInfo, Fence->GetHandle()) failed, VkResult=-4                                                                                 
+ at /home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71                                                             
+ with error VK_ERROR_DEVICE_LOST                                                    
+Signal 11 caught.                                                                   
+Malloc Size=65538 LargeMemoryPoolOffset=65554                                       
+
+CommonUnixCrashHandler: Signal=11                                                   
+Malloc Size=65502 LargeMemoryPoolOffset=131086 
+Malloc Size=90722 LargeMemoryPoolOffset=221826 
+Malloc Size=65502 LargeMemoryPoolOffset=287358 
+Malloc Size=90902 LargeMemoryPoolOffset=378278 
+[2022.03.02-14.34.20:586][  2]LogCore: === Critical error: ===
+Unhandled Exception: SIGSEGV: invalid attempt to write memory at address 0x0000000000000003
+
+*** possible solution
+
+this page
+https://forums.unrealengine.com/t/vk_error_device_lost/480534
+
+this person get VK_ERROR_DEVICE_LOST when tooltips pop up
+
+
+
+ SOLUTION:
+
+Hello, that is a known issue, there is a new memory management in place that is causing these from time to time. The current workaround is to disable this.
+
+What I did is add it to my project DefaultEngine.ini
+
+[SystemSettings]
+r.Vulkan.EnableDefrag=0
+or just disable this at runtime by the same cvar (r.Vulkan.EnableDefrag). It is the best that can be done for now. They are still working on it, 4.26.1 and 4.26.2 are slightly better but still crash from time to time (with the Defrag enabled).
+
+
+
+
+I haven't got as far as making a project, so I tried putting that line in to BaseEngine.ini:
+/home/bst/Software/UnrealEngine/Engine/Config/BaseEngine.ini
+
+*** did it work?
+
+no
+
+ESA-INTEL: error: ../src/intel/vulkan/anv_device.c:3713: GPU hung on one of our command buffers (VK_ERROR_DEVICE_LOST)
+<<<<<RED TEXT START>>>>>>
+[2022.03.02-14.59.09:478][  2]LogVulkanRHI: Error: VulkanRHI::vkQueueSubmit(Queue, 1, &SubmitInfo, Fence->GetHandle()) failed, VkResult=-4                              
+ at /home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71                                                             
+ with error VK_ERROR_DEVICE_LOST                                                    
+Fatal error: [File:/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanUtil.cpp] [Line: 958]                                     
+VulkanRHI::vkQueueSubmit(Queue, 1, &SubmitInfo, Fence->GetHandle()) failed, VkResult=-4                                                                                 
+ at /home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71                                                             
+ with error VK_ERROR_DEVICE_LOST
+<<<<<RED TEXT END>>>>>>
+Signal 11 caught.                                                                   
+Malloc Size=65538 LargeMemoryPoolOffset=65554                                       
+CommonUnixCrashHandler: Signal=11                                                   
+Malloc Size=36347 LargeMemoryPoolOffset=101931 
+Malloc Size=72696 LargeMemoryPoolOffset=174648 
+Malloc Size=100442 LargeMemoryPoolOffset=275114 
+Malloc Size=36347 LargeMemoryPoolOffset=311483 
+Malloc Size=36347 LargeMemoryPoolOffset=347851 
+Malloc Size=72696 LargeMemoryPoolOffset=420568 
+Malloc Size=100622 LargeMemoryPoolOffset=521214 
+Malloc Size=36360 LargeMemoryPoolOffset=557592 
+[2022.03.02-14.59.09:524][  2]LogCore: === Critical error: ===
+Unhandled Exception: SIGSEGV: invalid attempt to write memory at address 0x0000000000000003
+
+* beginner tutorials
+
+from phoenix
+https://www.udemy.com/course/unrealblueprint/
+
+https://www.unrealengine.com/en-US/learn
+
+https://www.unrealengine.com/en-US/onlinelearning-courses/your-first-hour-in-unreal-engine-4?sessionInvalidated=true
+
+from seamus
+https://www.linkedin.com/learning/topics/unreal-engine-5?u=57077561
