@@ -348,6 +348,20 @@ The kernel has an execution counter
 - the next cell executed after that will show In[2], Out[2]
 - if you go back and execute the first cell again, it will show In[3], Out[3]
 
+** Jupyter Notebook Features
+
+Installing packages within a notebook:
+
+
+
+Getting documentation within a notebook:
+
+?
+
+Get documentation for a class:
+- ?pandas.core.frame.DataFrame <--- did't work for me!
+- SHIFT-TAB brings up class documentation for item under cursor
+
 * anaconda
 
 Anaconda is a distribution of the Python and R programming languages for

@@ -259,6 +259,35 @@ Malloc Size=36360 LargeMemoryPoolOffset=557592
 [2022.03.02-14.59.09:524][  2]LogCore: === Critical error: ===
 Unhandled Exception: SIGSEGV: invalid attempt to write memory at address 0x0000000000000003
 
+* Install on BSTPG Visualizer Console
+
+clone github repo - 15.72 GB
+
+run Setup.sh
+- start 1:09
+- needed to install some dependencies (build-essentials) - asked for sudo password
+- end 1:39
+
+run GenerateProjectFiles.sh
+- DANG! no useable version of libssl found
+  - a bunch of web searching followed
+    - eventually followed instructions here: https://askubuntu.com/questions/1261614/ubuntu-20-04-libssl-so-1-0-0-cannot-open-shared-object-file-no-such-file-or-d
+      - downloaded .deb file from here: http://security.ubuntu.com/ubuntu/pool/main/o/openssl1.0/
+      - this file: libssl1.0.0_1.0.2n-1ubuntu5.8_amd64.deb
+      - installed manually like this: sudo dpkg -i libssl1.0.0_1.0.2n-1ubuntu5.8_amd64.deb
+      - now it works!
+- start 2:22
+- end 2:23
+
+run make
+- start 2:25
+  - building 58 actions with 3 processes...
+  - ...
+  - the biggest one is 4008 actions!
+- end
+
+
+
 * beginner tutorials
 
 from phoenix

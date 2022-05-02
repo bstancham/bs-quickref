@@ -1,5 +1,5 @@
 Quick-reference notes and short examples for various programming languages and
 software applications.
 
-Some of these files are a bit of a mess generally, the ones which I use more
+Some of these files are a bit of a mess. Generally, the ones which I use more
 often will have been tidied up and refined more.
