@@ -1,5 +1,175 @@
 UNIX/LINUX SHELL QUICKSTART GUIDE - (using BASH)
 ... also see: ComputerWork/System/
+
+* BASH BASICS
+
+$ pwd # print working directory
+
+$ clear # clears terminal window
+
+CHANGE DIRECTORY (BASIC NAVIGATION)
+$ cd [PATH] # change directory
+$ cd ~      # go to $HOME
+$ cd        # go to $HOME by default
+$ cd -      # go back to last working directory
+
+COPY FILES AND DIRECTORIES
+$ cp -p file1 file2      # preserve mode, ownership and timestamp
+$ cp -i file1 file2      # if file2 exists, prompt for confirmation before overwriting
+$ cp -r dir1 new-dirname # copy directory recursively (including contents)
+
+MOVE/RENAME
+$ mv -i file1 file2 # if file2 exists, prompt for confirmation before overwriting
+$ mv -v file1 file2 # show details during rename...
+
+CREATE NEW DIRECTORIES
+$ mkdir [DIR]             # make new empty dir
+$ mkdir -p dir/dir2/dir3/ # -p means make parent directories as needed...
+... if any of these directories doesn’t exist, they will be created
+
+LIST FILES AND DIRECTORIES
+$ ls            # list files in dir
+$ ls -hal       # h = human-readable, a = all files, l = long-listing
+$ tree [DIR]    # nice ascii-art tree diagram of sub-directories (install with apt-get)
+$ tree -d [DIR] # list directories only
+$ tree -I "*~" src/main/java # ignore backup files (NOTE: ignore pattern must be quoted)
+
+REMOVE (UNLINK) FILES
+$ rm [FILE]
+$ rm -i [FILE] # ask for confirmation before removing
+$ rm -i *.jpg  # show each filename and ask for confirmation
+$ rmdir [DIR]  # remove directory (only works for empty dir)
+$ rm -r [DIR]  # recursively removes directory and it's contents
+
+* COMMAND HISTORY
+
+$ man history
+$ history # show command history as numbered list
+$ !236    # execute no. 236 from the history list
+$ !236:p  # :p modifier means print without executing...
+... command is also added to history so you can now press UP, and edit the command
+$ !!      # last command
+$ sudo !! # last command as root
+$ !java   # execute last command beginning with 'java'
+$ !java:p # show last command beginning with 'java'
+
+USE ARGUMENTS FROM LAST COMMAND
+$ mkdir flipper/flopper
+$ cd !$ # cd to flipper/flopper
+
+CORRECT MISSPELLED COMMAND
+$ nanp /path/to/a/document/buried/deep/in/the/filesystem
+$ ^nanp^nano # runs same command but replaces first instance of 'nanp' with 'nano'
+
+REUSE A COMMAND YOU TYPED AGES AGO
+$ history | grep javac # find the last 'javac' I did
+$ !2334                # execute it again
+
+KEEP A COMMAND FROM ENTERING HISTORY
+... type a space as the first character on the command line
+
+* BASH LANGUAGE FEATURES
+
+VARIABLES (see MORE ABOUT VARIABLES)
+use the dollar sign to reference a variable
+: $ echo $HOME
+variables can be interpolated into strings
+: $ echo "My username is $USER and my home directory is $HOME"
+use curly braces to embed without spaces
+: $ echo "The current user is >>>${USER}<<< and their home directory is ${HOME}"
+display all environment variables
+: $ printenv
+
+INTERPOLATE OUTPUT OF A COMMAND
+use either BACKTICKS, or PARENTHESIS EXPANSION...
+$ my_var=`locate "scala-swing.jar"`  # store output of command in a variable
+$ my_var=$(locate "scala-swing.jar") # same
+$ echo "Current dir is $(pwd), and I put my bash in `which bash` so I don't lose it"
+
+PIPE |
+examples:
+$ ps aux | grep flash  # find the name of processes associated with Flashplayer
+$ cd /proc/44352/fd    # move to the directory of that process (sub-directory 'fd' = File Descriptor)
+$ ls -hal | grep Flash # list temporary video files in use by Flashplayer
+
+OUTPUT REDIRECTOR
+$ [CMD] > [FILE]  # write output of CMD to FILE
+$ [CMD] >> [FILE] # append output of CMD end of FILE (creates file if it doesn't exist)
+EXAMPLE:
+echo "I am a very small text file." > file.txt # write output to file
+echo "... and another line..." >> file.txt     # APPEND to end of file
+
+INPUT REDIRECTOR
+$ [CMD] < [FILE] # CMD treats contents of FILE as standard input
+
+USER INPUT (useful in scripts)
+read a  # read user input and store in variable named 'a'
+echo $a # show value
+
+EXIT CODES
+In bash exit status 0 for success, 1 if failed.
+$ echo $? # displays exit code of most recent foreground pipeline
+
+* MORE ABOUT VARIABLES (AND BASH OPTIONS)
+
+SHOW ALL ENVIRONMENT VARIABLES
+these both seem to do the same thing
+: $ printenv
+: $ env
+
+CREATE NEW VARIABLES
+store all files in current directory in variable
+: $ my_variable=*
+print to terminal
+: $ echo $my_variable
+store output of locate in variable
+: $ var=`locate "scala-swing.jar"`
+print value of variable
+: $ echo $var
+read a line of keyboard input and store in a variable named 'var'
+: $ read var
+print value of var
+: $ echo $var
+
+SPECIAL SHELL VARIABLES (these are listed in the bash manpage under 'Special Variables')
+Positional parameters $1,$2,$3… and their corresponding array representation, count and IFS expansion $@, $#, and $*.
+$- current options set for the shell.
+$$ pid of the current shell (not subshell)
+$_ most recent parameter (or the abs path of the command to start the current shell immediately after startup)
+$IFS the (input) field separator
+$? most recent foreground pipeline exit status
+$! PID of the most recent background command
+$0 name of the shell or shell script
+
+SET (LIST OR SET OPTIONS AND VARIABLES)
+show massive list all shell variables, environmental variables, local variables, and shell functions
+: $ set
+setting a bash option (the 'x' option means, print commands and their arguments as they are executed)
+: $ set -x
+unset the -x option
+: $ set +x
+show which options are currently set
+: $ echo $-
+show usage info for set
+: $ help set
+
+* ECHO OPTIONS
+
+-n Do not output the trailing new line.
+
+-e Enable interpretation of the following backslash escaped characters in the strings:
+	\a alert (bell)
+	\b backspace
+	\c suppress trailing new line
+	\n new line
+	\r carriage return
+	\t horizontal tab
+	\\ backslash
+
+EXAMPLE
+this sounds the bell
+: $ echo -e "\a"
+
 * USING MANPAGES (ALSO SEE: LESS)
 $ man command # display manual page for a command
 $ man NUMBER command # use whatis to see all numbered pages available
@@ -306,127 +476,64 @@ $ gksu [COMMAND] # like sudo, but for graphical programs
 
 * FILE INFORMATION
 
-$ file FILENAME # type of file
-$ stat FILENAME # file or filesystem status
-$ wc FILENAME   # word count
+SHOW TYPE OF FILE
+: $ file FILENAME
 
-use stat with a format string to output exactly what you want - this displays the file size in bytes:
-$ stat --format="%s" $output_file
+DETAILED STATUS OF FILE OR FILESYSTEM (use -f option for a filesystem)
+: $ stat FILENAME
+: $ stat -f FILESYSTEM
+use stat with a format string to output exactly what you want - this displays the file size in bytes
+: $ stat --format="%s" $output_file
 
-* BASH LANGUAGE FEATURES
+WORD COUNT (newlines, words, bytes)
+: $ wc FILENAME
 
-VARIABLES
-$ echo $HOME # Use dollar sign to reference a variable
-... variables can be interpolated into strings...
-$ echo "My username is $USER and my home directory is $HOME"
-... use curly braces to embed without spaces
-$ echo "zzzzzzzzzzzzzzz${USER}zzzzzzzzzzzzzzzzzz"
+DISK USAGE/FILE SIZE/DIRECTORY SIZE
+show size of all files in dir (-h = human readable, -s = summary (otherwise dir contents shown individually)
+: $ du -sh *
+show size of directory
+: $ du -sh [DIR]
+open current dir in ncurses based disk usage analyser (VERY NICE!)
+install ncdu via apt-get
+: $ ncdu .
 
-INTERPOLATE OUTPUT OF A COMMAND
-use either BACKTICKS, or PARENTHESIS EXPANSION...
-$ my_var=`locate "scala-swing.jar"`  # store output of command in a variable
-$ my_var=$(locate "scala-swing.jar") # same
-$ echo "Current dir is $(pwd), and I put my bash in `which bash` so I don't lose it"
+* FILESYSTEM INFORMATION
 
+displays system disk usage for all filesystems
+: $ df
+with sizes in human readable format
+: $ df -h
+show type of filesystem
+: $ df -T
 
- | (PIPE)
-examples:
-$ ps aux | grep flash  # find the name of processes associated with Flashplayer
-$ cd /proc/44352/fd    # move to the directory of that process (sub-directory 'fd' = File Descriptor)
-$ ls -hal | grep Flash # list temporary video files in use by Flashplayer
+list all filesystem partitions
+(want to use sudo here or you may not get a complete list)
+: $ sudo fdisk -l
 
+GET INFO ABOUT A USB STICK OR OTHER MOUNTED FILESYSTEM
+list filesystems (can usually work out what is what by the sizes)
+: $ sudo fdisk -l
+now that we have the name of the filesystem we can use stat to get more info
+: $ stat -f /dev/mmcblk0
 
-OUTPUT REDIRECTOR
-$ [CMD] > [FILE]  # write output of CMD to FILE
-$ [CMD] >> [FILE] # append output of CMD end of FILE (creates file if it doesn't exist)
-EXAMPLE:
-echo "I am a very small text file." > file.txt # write output to file
-echo "... and another line..." >> file.txt     # APPEND to end of file
+* MOUNT A FILESYSTEM (USB STICK/MOBILE PHONE ETC)
 
-INPUT REDIRECTOR
-$ [CMD] < [FILE] # CMD treats contents of FILE as standard input
+plug in device, then use fdisk to find out what it's called on the system
+: $ sudo fdisk -l
+lists all disk partitions - we're looking for something like /dev/sdb1
+... looking at SIZE and TYPE may help
 
-USER INPUT (useful in scripts)
-read a  # read user input and store in variable named 'a'
-echo $a # show value
+make folder to mount it in (can be mounted anywhere - just using /media as a convention)
+: $ mkdir /media/usb
+mount filesystem
+: $ sudo mount /dev/sdb1 /media/usb
 
+OPTIONAL: change ownership if you want to be able to do stuff easily
+: $ sudo chown benopod:benopod -R /media/usb
 
-EXIT CODES
-In bash exit status 0 for success, 1 if failed.
-$ echo $? # displays exit code of most recent foreground pipeline
-
-* GENERAL
-
-$ pwd       # print working directory
-
-$ cd [PATH] # change directory
-$ cd        # go to $HOME by default
-$ cd -      # go back to last working directory
-
-$ cp -p file1 file2 # preserve mode, ownership and timestamp
-$ cp -i file1 file2 # if file2 exists, prompt for confirmation before overwriting
-
-$ mv -i file1 file2 # if file2 exists, prompt for confirmation before overwriting
-$ mv -v file1 file2 # show details during rename...
-
-$ mkdir [DIR]             # make new empty dir
-$ mkdir -p dir/dir2/dir3/ # -p means make parent directories as needed...
-... if any of these directories doesn’t exist, they will be created
-
-$ clear # clears terminal window
-
-
-
-$ du -sh * # (disk usage) - show size of all files in dir (-h = human readable, -s = summary (otherwise dir contents shown individually)
-
-$ du -sh [DIR] # show size of directory
-
-$ ncdu . # open current dir in ncurses based disk usage analyser (AWESOME!) (install ncdu via apt-get)
-
-
-
-LISTING FILES AND DIRECTORIES
-$ ls            # list files in dir
-$ ls -hal       # h = human-readable, a = all files, l = long-listing
-$ tree [DIR]    # nice ascii-art tree diagram of sub-directories (install with apt-get)
-$ tree -d [DIR] # list directories only
-$ tree -I "*~" src/main/java # ignore backup files (NOTE: ignore pattern must be quoted)
-
-
-
-REMOVE (UNLINK) FILES
-$ rm [FILE]
-$ rm -i [FILE] # ask for confirmation before removing
-$ rm -i *.jpg  # show each filename and ask for confirmation
-$ rmdir [DIR]  # remove directory (only works for empty dir)
-$ rm -r [DIR]  # recursively removes directory and it's contents
-
-* COMMAND HISTORY
-
-$ man history
-$ history # show command history as numbered list
-$ !236    # execute no. 236 from the history list
-$ !236:p  # :p modifier means print without executing...
-... command is also added to history so you can now press UP, and edit the command
-$ !!      # last command
-$ sudo !! # last command as root
-$ !java   # execute last command beginning with 'java'
-$ !java:p # show last command beginning with 'java'
-
-USE ARGUMENTS FROM LAST COMMAND
-$ mkdir flipper/flopper
-$ cd !$ # cd to flipper/flopper
-
-CORRECT MISSPELLED COMMAND
-$ nanp /path/to/a/document/buried/deep/in/the/filesystem
-$ ^nanp^nano # runs same command but replaces first instance of 'nanp' with 'nano'
-
-REUSE A COMMAND YOU TYPED AGES AGO
-$ history | grep javac # find the last 'javac' I did
-$ !2334                # execute it again
-
-KEEP A COMMAND FROM ENTERING HISTORY
-... type a space as the first character on the command line
+unmount when finished - can target either the device OR mount point, so both these do the same
+: $ sudo umount /dev/sdb1
+: $ sudo umount /media/usb
 
 * FTP (File Transfer Protocol) - transfer files over network
 
@@ -441,8 +548,6 @@ $ shopt -s extglob # SET (enable) option
 $ shopt -u extglob # UNSET (disable) option
 
 * SYMBOLIC LINKS
-
-
 
 $ readlink /usr/share/java/vecmath.jar
 
@@ -460,38 +565,6 @@ I've made symbolic links in my home to some commonly used directories:
   bsgeom2d
   bstpg
   websites
-
-* IP: display & configure networking
-
-NOTE: ifconfig is now deprecated
-
-USES OF IP COMMAND:
-1: Find out which interfaces are configured on the system.
-2: Query the status of a IP interface.
-3: Configure the local loop-back, Ethernet and other IP interfaces.
-4: Mark the interface as up or down.
-5: Configure and modify default and static routing.
-6: Configure tunnel over IP.
-7: Configure ARP or NDISC cache entry.
-8: Assign IP address, routes, subnet and other IP information to IP interfaces.
-
-
-EXAMPLES:
-
-Get IP address of computer...
-... this lists all ip addresses associated on all network interfaces:
-
-  $ ip address
-
-.... 'address' can be abbreviated to 'addr' or 'a', so these are the same:
-
-  $ ip addr
-  $ ip a
-
-... show only IP v4 or v6 addresses:
-
-  $ ip -4 a
-  $ ip -6 a
 
 * MANAGING PROCESSES
 
@@ -542,43 +615,6 @@ $ htop
 
 SHOW TREE OF SYSTEM PROCESSES
 $ pstree
-
-* VARIABLES
-$ my_variable=* # store all files in directory in variable
-$ echo $my_variable # print to terminal
-
-var=`locate "scala-swing.jar"` # store output of locate in variable
-echo $var # print value of variable
-
-read var # reads a line of keyboard input and stores in a variable named 'var'
-echo $var # print value of var
-
-ECHO OPTIONS: echo displays text or value of variable
--n Do not output the trailing new line.
--e Enable interpretation of the following backslash escaped characters in the strings:
-	\a alert (bell)
-	\b backspace
-	\c suppress trailing new line
-	\n new line
-	\r carriage return
-	\t horizontal tab
-	\\ backslash
-EXAMPLE: $ echo -e "\a" # sounds the bell
-
-
-SPECIAL SHELL VARIABLES (these are listed in the bash manpage under 'Special Variables')
-Positional parameters $1,$2,$3… and their corresponding array representation, count and IFS expansion $@, $#, and $*.
-$- current options set for the shell.
-$$ pid of the current shell (not subshell)
-$_ most recent parameter (or the abs path of the command to start the current shell immediately after startup)
-$IFS the (input) field separator
-$? most recent foreground pipeline exit status
-$! PID of the most recent background command
-$0 name of the shell or shell script
-
-
-ENVIRONMENT VARIABLES
-$ printenv # prints environment variables.
 
 * GREP (Global Regular Expression Print)
 
@@ -759,66 +795,58 @@ this via the vidahost cloud hosting platform website)
 
 ... terminal will prompt for password.
 
-* SOME MORE COOL BASH COMMANDS
+* BASH COMMAND EXAMPLES (MISC USEFUL THINGS)
 
-Displays system disk usage:
-$ df
-$ df -h # sizes in human readable format
-$ df -T # show type of file system
+grep the output of 'ls' for any filenames beginning with a digit
+(NOTE: this doesn't work unless we use the -E tag - for extended regex)
+: $ ls | grep -E '^[0-9]+'
 
-$ fdisk -l # list all file system partitions
+do the same grep
+sort them into reverse order
+open them all in gedit
+: $ gedit $( ls | grep -E '^[0-9]+' | sort -r )
 
+do the same grep
+move all the files to ./another_dir
+: $ mv $(ls | grep -E '^[0-9]+') ./another_dir
 
-## --- grep the output of 'ls' for any filenames beginning with a digit
-## --- (NOTE: this doesn't work unless we use the -E tag - for extended regex)
-$ ls | grep -E '^[0-9]+'
-
-## --- do the same grep
-## --- sort them into reverse order
-## --- open them all in gedit
-$ gedit $( ls | grep -E '^[0-9]+' | sort -r )
-
-## --- do the same grep
-## --- move all the files to ./another_dir
-$ mv $(ls | grep -E '^[0-9]+') ./another_dir
-
-## --- get the time, in seconds since epoch for each file
-## --- sort them numerically
-$ stat --format=%Y * | sort
+get the time, in seconds since epoch for each file
+sort them numerically
+: $ stat --format=%Y * | sort
 
 
-## --- list all directories begginning with 'attempt'.
-$ ls -d attempt*
+list all directories begginning with 'attempt'.
+: $ ls -d attempt*
 
-## --- list all directories NOT beginnning with 'attempt'.
-$ ls -d !(attempt*)
+list all directories NOT beginnning with 'attempt'.
+: $ ls -d !(attempt*)
 
-## --- delete all directories NOT beginning with 'attempt' (along with their contents).
-$ rm -r !(attempt*)
-
-
-## Store all files from directory in a shell variable...
-## ... then loop through each file
-$ homefiles=*
-$ for f in $homefiles; do echo "Processing $f file..."; done
+delete all directories NOT beginning with 'attempt' (along with their contents).
+: $ rm -r !(attempt*)
 
 
-
-# show directories of $PATH variable on separate lines...
-... tr --> transpose --> used to replace : with newline...
-$ echo $PATH | tr ":" "\b"
-
+Store all files from directory in a shell variable, then loop through each file
+: $ homefiles=*
+: $ for f in $homefiles; do echo "Processing $f file..."; done
 
 
-$ stat FILE...   # show detailed status of file
+show directories of $PATH variable on separate lines
+(tr --> transpose --> used to replace : with newline)
+: $ echo $PATH | tr ":" "\b"
 
-$ date           # displays current date and time
+* MISC BASH COMMANDS
 
-$ cal            # show a simple calender for current month
+displays current date and time
+: $ date
 
-$ time [COMMAND] # show how much time a process takes
+show a simple calender for current month
+: $ cal
 
-$ sort FILE...   # Write sorted concatenation of all FILE(s) to standard output (see elsewhere for fancy examples)
+show how much time a process takes
+: $ time [COMMAND]
+
+write sorted concatenation of all FILE(s) to standard output (see elsewhere for fancy examples)
+: $ sort FILE1 FILE2 FILE3 ...
 
 * IMAGEMAGICK
 a free software suite for the creation, modification and display of bitmap images.
@@ -1006,94 +1034,84 @@ $ diff FILEa FILEb # if files are the same, exit code 0, and no output...
 
 ... also use diff to compare directories full of files, including recursively...
 
-* ALIASES AND STUFF
+* ALIASES
 
 $ alias l="ls -al --color" # create an alias
 $ alias ls                 # shows what alias currently stands for 'ls'
 
-* ENVIRONMENT VARIABLES
-$ env      ; show environment variables
-$ printenv ; show environment variables
-
-* SET
-$ set ; show massive list all shell variables, environmental variables, local variables, and shell functions...
-$ set -x ; print commands and their arguments as they are executed
-$ set +x ; unset the -x option
-$ echo $- ; show what options are currently set
-$ help set ; show usage info for set
-
-* MOUNT A FILESYSTEM (USB STICK/MOBILE PHONE ETC)
-
-# plug in device, then...
-# ... list disk partitions, so we can find out what it's called...
-$ sudo fdisk -l
-# ... looking for something like /dev/sdb1 (looking at SIZE and TYPE may help)
-
-# make folder to mount it in (can be mounted anywhere - just using /media as a convention)
-$ mkdir /media/usb
-
-# mount filesystem
-$ sudo mount /dev/sdb1 /media/usb
-
-# OPTIONAL: change ownership if you want to be able to do stuff easily
-$ sudo chown benopod:benopod -R /media/usb
-
-# unmount when finished
-# ... NOTE: can target either the device OR mount point, so both these do the same...
-$ sudo umount /dev/sdb1
-$ sudo umount /media/usb
-
-* INFO ABOUT A FILESYSTEM (USB STICK ETC)
-
-# list filesystems (can usually work out what is what by the sizes)
-$ sudo fdisk -l
-
-$ stat -f /dev/mmcblk0
-
-* INFORMATION ABOUT NETWORK CONNECTIONS
-
-Get wifi network currently connected to
-$ iwgetid
-... just the SSID...
-$ iwgetid -r
-
-
-SEE ALSO:
-iwlist
-
-
+* NETWORK INFORMATION
 
 SEE: Linux Network Administrators Guide (http://www.tldp.org/LDP/nag2) ...
 ... start from http://www.tldp.org/LDP/nag2/x-087-2-intro.tcpip.html
 
+** IP: DISPLAY & CONFIGURE NETWORKING
+
+NOTE: ifconfig is now deprecated
+
+USES OF IP COMMAND:
+1: Find out which interfaces are configured on the system.
+2: Query the status of a IP interface.
+3: Configure the local loop-back, Ethernet and other IP interfaces.
+4: Mark the interface as up or down.
+5: Configure and modify default and static routing.
+6: Configure tunnel over IP.
+7: Configure ARP or NDISC cache entry.
+8: Assign IP address, routes, subnet and other IP information to IP interfaces.
 
 
-$ netstat
+EXAMPLES:
 
-options:
--n
--w
--W
+Get IP address of computer.
+Lists all ip addresses associated on all network interfaces.
+'address' can be abbreviated to 'addr' or 'a', so these are the same:
+: $ ip address
+: $ ip addr
+: $ ip a
+show only IP v4 or v6 addresses:
+: $ ip -4 a
+: $ ip -6 a
+
+** WIFI NETWORK INFO
+
+Get wifi network currently connected to
+: $ iwgetid
+just the SSID
+: $ iwgetid -r
+
+SEE ALSO: iwlist
+
+** NETSTAT
+
+list network and socket connections (will be a long list)
+: $ netstat
+
+SOME NETSTAT OPTIONS:
+-n   numeric (show numeric addresses instead of trying to determine symbolic host, port or user name)
+-w   --raw (protocol used by the socket)
+-W   wide (do not truncate IP addresses)
 -a   all
 -t   tcp
--p   show program
-
-$ netstat -natp
-$ sudo netstat -natp # may give a little extra info...
-
-netstat -watp
+-p   show program name and process ID
 
 
+NETSTAT EXAMPLES:
 
-==== NETWORK ANALYSIS ====
+show all TCP connections i.e. internet connections
+: $ netstat -natp
+will need sudo to get a complete list
+: $ sudo netstat -natp
+should give more still (-w seems to include tcp AND raw)
+: $ sudo netstat -watp
+
+** NETWORK ANALYSIS
 
 tcpdump
 
-$ sudo tcpdump -i any
-# listen on all channels...
+listen on all channels
+: $ sudo tcpdump -i any
 
-$ tcpdump -D
-# show list of available interfaces
+show list of available interfaces
+: $ tcpdump -D
 
 * GPG (GnuPG) CRYPTOGRAPHY TOOL
 
@@ -1128,6 +1146,38 @@ DECRYPT AN ENCRYPTED FILE
  $ gpg --decrypt my_file
 
 ... will prompt for password, then dump file contents to terminal
+
+* INFORMATION ABOUT HARDWARE USING lshw
+
+need sudo to get complete list
+: sudo lshw
+
+short version (single line per device)
+: sudo lshw -short
+
+get summary of options
+: lshw -h
+
+list info about graphics cards (use -c option to only show certain class of device)
+: sudo lshw -c video
+
+* CONFIGURE INPUT DEVICES USING xinput
+
+EXAMPLE: ACTIVATING TOUCHPAD TAP-TO-CLICK
+
+list input devices
+: xinput list
+
+found my touchpad listed and it has the ID number 14
+
+list properties for device with id=14
+: xinput list-props 14
+
+should see a line which looks something like this:
+	libinput Tapping Enabled (331):	0
+
+activate tapping using the device ID and the device-property number
+: xinput set-prop 14 331 1
 
 * SHELL SCRIPTING
 ** MORE HELP
@@ -1256,7 +1306,7 @@ INTEGER COMPARISON
 <, <=, >, >=
 
 STRING COMPARISON
-=  
+=
 ==
 !=
 <
@@ -1295,7 +1345,7 @@ CASE:
 case "$variable" in
   abc) echo "\$variable = abc" ;; # double semicolon to terminate option
   xyz) echo "\$variable = xyz" ;;
-esac  
+esac
 
 ** LOOPING
 
@@ -1385,7 +1435,7 @@ $ echo "$human_num"
 
  ... use parens () for grouping
  ... | OR operator
- ... 
+ ...
 
 *** EXTENDED REGULAR EXPRESSIONS
  ...
@@ -1503,7 +1553,7 @@ $ echo "$human_num"
  $1, $2, $3... --- 1st, 2nd, 3rd field in the line
 
  ... passing shell variables in to awk...
- $ awk -v var="$SHELL_VARIABLE" 
+ $ awk -v var="$SHELL_VARIABLE"
 
 
 **** AWK EXAMPLES
@@ -1559,7 +1609,7 @@ ANSI_BLUE = \u001b[34m
 ANSI_MAGENTA = \u001b[35m
 ANSI_CYAN = \u001b[36m
 ANSI_WHITE = \u001b[37m
-  
+
 ANSI_BG_BLACK = \u001b[40m
 ANSI_BG_RED = \u001b[41m
 ANSI_BG_GREEN = \u001b[42m

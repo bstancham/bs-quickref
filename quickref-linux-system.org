@@ -368,10 +368,7 @@ waiting to be delivered to users on the system.
 
 ** IMPORTANT FILES, their location and their Usability
 
-Linux is a complex system which requires a more complex and efficient way to
-start, stop, maintain and reboot a system unlike Windows. There is a well
-defined configuration files, binaries, man pages, info files, etc. for every
-process in Linux.
+List from ...?
 
     /boot/vmlinuz : The Linux Kernel file.
     /dev/hda : Device file for the first IDE HDD (Hard Disk Drive)
