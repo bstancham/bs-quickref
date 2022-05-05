@@ -1,6 +1,4 @@
-* crash reports
-crash reports are saved here:
-- UnrealEngine/Engine/Saved/Crashes
+#+title: Quick-Reference: Unreal Engine
 
 * Installation
 ** intallation instructions
@@ -10,14 +8,25 @@ https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/Linux/BeginnerLinux
 another guide
 https://rhyce.dev/2019/05/02/compiling-unreal-engine-4-from-source/
 
-** (Feb 2022) installation
+** Install on Laptop (Asus Zenbook 13)
+*** Summary
+
+Unreal Engine version: 4.27
+Status: WORKING (but quite laggy)
+
+Installed proprietory graphics driver (don't know whether it made a difference).
+
+Run editor with special options for my laptop graphics card:
+: $ __NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only ./UE4Editor
+
+*** Installation Details: (Feb 2022)
 
 Need to make an account with Epic Games
 
 To install on Linux, have to clone the code repo from Github an compile it yourself:
 - link my Epic account with my Github account to get access to the repo
 - can now clone the repo - it was over 16GB!
-- run Setup.sh - say yes to the popup asking "register uneal file types?"
+- run Setup.sh - say yes to the popup asking "register unreal file types?"
 - should get a success message
   - Unreal dir is now 65.7GB on my computer!
 - run GenerateProjectFiles.sh
@@ -29,67 +38,17 @@ UnrealBuildTool.exe UnrealInsights.target
 Total time in Local executor: 525.36 seconds
 Total execution time: 530.63 seconds
 
-- run unreal engine editor
-  - compiling shaders since ~13:00
-    - crashed after a long time compiling shaders
-  - try again with vulkan disabled (use command line flag -opengl4)
-    - crashed again
+Build appears to be successful
 
-*** crashed at 13:10
-Fatal error:
-[File:/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanUtil.cpp]
-[Line: 958] VulkanRHI::vkQueueSubmit(Queue, 1, &SubmitInfo, Fence->GetHandle())
-failed, VkResult=-4 at
-/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71
-with error VK_ERROR_DEVICE_LOST 0x00007f20e94fcfef
-libUE4Editor-VulkanRHI.so!VulkanRHI::VerifyVulkanResult(VkResult, char const*,
-char const*, unsigned int)
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanUtil.cpp:957]
-0x00007f20e94d36ad
-libUE4Editor-VulkanRHI.so!FVulkanQueue::Submit(FVulkanCmdBuffer*, unsigned int,
-VkSemaphore_T**)
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71]
-0x00007f20e9465933
-libUE4Editor-VulkanRHI.so!FVulkanCommandBufferManager::SubmitUploadCmdBuffer(unsigned
-int, VkSemaphore_T**)
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanCommandBuffer.cpp:563]
-0x00007f20e95346ed
-libUE4Editor-VulkanRHI.so!FVulkanSurface::InternalLockWrite(FVulkanCommandListContext&,
-FVulkanSurface*, VkBufferImageCopy const&, VulkanRHI::FStagingBuffer*)
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanTexture.cpp:188]
-0x00007f20e953de73
-libUE4Editor-VulkanRHI.so!FRHICommand<FRHICommandLockWriteTexture,
-FUnnamedRhiCommand>::ExecuteAndDestruct(FRHICommandListBase&,
-FRHICommandListDebugContext&)
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/RHI/Public/RHICommandList.h:765]
-0x00007f21617b05f0
-libUE4Editor-RHI.so!FRHICommandListExecutor::ExecuteInner_DoExecute(FRHICommandListBase&)
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/RHI/Private/RHICommandList.cpp:372]
-0x00007f21618362dc
-libUE4Editor-RHI.so!FExecuteRHIThreadTask::DoTask(ENamedThreads::Type,
-TRefCountPtr<FGraphEvent> const&)
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/RHI/Private/RHICommandList.cpp:427]
-0x00007f2161835863
-libUE4Editor-RHI.so!TGraphTask<FExecuteRHIThreadTask>::ExecuteTask(TArray<FBaseGraphTask*,
-TSizedDefaultAllocator<32> >&, ENamedThreads::Type)
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/Core/Public/Async/TaskGraphInterfaces.h:886]
-0x00007f21671e395b
-libUE4Editor-Core.so!FNamedTaskThread::ProcessTasksNamedThread(int, bool)
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/Core/Private/Async/TaskGraph.cpp:710]
-0x00007f21671e1e3e
-libUE4Editor-Core.so!FNamedTaskThread::ProcessTasksUntilQuit(int)
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/Core/Private/Async/TaskGraph.cpp:601]
-0x00007f21619face3 libUE4Editor-RenderCore.so!FRHIThread::Run()
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/RenderCore/Private/RenderingThread.cpp:319]
-0x00007f21672b8167 libUE4Editor-Core.so!FRunnableThreadPThread::Run()
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/Core/Private/HAL/PThreadRunnableThread.cpp:25]
-0x00007f2167274a63
-libUE4Editor-Core.so!FRunnableThreadPThread::_ThreadProc(void*)
-[/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/Core/Private/HAL/PThreadRunnableThread.h:185]
-0x00007f2167c25609 libpthread.so.0!UnknownFunction(0x9608) 0x00007f215e25d293
-libc.so.6!clone(+0x42)
+Try to run Unreal Engine Editor:
+- spent a very long time compiling shaders, THEN CRASHED
+- try again with vulkan disabled (using command line flag -opengl4)
+  - CRASHED AGAIN
 
-*** crashed with -opengl4
+
+
+CAUSE OF THE CRASH:
+
 Signal 11 caught.
 FUnixPlatformMisc::RequestExitWithStatus
 FUnixPlatformMisc::RequestExit
@@ -97,12 +56,12 @@ FUnixPlatformMisc::RequestExit
 
 Signal 11 is segmentation fault
 
-** weds 02/03/2022
+*** Installation Details: weds 02/03/2022
 
 try running editor again
 
 in dir: UnrealEngine/Engine/Binaries/Linux
- 
+
  $ ./UE4Editor
 
 crashed again, as expected (see crash report):
@@ -115,7 +74,7 @@ try again with opengl option:
 /home/bst/Software/UnrealEngine/Engine/Saved/Crashes/crashinfo--pid-88879-49C54E43C7C54FE99C7E9166B8CF99D0
 
 maybe more clues in the terminal output
-*** term output
+**** term output
 erl: warning: Setting locale failed.
 perl: warning: Please check that your locale settings:
         LANGUAGE = "",
@@ -152,10 +111,9 @@ Signal 11 caught.
 Engine crash handling finished; re-raising signal 11 for the default handler. Good bye.
 Segmentation fault (core dumped)
 
+**** try installing proprietory graphics drivers
 
-** try installing proprietory graphics drivers
-
-$ sudo lshw -c video
+: $ sudo lshw -c video
 
        product: GP108M [GeForce MX150]
        vendor: NVIDIA Corporation
@@ -163,15 +121,12 @@ $ sudo lshw -c video
        bus info: pci@0000:01:00.0
 
        configuration: driver=nouveau latency=0
- 
-$ sudo apt-get install nvidia-driver-470
 
-enter a password for secure boot
- doggleDOOGLE@9
+: $ sudo apt-get install nvidia-driver-470
 
 try again
 
- $ ./UE4Editor
+: $ ./UE4Editor
 
 crash again
 
@@ -179,87 +134,77 @@ crash report:
 /home/bst/Software/UnrealEngine/Engine/Saved/Crashes/crashinfo--pid-112271-06894B00708A4E019C0BB1C1EBB0ED26
 
 try again with opengl option:
- $ ./UE4Editor -opengl
+: $ ./UE4Editor -opengl
 
-warning: OpenGL is no longer supported for desktop platforms, Vulkan will be used instead 
+warning: OpenGL is no longer supported for desktop platforms, Vulkan will be used instead
 
-*** relevent terminal output
+*** Installation Details: SUCCESS: using command line options from video (May 2nd 2022)
 
-[2022.03.02-14.34.20:073][  1]LogCollectionManager: Fixed up redirectors for 0 collections in 0.000013 seconds (updated 0 objects)
-MESA-INTEL: error: ../src/intel/vulkan/anv_device.c:3713: GPU hung on one of our command buffers (VK_ERROR_DEVICE_LOST)
+See this video: "Unreal Engine run on laptop with MX nvidia optimus graphics vulkan prime offload rendering linux"
+https://youtu.be/xTTJZA9W6Hs
 
-[2022.03.02-14.34.20:550][  2]LogVulkanRHI: Error: VulkanRHI::vkQueueSubmit(Queue, 1, &SubmitInfo, Fence->GetHandle()) failed, VkResult=-4                              
- at /home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71                                                             
- with error VK_ERROR_DEVICE_LOST                                                    
-Fatal error: [File:/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanUtil.cpp] [Line: 958]                                     
-VulkanRHI::vkQueueSubmit(Queue, 1, &SubmitInfo, Fence->GetHandle()) failed, VkResult=-4                                                                                 
- at /home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71                                                             
- with error VK_ERROR_DEVICE_LOST                                                    
-Signal 11 caught.                                                                   
-Malloc Size=65538 LargeMemoryPoolOffset=65554                                       
+He uses some command line options which I didn't use before:
+: $ __NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only ./UE4Editor
 
-CommonUnixCrashHandler: Signal=11                                                   
-Malloc Size=65502 LargeMemoryPoolOffset=131086 
-Malloc Size=90722 LargeMemoryPoolOffset=221826 
-Malloc Size=65502 LargeMemoryPoolOffset=287358 
-Malloc Size=90902 LargeMemoryPoolOffset=378278 
-[2022.03.02-14.34.20:586][  2]LogCore: === Critical error: ===
-Unhandled Exception: SIGSEGV: invalid attempt to write memory at address 0x0000000000000003
+OMG! Unreal Editor started
 
-*** possible solution
+I chose these options:
+- Game
+- BluePrint, With Starter Pack
+- First Person
+- project name: Test
 
-this page
-https://forums.unrealengine.com/t/vk_error_device_lost/480534
-
-this person get VK_ERROR_DEVICE_LOST when tooltips pop up
-
-
-
- SOLUTION:
-
-Hello, that is a known issue, there is a new memory management in place that is causing these from time to time. The current workaround is to disable this.
-
-What I did is add it to my project DefaultEngine.ini
-
-[SystemSettings]
-r.Vulkan.EnableDefrag=0
-or just disable this at runtime by the same cvar (r.Vulkan.EnableDefrag). It is the best that can be done for now. They are still working on it, 4.26.1 and 4.26.2 are slightly better but still crash from time to time (with the Defrag enabled).
+Generating the project:
+- ran for some time, THEN IT CRASHED!
 
 
 
 
-I haven't got as far as making a project, so I tried putting that line in to BaseEngine.ini:
-/home/bst/Software/UnrealEngine/Engine/Config/BaseEngine.ini
+Try again, choosing different initial project options:
+- Game
+- C++, No Starter Pack
+- First Person
+- project name: TestCPP
 
-*** did it work?
+Generating the project:
+- Seems that project was created ok
+- Terminal process exits and folder opens showing my project contents
 
-no
+How do I run the project?
 
-ESA-INTEL: error: ../src/intel/vulkan/anv_device.c:3713: GPU hung on one of our command buffers (VK_ERROR_DEVICE_LOST)
-<<<<<RED TEXT START>>>>>>
-[2022.03.02-14.59.09:478][  2]LogVulkanRHI: Error: VulkanRHI::vkQueueSubmit(Queue, 1, &SubmitInfo, Fence->GetHandle()) failed, VkResult=-4                              
- at /home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71                                                             
- with error VK_ERROR_DEVICE_LOST                                                    
-Fatal error: [File:/home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanUtil.cpp] [Line: 958]                                     
-VulkanRHI::vkQueueSubmit(Queue, 1, &SubmitInfo, Fence->GetHandle()) failed, VkResult=-4                                                                                 
- at /home/bst/Software/UnrealEngine/UnrealEngine/Engine/Source/Runtime/VulkanRHI/Private/VulkanQueue.cpp:71                                                             
- with error VK_ERROR_DEVICE_LOST
-<<<<<RED TEXT END>>>>>>
-Signal 11 caught.                                                                   
-Malloc Size=65538 LargeMemoryPoolOffset=65554                                       
-CommonUnixCrashHandler: Signal=11                                                   
-Malloc Size=36347 LargeMemoryPoolOffset=101931 
-Malloc Size=72696 LargeMemoryPoolOffset=174648 
-Malloc Size=100442 LargeMemoryPoolOffset=275114 
-Malloc Size=36347 LargeMemoryPoolOffset=311483 
-Malloc Size=36347 LargeMemoryPoolOffset=347851 
-Malloc Size=72696 LargeMemoryPoolOffset=420568 
-Malloc Size=100622 LargeMemoryPoolOffset=521214 
-Malloc Size=36360 LargeMemoryPoolOffset=557592 
-[2022.03.02-14.59.09:524][  2]LogCore: === Critical error: ===
-Unhandled Exception: SIGSEGV: invalid attempt to write memory at address 0x0000000000000003
+Project dir contains a Makefile which includes a lot of different targets
 
-* Install on BSTPG Visualizer Console
+I tried this:
+
+: make UE4Editor
+
+... a very long compilation process started...
+
+... eventually the terminal process ends and quits - NOTHING
+
+
+
+tried this:
+
+: make TestCPPEditor
+
+.... compiled for a short while, then terminal process just ended...
+
+
+
+
+tried running UE4Editor again and selecting TestCPP from the list of recent projects:
+- OMG IT WORKED!
+
+** Install on BSTPG Visualizer Console (Apr/May 2022)
+*** Summary
+
+Unreal Engine version: 5.0.1
+Status: NOT WORKING
+
+Needed to install obsolete package lissl to run GenerateProjectFiles.sh
+
+*** Installation Details
 
 clone github repo - 15.72 GB
 
@@ -286,9 +231,15 @@ run make
   - the biggest one is 4008 actions!
 - end
 
+run the editor:
+- dfferent binary name for UE5, something like UnrealEngineEditor
+- CRASHES at about 80-something percent, just like on the laptop did
 
+* When Unreal Crashes
+crash reports are saved here:
+- UnrealEngine/Engine/Saved/Crashes
 
-* beginner tutorials
+* Beginner Tutorials
 
 from phoenix
 https://www.udemy.com/course/unrealblueprint/
@@ -299,3 +250,17 @@ https://www.unrealengine.com/en-US/onlinelearning-courses/your-first-hour-in-unr
 
 from seamus
 https://www.linkedin.com/learning/topics/unreal-engine-5?u=57077561
+
+
+
+MORE
+
+adding Unreal to PATH etc:
+https://stackoverflow.com/questions/67233814/how-to-buildrun-unreal-c-project-on-linux
+
+maybe look at this video: Unreal Engine C++ Project Setup, From Scratch
+https://www.youtube.com/watch?v=94FvzO1HVzY
+
+* C++ and Blueprints
+
+Unreal Blueprints is a visual programming system (nodes & wires).
