@@ -1,13 +1,218 @@
-WINDOWS QUICKSTART GUIDE
+#+title: Windows Quick-Reference
 
-* COMMAND PROMPT
+* Introduction
 
-dir --- list directory contents
-cd  --- change dir
-help --- print list of commands
-exit --- 
+Use powershell
 
+* Windows Filesystem
 
-* FILE PERMISSIONS
+my files are here:
+: C:\Users\Vaio\Documents\Ben
+
+* Powershell
+** Powershell Quick-Reference
+
+A lot of basic commands are the same as unix shell:
+- ls
+- cd
+- mkdir
+
+** Introduction
+
+The PowerShell design integrates concepts from many different
+environments. Several of the concepts will be familiar to people with
+experience in shells or programming environments. However, few people
+will know about all of them. Looking at some of these concepts
+provides a useful overview of the shell.
+
+OUTPUT IS OBJECT-BASED
+
+Unlike traditional command-line interfaces, PowerShell cmdlets are
+designed to deal with objects. An object is structured information
+that is more than just the string of characters appearing on the
+screen. Command output always carries extra information that you can
+use if you need it.  If you've used text-processing tools to process
+data in the past, you'll find that they behave differently when used
+in PowerShell. In most cases, you don't need text-processing tools to
+extract specific information. You directly access portions of the data
+using standard PowerShell object syntax.
+
+POWERSHELL USES SOME C# SYNTAX
+
+PowerShell is built on the .NET Framework. It shares some syntax
+features and keywords with the C# programming language. Learning
+PowerShell can make it much easier to learn C#. If you're already
+familiar with C#, these similarities can make learning PowerShell
+easier.
+
+** Consistent Verb-Noun Command Naming System
+
+PS> Get-Command
+... lists all cmdlets
+
+PS> Get-Command -Verb Get
+... lists all cmdlets which use the verb 'get'
+
+** Consistent Standard Parameters
+
+-?
+-name
+
+-WhatIf
+-Confirm
+-Verbose
+-Debug
+-Warn
+-ErrorAction
+-ErrorVariable
+-OutVariable
+-OutBuffer
+
+* Command Prompt (CMD.EXE)
+** Command Prompt Quick-Reference
+
+dir   - list directory contents
+cd    - change dir
+help  - print list of commands
+exit  -
+where - kind of like ~which~ in unix
+
+** Basic Usage
+
+Previous Commands in Command History: You can use the up/down arrow
+keys to scroll through the previous/next command in the command
+history.
+
+Auto-Complete with TAB: Type the first few characters of a
+filen/directory name, and press TAB key to auto-complete the
+file/directory name. Press TAB key repeatedly to cycle through all the
+matches.
+
+Copy/Paste: In the latest CMD, you can use Ctrl-c/Ctrl-v for
+Copy/Paste, by enabling "Enable Ctrl Key Shortcuts" (via click on the
+CMD icon (top-left corner) ⇒ Properties ⇒ Options ⇒ Edit Options ⇒
+Check "Enable Ctrl Key Shortcuts").
+
+(In the earlier version of CMD, you need to enable Copy/Paste by
+clicking on the CMD icon (top-left corner) ⇒ Properties ⇒ Options ⇒
+Edit Options ⇒ Check "QuickEdit Mode". Once enabled, you can
+right-click to copy the highlighted text, and another right-click to
+paste on the command-line.)
+
+Moving the Command-Line Cursor: In CMD, you CANNOT use mouse pointer
+to move the command-line cursor. Instead, you need to use
+Left/Right-Arrow, Backspace or Delete keys to move the command-line
+cursor.
+
+These are the various ways of moving the command-line cursor:
+- Left/Right Arrow Key: Move the cursor one character to the left/right.
+- Backspace/Delete Key: delete the previous/current character under the cursor.
+- ESC Key: Clear command-line.
+- Home/End Keys: Move to the begin/end of command line.
+- Ctrl + Left/Right-Arrow Key: Move one "word" to the left/right.
+
+Tips and Tweaks for CMD
+- CMD is NOT case-sensitive.
+- The screen buffer size (controlling the amount of messages retained in the screen) can be configured under "CMD icon" ⇒ "Properties" ⇒ "Layout". You should set to a bigger number (500-2000), so that you can view more old messages.
+- You can also change the colors and font via "CMD icon" ⇒ "Properties" ⇒ "Colors" and "Properties" ⇒ "Font".y
+
+** Helping Yourself
+
+> help
+prints list of commands
+
+> help cd
+prints help for the CD command
+
+** Navigation
+
+To set or change the current drive, enter the drive letter followed by a colon (:), e.g.,
+Prompt> d:    // Change the current drive to D. The prompt changes to D:\...
+D:\...> c:    // Change the current drive to C. The prompt changes to C:\...
+C:\...>
+
+2.5  Change Directory (cd) Command
+To change current working directory, under the current drive, use command "cd new-path" (change directory).
+It is important to take note that you need to set the current drive first (via "x:" command) before setting the current directory under the current drive.
+You can specify new-path in two ways: absolute or relative. An absolute path begins with a "\" or root directory. A relative path is relative to the current working directory and does NOT begin with a leading "\". For example,
+Prompt> c:
+   // Set current drive to C. The prompt changes to C:\...
+C:\....> cd \
+   // Set current directory to the root directory of the current drive
+C:\> cd Windows
+   // Set current directory to "Windows" relative to current directory of the current drive
+C:\Windows> cd system
+   // Set current directory to "system" relative to current directory of the current drive
+C:\Windows\system> cd \myproject\java
+   // Set current directory absolutely to "\myproject\java" of the current drive
+C:\myproject\java> cd "\Program Files\java\jdk1.7.0_07\bin"
+   // Set current directory absolutely. Enclosed with double quotes if pathname contains blank.
+C:\Program Files\java\jdk1.7.0_07\bin> d:
+   // Set the current drive to D drive
+D:\....> cd \
+   // Change directory to the root of the current drive
+D:\> cd Java
+   // Change directory to the "Java" sub-directory of the current directory
+D:\Java>
+
+You can use ".." (double-dot) to refer to the parent directory and "." (single-dot) to refer to current directory. For example,
+C:\Program Files\java\jdk1.7.0_07\bin> cd ..   // Parent directory
+C:\Program Files\java\jdk1.7.0_07> cd ..
+C:\Program Files\java> cd ..
+C:\Program Files>
+
+** Directory Listing - 2.6  Directory (dir) Command
+
+You can list the contents of the current directory via the dir command, for example,
+Prompt> dir              // List of contents of the current directory
+......
+Prompt> dir Hello.java   // Show the file "Hello.java" only
+Wildcards * and ?
+You can use wildcards for pattern matching. The wildcard * matches zero or more (any) characters; ? matches one (any) character.
+Prompt> dir *.java  // List files ending with ".java"
+.....
+Prompt> dir test*   // List files starting with "test"
+.....
+
+* File Permissions
 
 right-click-->Security-->...
+
+* Windows and Emacs
+** Installation and Setup
+
+First, Install git (it will be required later on) - download and run
+installer from the git website.
+
+Now, download and run the emacs installer.
+
+Open emacs. Bring up the windows menu and type "emacs" to search for
+the emacs launcher.
+
+I will use magit to clone my emacs config from github. This means that
+I don't need to know how to use git on windows, however it does
+require an underlying git installation, hence the first step of this
+process.
+
+Magit is not in the gnu package repo, so add melpa to the list of
+package archives.
+
+Find the emacs home dir with ~C-x d ~~
+
+Create the file ~.emacs.d/init.el~ and add this:
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize) ; required before use-package will work
+
+Now restart emacs and run package-list-packages
+
+Install magit
+
+Inside .emacs.d, use magit-clone to clone my emacs config from github.
+
+Follow instructions in the top level README to complete setup.
+
+Now, clone my snippets collection also.
+
+Can now restart emacs and hopefully everything will be setup.

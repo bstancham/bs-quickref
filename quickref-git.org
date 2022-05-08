@@ -756,3 +756,18 @@ Verify that the remote URL has changed.
  # Verify new remote URL
  > origin  git@github.com:USERNAME/REPOSITORY.git (fetch)
  > origin  git@github.com:USERNAME/REPOSITORY.git (push)
+
+* PERSONAL ACCESS TOKEN (PAT)
+
+GENERAL NOTES
+- delete PATs as soon as they are not needed
+- set short expiry dates
+
+GENERATE A NEW PAT:
+- Settings-->Developer Settings-->Personal Access Tokens
+- create a new token
+- choose settings for new PAT:
+  - NOTE: some identifying info
+  - EXPIRY:
+  - SCOPE: usually just choose "repo"
+- copy the generated token and STORE IT SOMEWHERE SAFE!
