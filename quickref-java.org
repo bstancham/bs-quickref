@@ -1,12 +1,12 @@
-==== JAVA QUICKSTART GUIDE ===========================================
+#+title: Java Quick-Reference
 
-FUNDAMENTALS:
+* JAVA FUNDAMENTALS
 - compiled
 - static typed
 - one class per source file (although inner-classes are allowed)
 - hosted: JVM ---> Java Virtual Machine
 
-* ========================== JAVA VERSIONS ===========================
+* JAVA VERSIONS
 Long term support (LTS):
 - java 11 (released September 2018)
 - java 17 (due for release in September 2021)
@@ -14,46 +14,68 @@ Long term support (LTS):
 For Raspberry Pi:
 - July 2021: use java 11
 
-* =================== COMPILING AND RUNNING PROGRAMS ===================
+* HOW TO SWITCH BETWEEN DIFFERENT JAVA VERSIONS OR IMPLEMENTATIONS
+
+First we get the list of available alternatives using -l option...
+
+: $ update-java-alternatives -l
+
+The output is something like this:
+
+#+BEGIN_SRC
+java-1.5.0-sun 53 /usr/lib/jvm/java-1.5.0-sun
+java-6-openjdk 1061 /usr/lib/jvm/java-6-openjdk
+java-6-sun 63 /usr/lib/jvm/java-6-sun
+#+END_SRC
+
+Now select one of them, for example 'java-6-sun':
+
+: $ echo update-java-alternatives -s java-6-sun
+
+Finally, check that it has been changed:
+
+: $ java -version
+
+* COMPILING AND RUNNING PROGRAMS
 ** COMPILATION
-$ javac MainClassName.java
 
-$ javac src/path/to/MainClass.java -d build
+Basic compilation:
+: $ javac MainClassName.java
 
-$ jar cvf blahblah.jar build/path/to/*.class
+Specify destination dir with -d option:
+: $ javac src/path/to/MainClass.java -d build
+
+Pack classes into a jar:
+: $ jar cvf blahblah.jar path/to/classes/*.class
 
 Including a jar on the classpath:
 
-
-
-
-
 ** RUNNING
-$ java MainClassName
+
+: $ java path.to.MainClass
+
+** RUNNING JAR FILES
+
+Execute a jar (only works if jar manifest has a main class defined)
+: $ java -jar pingo.jar
+
+Execute a jar without main class in manifest (include the jar on the classpath):
+: $ java -cp path/to/jarfile.jar path.of.MainClass
+
+Execute a jar with classpath...
+... the -jar command causes -cp to be ignored, so instead, we put all the
+files and jars we need on the classpath, then give the main class (which is
+inside one of the jars on the classpath):
+: $ java -cp .:lib/plopplop.jar:lib/pingo.jar path.to.MainClass
+
+** MORE ABOUT JAR FILES
+
+List content of jar file:
+: $ jar tf FILENAME.jar
 
 ** BUILDING JAVADOC
 
 MAKE JAVADOC:
-
-** JAR FILES
-
-execute a jar (only works if jar manifest has a main class defined)
-$ java -jar pingo.jar
-
-execute a jar without main class in manifest...
-... include the jar on the classpath
-$ java -cp path/to/jarfile.jar path.of.MainClass
-
-execute a jar with classpath...
-... the -jar command causes -cp to be ignored, so instead, we put all the
-files and jars we need on the classpath, then give the main class (which is
-inside one of the jars on the classpath)...
-$ java -cp .:lib/plopplop.jar:lib/pingo.jar path.to.MainClass
-
-
-
-list content of jar file
-$ jar tf FILENAME.jar
 
 ** JUNIT
 
@@ -66,7 +88,8 @@ http://www.vogella.com/tutorials/JUnit/article.html#usingjuni4
 
 http://findbugs.sourceforge.net/index.html
 
-* ======================== GRADLE (build tool) =========================
+* GRADLE (build tool)
+** Introduction
 - gradle is the current thing (2017)
 - mostly automatic, based on using a conventional project structure...
 - will automatically download dependencies from repository!
@@ -244,7 +267,7 @@ SITUATION: gradle init --type java-application
 PROBLEM:
 SOLUTION:
 
-* ============================= PROFILING ==============================
+* PROFILING
 ** VisualVM (Oracle)
 ... default profiling tool bundled with oracle's JDK...
 ... not included in debian openjdk package, but available separately:
@@ -263,7 +286,7 @@ Applications window on the left hand side...
 
 ** Java Mission Control
 
-* ============================== DEBUGGER ==============================
+* DEBUGGER
 ** jdb --- command line debugger (comes with jdk)
 
 $ jdb [options] [class] [arguments]
@@ -316,7 +339,7 @@ Run program:
 > exit    --> exit jdb
 > catch <class id> --> break for specified exception
 
-* ====================== DIAGNOSE MEMORY LEAKS =======================
+* DIAGNOSE MEMORY LEAKS
 ** introduction
 A memory leak occurs when object references that are no longer needed are
 unnecessarily maintained.
@@ -349,12 +372,12 @@ https://blog.gceasy.io/2016/11/22/resolve-memory-leak/
 ** java.lang.OutOfMemoryError: unable to create new native thread
 https://dzone.com/articles/troubleshoot-outofmemoryerror-unable-to-create-new
 
-* ============= OTHER TOOLS FOR DIAGNOSIS AND DEBUGGING ==============
+* OTHER TOOLS FOR DIAGNOSIS AND DEBUGGING
 ** jps - list java processes on computer
 like ps but for java
 some java processes may not be listed by ps
 list java virtual machines instrumented on computer
-* ============================ NEW FEATURES ============================
+* NEW FEATURES
 
 JAVA 9
 - jshell REPL
@@ -370,7 +393,7 @@ JAVA 7
 - Simplified varargs method declaration
 - underscores in number literals
 
-* ================= JSHELL (JAVA REPL - since Java 9) ==================
+* JSHELL (JAVA REPL - since Java 9)
 
 TIPS:
 - Use TAB-completion to see which methods are available...
@@ -449,7 +472,7 @@ jshell> import static bsjshell.BSJS.*;
 Use a method...
 jshell> printByte((byte) 5);
 
-* =========================== JAVA AND EMACS ===========================
+* JAVA AND EMACS
 
 My Setup:
 
@@ -568,15 +591,16 @@ An index for the core Java classes (i.e. java.*) is provided built-in...
 utility installed on your system. The initial fetch is slow but Emacs
 will operate from its own cache after that.
 
-* ============================ HELLO WORLD =============================
-
+* HELLO WORLD
+#+BEGIN_SRC java
 public class HelloWorld {
     public static void main(String[] args) {
         System.out.println("Hello World!");
     }
 }
+#+END_SRC
 
-* ================== DIRECTORY STRUCTURE OF A PROJECT ==================
+* DIRECTORY STRUCTURE OF A PROJECT
 
 (DIR) src      # source files
 (DIR) build    # class files compile here
@@ -585,7 +609,7 @@ public class HelloWorld {
 (DIR) doc      # javadoc gets built here
       makefile # or build.xml if you're using ant
 
-* ======================== COMMENTS AND JAVADOC ========================
+* COMMENTS AND JAVADOC
 ** basics
 
 // single line comment
@@ -764,7 +788,7 @@ See <a href="http://groversmill.com/">Grover's Mill</a> for a history of the Mar
 
 todo...
 
-* ========================= IMPORT STATEMENTS ==========================
+* IMPORT STATEMENTS
 
 import info.bschambers.blockspace.util.Pt3D;
 // import the class Pt3D
@@ -779,7 +803,7 @@ import static info.bschambers.blockspace.TestUtil.*;
 java.util.Random rand = new java.util.Random();
 // ... this can sometimes be useful to avoid namespace clashes...
 
-* ============================= DATA TYPES =============================
+* DATA TYPES
 
 int      - 32 bit integer
 long     - 64 bit integer
@@ -826,7 +850,7 @@ BigDecimal rounded = bd.setScale(2, RoundingMode.HALF_UP); // result is 302.54
 
 double d = rounded.doubleValue();
 
-* ========================= BITWISE OPERATIONS =========================
+* BITWISE OPERATIONS
 
 byte   - 8 bits
 short  - 16 bits
@@ -901,7 +925,7 @@ byte b1 = 0b1111_1111;
 // ... however, I can force it by casting...
 byte b1 = (byte) 0b1111_1111;
 
-* ============================== OBJECTS ===============================
+* OBJECTS
 
 // minimal class...
 public class MyClass {
@@ -921,7 +945,7 @@ public class MyClass extends MySuperClass implements YourInterface {
     public int getI() { return i; }
 }
 
-* ======================= LOOPING AND ITERATION ========================
+* LOOPING AND ITERATION
 
 // standard for loop
 for (int i = 0; i < array.length; i++) {
@@ -971,7 +995,7 @@ public void remove() // OPTIONAL: throw new UnsupportedOperationException
 // to use class in for-each loop, must implement Iterable<T>...
 public Iterator<T> iterator()
 
-* ========================== SWITCH STATEMENT ==========================
+* SWITCH STATEMENT
 
 ... Switch works with byte, short, char, and int primitive data types. It also
 works with enumerated types (see Enum) the String class, and a few special
@@ -999,11 +1023,11 @@ switch (month) {
 }
 System.out.println(monthString); // will print out "August"
 
-* ==== CLASS CASTING ===================================================
+* CLASS CASTING
 
 int num = (int) 32.7429; // cast double into int
 
-* ==== GENERICS ========================================================
+* GENERICS
 Generics enable types (classes and interfaces) to be parameters when defining classes, interfaces and methods.
 
 //
@@ -1049,8 +1073,7 @@ JoinMethod jm = Misc.chooseRandom(joiners);
 // this is also valid, but not neccessary
 JoinMethod jm = Misc.<JoinMethod>chooseRandom(joiners);
 
-* ========================= DATA STRUCTURES ==========================
-
+* DATA STRUCTURES
 ** ARRAYS
 
 NOTE: arrays are a special case which are not so object-oriented as most of java
@@ -1177,7 +1200,7 @@ predictable iteration order (which is insertion order by default), you could
 easily swap out the HashMap for a LinkedHashMap. This wouldn't be as easy if you
 were using Hashtable.
 
-* ==== ENUMS ===========================================================
+* ENUMS
 
 An enum type is a special data type that enables for a variable to be
 a set of predefined constants. The variable must be equal to one of
@@ -1242,7 +1265,7 @@ public enum Planet {
     }
 }
 
-* ==== VARARGS =========================================================
+* VARARGS
 
 //  Varargs are converted into an array, so you use them exactly as you would use
 // an array...
@@ -1262,7 +1285,7 @@ public double min(double first, double ... rest) {
     return min;
 }
 
-* ==== ASSERTIONS ======================================================
+* ASSERTIONS
 
 Assertions are boolean expressions which verify assumptions that we
 make within code we develop. If the expression is false, the program
@@ -1280,7 +1303,7 @@ using the -enableassertions flag (-ea for short). Assertions are for
 debugging: your program should not rely on assertions for normal
 operation since they may be disabled.
 
-* ==== STRING METHODS ==================================================
+* STRING METHODS
 
 String str = "hello!"; // string literal
 String str2 = new String(str); // new constructor makes a copy of the input string
@@ -1339,9 +1362,10 @@ String s = String.format("A few format codes used --> string:%s number:%d", str,
 // ... find number of full stops in str:
 str.length() - str.replace(".", "").length()
 
-* ==== REGULAR EXPRESSIONS =============================================
+* REGULAR EXPRESSIONS
 
-// QUICK EXAMPLE
+A QUICK EXAMPLE:
+#+BEGIN_SRC java
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 Pattern p = Pattern.compile(""); // regex
@@ -1351,6 +1375,8 @@ while (m.find()) {
                       "index %d and ending at index %d.%n",
                       m.group(), m.start(), m.end());
 }
+
+#+END_SRC
 
 // EXAMPLES:
 // note: backslash has to be escaped in string...
@@ -1439,7 +1465,7 @@ $    The end of a line
 \Z   The end of the input but for the final terminator, if any
 \z   The end of the input
 
-* ==== OBJECT COMPARISON ===============================================
+* OBJECT COMPARISON
 
 boolean x = 3 == 1 + 2; // true
 
@@ -1523,8 +1549,7 @@ object1 instanceof Class1
 SuperClass.isAssignableFrom(ChildClass)
 object1.getClass().isAssignableFrom(object2.getClass())
 
-* ==== HASH/HASHCODE ===================================================
-
+* HASH/HASHCODE
 ** OVERRIDING HASHCODE
 
 for nearly all cases reasonable good implementation was proposed in Josh Bloch's Effective Java in item 8. The best thing is to look it up there because the author explains there why the approach is good.
@@ -1574,7 +1599,7 @@ I used item 8 of Josh Bloch's "Effective Java" book. – dmeister Oct 4 '10 at 1
 
 @SimonAndréForsberg Well, computed hash code cannot be always unique :) Is a hashcode. However I got the idea: the prime number has only one multiplier, while non-prime has at least two. That creates an extra combination for multiplication operator to result the same hash, i.e. cause collision. – dma_k Feb 15 '13 at 14:08
 
-* ==== DEEP COPY OF OBJECT =============================================
+* DEEP COPY OF OBJECT
 ... DON'T override Object.clone() (see internet for reasons)
 
 ... Make a copy constructor for the class:
@@ -1583,8 +1608,7 @@ public Thing(Thing original) {
     // ... make sure that no references are shared!
 }
 
-* ==== GUI =============================================================
-
+* GUI
 ** awt (Abstract Windowing Toolkit)
 
 The original java GUI library...
@@ -1624,11 +1648,11 @@ $ sudo apt-get install openjfx
 *** alignment of a JLabel (probably applies to other components also)
 see /home/bsc/ComputerWork/PROJECTS/bstpg/TESTGUI/src/main/java/info/bschambers/bstpg/testgui/TPGListChooserDialog.java
 
-* ========================== FILE OPERATIONS ===========================
+* FILE OPERATIONS
 
 packages:
-java.io
-java.nio
+- java.io
+- java.nio
 
 ** READ A FILE
 import java.util.List;
@@ -1708,7 +1732,7 @@ try {
 File.separator // the system dependent file-path separator
 String newline = System.getProperty("line.separator");
 
-* ========================= EXCEPTION HANDLING =========================
+* EXCEPTION HANDLING
 ** THROW AN EXCEPTION
 throw new NullPointerException("optional message string");
 
@@ -1740,7 +1764,7 @@ public static class UnrecognisedBlockException extends RuntimeException {
     }
 }
 
-* ======================= COMPILER ANNOTATIONS =======================
+* COMPILER ANNOTATIONS
 
 @Override
 ... compiler throws an exception if the overriden method is not detected in
@@ -1766,7 +1790,7 @@ from parameterized vararg"...
 no danger that your method will assign an incorrect data type and
 therefore of unexpected ClassCastException
 
-* ===================== ANONYMOUS INNER CLASSES ======================
+* ANONYMOUS INNER CLASSES
 
 interface Spangler {
     public void spangle();
@@ -1782,7 +1806,7 @@ methodWhichTakesASpangler(new Spangler() {
 // same thing using lambda...
 methodWhichTakesASpangler(() -> System.out.println("SPANGLE!"));
 
-* ========== FUNCTIONAL INTERFACES/LAMBDA/METHOD REFERENCES ==========
+* FUNCTIONAL INTERFACES/LAMBDA/METHOD REFERENCES
 ** introduction
 Instead of using
 ANONYMOUS CLASS
@@ -1959,7 +1983,7 @@ calculateOnShipments(l, Shipment::calculateWeight);
 
 #+END_SRC
 
-* =========================== RANDOM NUMBERS ===========================
+* RANDOM NUMBERS
 
 Math.random() // random double between 0 (inclusive) and 1 (exclusive)
 
@@ -1968,7 +1992,7 @@ Random rand new Random();
 rand.nextInt();   // a random int
 rand.nextInt(10); // a random int between 0 and 9
 
-* ========== SERIALIZATION: loading and saving java objects ==========
+* SERIALIZATION: loading and saving java objects
 ** introduction
 USE EITHER:
 ... built in interface java.io.Serializable
@@ -2108,7 +2132,7 @@ public class GsonTest {
 }
 #+END_SRC
 
-* ==================== INTERFACES/ABSTRACT METHODS =====================
+* INTERFACES/ABSTRACT METHODS
 
 SINCE JAVA 8 INTERFACES CAN DEFINE DEFAULT METHODS
 
@@ -2122,7 +2146,7 @@ public interface flipper {
 
 }
 
-* =================== MULTITHREADING AND CONCURRENCY ===================
+* MULTITHREADING AND CONCURRENCY
 ** THREADS AND PROCESSES
 *** THREAD
 Threads are sometimes called lightweight processes. Both processes and
@@ -2465,24 +2489,24 @@ The java.util.concurrent package includes a number of additions to the Java Coll
 
 All of these collections help avoid Memory Consistency Errors by defining a happens-before relationship between an operation that adds an object to the collection with subsequent operations that access or remove that object.
 
-* ================================ MISC ================================
+* MISC
 
-// pause for 500 milliseconds
+PAUSE PROGRAM FOR 500 MILLISECONDS
+#+BEGIN_SRC java
 try {
     Thread.sleep(500);
 } catch (InterruptedException e) {}
+#+END_SRC
 
-
-
-// SYSTEM PROPERTIES
+GET SYSTEM PROPERTIES
+#+BEGIN_SRC java
 // get user home dir
 String home = System.getProperty("user.home");
 // file separator
 String home = System.getProperty("file.separator");
+#+END_SRC
 
-
-
-// ANSI TERMINAL CONTROL SEQUENCES
+* ANSI TERMINAL CONTROL SEQUENCES
 in java "\e" gets me an illegal control character exception...
 ... instead, use "\u001b"... unicode literal for ESC character
 
@@ -2491,7 +2515,8 @@ in java "\e" gets me an illegal control character exception...
 "\u001b[2K" --- Erase In Line (erase whole line)
 "\u001b[0K" --- Erase In Line (erase from cursor to end of line)
 "\u001b[1K" --- Erase In Line (erase from cursor to beginning of line)
-* =============================== EMAIL ================================
+
+* EMAIL
 ** simple
 import java.util.Properties;
 import javax.mail.*;
@@ -2650,7 +2675,7 @@ $ keytool -list -cacerts -storepass changeit
 
 haven't done this yet...
 * RUN SHELL COMMAND
-* =========================== PARSING XML ============================
+* PARSING XML
 ** DOM or SAX
 - DOM = Document Object Model
 - SAX = Simple API for XML
