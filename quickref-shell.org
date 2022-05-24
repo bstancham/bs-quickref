@@ -1,5 +1,4 @@
-UNIX/LINUX SHELL QUICKSTART GUIDE - (using BASH)
-... also see: ComputerWork/System/
+#+title: Unix/Linux Shell Quick-Reference (using BASH)
 
 * BASH BASICS
 
@@ -214,17 +213,35 @@ $ sh -c COMMAND # run command in new non-interactive shell
 * MAAGING PACKAGES
 ** manage packages via APT (Advanced Package Manager)
 
-$ apt-cache search spectrum
+Process of searching for and installing a ZX Spectrum emulator:
 
-$ apt-cache search spectrum | grep zx
+: $ apt-cache search spectrum
 
-$ apt-cache show fbzx
+: $ apt-cache search spectrum | grep zx
 
-$ sudo apt-get install fbzx
+: $ apt-cache show fbzx
+
+: $ sudo apt-get install fbzx
+
+
+List all currently installed packages:
+
+: $ apt list --installed
+
+
+Remove a package (removing Microsoft Visual Studio Code):
+
+: $ sudo apt-get remove code
+
+Purge is same as remove, but also removes configuration files:
+
+: $ sudo apt-get purge code
 
 ** install a package directly from .deb file
 
-$ sudo dpkg -i code_1.60.2-1632313585_amd64.deb
+Installing Microsoft Visual Studio Code:
+
+: $ sudo dpkg -i code_1.60.2-1632313585_amd64.deb
 
 * GET DIRECTORY OR FILE PATH FROM GUI
 
