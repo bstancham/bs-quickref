@@ -273,40 +273,31 @@ searches sys.path for named module and run it as the main module
 >>> datetime.today()
 
 * PYTHON UTILITIES
-* PIP (package manager)
-** Installation
- $ sudo apt-get install python3-pip
-** Usage
- $ python -m pip install pgzero
+* PIP (Package Manager)
 
-or
-
- $ sudo pip install pgzero
-
-* pip
-easy to use package manager
-
-  $ sudo apt-get install python3-pip
+Install pip:
+: $ sudo apt-get install python3-pip
 
 Update pip:
-  $ pip3 install -U pip3
+: $ pip3 install -U pip3
 
-  $ pip3 install package-name
+Install a package:
+: $ pip3 install package-name
 
-  $ pip3 search "query"
+: $ pip3 search "query"
 
-  $ pip3 show package-name
+: $ pip3 show package-name
 
 List all installed packages:
-  $ pip3 list
+: $ pip3 list
 
-  $ pip3 list --outdated
+: $ pip3 list --outdated
 
-  $ pip3 install package-name --upgrade
+: $ pip3 install package-name --upgrade
 
-  $ pip3 install package-name --upgrade --force-reinstall
+: $ pip3 install package-name --upgrade --force-reinstall
 
-  $ pip3 uninstall package-name
+: $ pip3 uninstall package-name
 
 * Ipython/Jupyter
 ** About
@@ -362,12 +353,13 @@ Get documentation for a class:
 - ?pandas.core.frame.DataFrame <--- did't work for me!
 - SHIFT-TAB brings up class documentation for item under cursor
 
-* anaconda
+* Anaconda
+** Introduction
 
 Anaconda is a distribution of the Python and R programming languages for
 scientific computing, that aims to simplify package management and deployment.
 
-
+** Installation
 
 11/02/2022
 
@@ -380,6 +372,73 @@ got the hashsum with sha256sum and checked it against that published on the webs
 run the installer from commandline using:
 
 installed in ~/anaconda3
+
+** Uninstall Anaconda
+
+10/05/2022
+
+Anaconda website says, just remove the anaconda dir
+
+: $ rm -rf ~/anaconda3
+
+I also removed some config files I found in my homedir:
+
+: $ rm -rf ~/.anaconda ~/.conda
+
+** Anaconda Basics
+
+Create an Anaconda environment named "emi", specifying python version 3.8:
+
+: $ conda create --name emi python=3.8
+
+Activate the emi environment:
+
+: $ conda activate emi
+
+To deactivate the environment:
+
+: $ conda deactivate
+
+INSTALLING PACKAGES:
+- first, activate the environment
+- WARNING! avoid installing packages in the base environment
+- then install packages
+
+: $ conda activate emi
+: $ conda install tensorflow
+This is how we were told to install at UAL - not sure why they want us to use conda-forge...
+... the -y option means you don't have to type 'y' at a prompt half way through...
+: $ conda install -c conda-forge -y pandas jupyter
+
+Uninstall a package (acts on currently active environment):
+
+: $ conda uninstall pandas
+
+List installed packages in current environment:
+
+: $ conda list
+
+List all environments:
+
+: $ conda info --envs
+
+Delete/remove an environment (remove environment named "emi"):
+
+: $ conda remove --name emi --all
+
+Update packages:
+- I think that this updates everything in the current environment...
+
+: $ conda update --all
+
+Deactivate the base environment:
+- by default anaconda starts automatically with the shell - you will see "(base)" on the prompt
+- to deactivate conda completely just do ~conda deactivate~ when in (base), this should completely shut down conda
+- to restart conda, do ~conda activate~
+
+If you want to stop conda from automatically activating the base environment, run this command:
+
+: $ conda config --set auto_activate_base false
 
 * PYTHON ENVIRONMENTS/VIRTUAL ENVIRONMENTS
 ** intro
@@ -1587,3 +1646,7 @@ other software used to create the image.
 * PIL/PILLOW (working with images)
 PIL (Python Imaging Library)
 Pillow is the friendly PIL fork
+* NUMPY
+* PYTHON ML: PANDAS
+* PYTHON ML: TENSORFLOW
+* PYTHON ML: KERAS
