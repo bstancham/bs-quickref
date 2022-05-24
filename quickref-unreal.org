@@ -1,265 +1,99 @@
-#+title: Quick-Reference: Unreal Engine
+#+title: Unreal Engine Quick-Reference
 
 * Installation
-** intallation instructions
-Linux quickstart
+** Introduction
+
+Follow the instruction here (Linux Quickstart):
+
 https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/Linux/BeginnerLinuxDeveloper/SettingUpAnUnrealWorkflow/
 
-another guide
-https://rhyce.dev/2019/05/02/compiling-unreal-engine-4-from-source/
+On Linux, there is no precompiled binary - we have to clone the repo from github
+and compile it ourselves.
+
+Have to sign up for an account with Epic and then link the Epic account to your
+github account in order to gain access.
 
 ** Install on Laptop (Asus Zenbook 13)
-*** Summary
 
 Unreal Engine version: 4.27
 Status: WORKING (but quite laggy)
 
-Installed proprietory graphics driver (don't know whether it made a difference).
+Compiled OK (took ALL DAY)
 
-Run editor with special options for my laptop graphics card:
+Installed proprietory graphics drivers (don't know whether it made a
+difference).
+
+Running the editor, always crashed at 80-something percent, until I discovered
+some special command line options for my laptop graphics card:
+
 : $ __NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only ./UE4Editor
 
-*** Installation Details: (Feb 2022)
+Found out about these options from this video ("Unreal Engine run on laptop with
+MX nvidia optimus graphics vulkan prime offload rendering linux"):
 
-Need to make an account with Epic Games
-
-To install on Linux, have to clone the code repo from Github an compile it yourself:
-- link my Epic account with my Github account to get access to the repo
-- can now clone the repo - it was over 16GB!
-- run Setup.sh - say yes to the popup asking "register unreal file types?"
-- should get a success message
-  - Unreal dir is now 65.7GB on my computer!
-- run GenerateProjectFiles.sh
-  - Unreal dir is now 65.9GB on my computer!
-- run make
-  - finished at 12:45 (started around 9:45?)
-  - Unreal dir is now 108.3GB on my computer!
-UnrealBuildTool.exe UnrealInsights.target
-Total time in Local executor: 525.36 seconds
-Total execution time: 530.63 seconds
-
-Build appears to be successful
-
-Try to run Unreal Engine Editor:
-- spent a very long time compiling shaders, THEN CRASHED
-- try again with vulkan disabled (using command line flag -opengl4)
-  - CRASHED AGAIN
-
-
-
-CAUSE OF THE CRASH:
-
-Signal 11 caught.
-FUnixPlatformMisc::RequestExitWithStatus
-FUnixPlatformMisc::RequestExit
-[2022.02.24-13.27.55:115][  2]LogAudioMixer: Display: Audio Buffer Underrun (starvation) detected.
-
-Signal 11 is segmentation fault
-
-*** Installation Details: weds 02/03/2022
-
-try running editor again
-
-in dir: UnrealEngine/Engine/Binaries/Linux
-
- $ ./UE4Editor
-
-crashed again, as expected (see crash report):
-/home/bst/Software/UnrealEngine/Engine/Saved/Crashes/crashinfo--pid-87340-AC807E5728FB461AB884EAAE04437674
-
-try again with opengl option:
-
- $ ./UE4Editor -opengl4
-
-/home/bst/Software/UnrealEngine/Engine/Saved/Crashes/crashinfo--pid-88879-49C54E43C7C54FE99C7E9166B8CF99D0
-
-maybe more clues in the terminal output
-**** term output
-erl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-        LANGUAGE = "",
-        LC_ALL = (unset),
-        LC_TIME = "en_GB.UTF-8",
-        LC_MONETARY = "en_GB.UTF-8",
-        LC_ADDRESS = "en_GB.UTF-8",
-        LC_TELEPHONE = "en_GB.UTF-8",
-        LC_NAME = "en_GB.UTF-8",
-        LC_MEASUREMENT = "en_GB.UTF-8",
-        LC_IDENTIFICATION = "en_GB.UTF-8",
-        LC_NUMERIC = "en_US",
-        LC_PAPER = "en_GB.UTF-8",
-        LANG = "en_GB.UTF-8"
-    are supported and installed on your system.
-perl: warning: Falling back to a fallback locale ("en_GB.UTF-8").
-Signal 11 caught.
-[2022.03.02-13.05.29:888][  0]LogSlate: Request Window 'Unreal Engine 4 Crash Reporter' being destroyed
-[2022.03.02-13.05.29:888][  0]LogSlate: Window 'Unreal Engine 4 Crash Reporter' being destroyed
-[2022.03.02-13.05.29:891][  0]LogCore: Engine exit requested (reason: OnRequestExit)
-[2022.03.02-13.05.29:894][  0]CrashReportCoreLog: Final state (Receiver) = Ready
-[2022.03.02-13.05.29:894][  0]CrashReportCoreLog: Final state (Receiver) = Unknown UploadState value
-[2022.03.02-13.05.29:910][  0]LogSlate: Slate User Destroyed.  User Index 0, Is Virtual User: 0
-[2022.03.02-13.05.29:910][  0]LogCore: Engine exit requested (reason: CrashReportClientApp RequestExit; note: exit was already requested)
-[2022.03.02-13.05.29:910][  0]LogExit: Preparing to exit.
-[2022.03.02-13.05.29:912][  0]LogExit: Object subsystem successfully closed.
-[2022.03.02-13.05.29:914][  0]LogModuleManager: Shutting down and abandoning module ImageWrapper (10)
-[2022.03.02-13.05.29:914][  0]LogModuleManager: Shutting down and abandoning module InputCore (8)
-[2022.03.02-13.05.29:914][  0]LogModuleManager: Shutting down and abandoning module CoreUObject (6)
-[2022.03.02-13.05.29:914][  0]LogModuleManager: Shutting down and abandoning module PakFile (4)
-[2022.03.02-13.05.29:914][  0]LogModuleManager: Shutting down and abandoning module RSA (3)
-[2022.03.02-13.05.29:915][  0]LogExit: Exiting.
-[2022.03.02-13.05.29:915][  0]LogInit: Tearing down SDL.
-Engine crash handling finished; re-raising signal 11 for the default handler. Good bye.
-Segmentation fault (core dumped)
-
-**** try installing proprietory graphics drivers
-
-: $ sudo lshw -c video
-
-       product: GP108M [GeForce MX150]
-       vendor: NVIDIA Corporation
-       physical id: 0
-       bus info: pci@0000:01:00.0
-
-       configuration: driver=nouveau latency=0
-
-: $ sudo apt-get install nvidia-driver-470
-
-try again
-
-: $ ./UE4Editor
-
-crash again
-
-crash report:
-/home/bst/Software/UnrealEngine/Engine/Saved/Crashes/crashinfo--pid-112271-06894B00708A4E019C0BB1C1EBB0ED26
-
-try again with opengl option:
-: $ ./UE4Editor -opengl
-
-warning: OpenGL is no longer supported for desktop platforms, Vulkan will be used instead
-
-*** Installation Details: SUCCESS: using command line options from video (May 2nd 2022)
-
-See this video: "Unreal Engine run on laptop with MX nvidia optimus graphics vulkan prime offload rendering linux"
 https://youtu.be/xTTJZA9W6Hs
 
-He uses some command line options which I didn't use before:
+* Running on my Laptop (Asus Zenbook 13)
+
+Opening the editor - need to use special command line options for laptop
+graphics card:
+
 : $ __NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only ./UE4Editor
 
-OMG! Unreal Editor started
+Once the editor is running, dial down settings as low as possible:
+- Settings-->Scalability-->Engine Scalability Settings--> EVERYTHING TO LOW
+- Settings-->Scalability-->Material Quality Level-->LOW
 
-I chose these options:
-- Game
-- BluePrint, With Starter Pack
-- First Person
-- project name: Test
-
-Generating the project:
-- ran for some time, THEN IT CRASHED!
-
-
-
-
-Try again, choosing different initial project options:
-- Game
-- C++, No Starter Pack
-- First Person
-- project name: TestCPP
-
-Generating the project:
-- Seems that project was created ok
-- Terminal process exits and folder opens showing my project contents
-
-How do I run the project?
-
-Project dir contains a Makefile which includes a lot of different targets
-
-I tried this:
-
-: make UE4Editor
-
-... a very long compilation process started...
-
-... eventually the terminal process ends and quits - NOTHING
-
-
-
-tried this:
-
-: make TestCPPEditor
-
-.... compiled for a short while, then terminal process just ended...
-
-
-
-
-tried running UE4Editor again and selecting TestCPP from the list of recent projects:
-- OMG IT WORKED!
-
-** Install on BSTPG Visualizer Console (Apr/May 2022)
-*** Summary
-
-Unreal Engine version: 5.0.1
-Status: NOT WORKING
-
-Needed to install obsolete package lissl to run GenerateProjectFiles.sh
-
-*** Installation Details
-
-clone github repo - 15.72 GB
-
-run Setup.sh
-- start 1:09
-- needed to install some dependencies (build-essentials) - asked for sudo password
-- end 1:39
-
-run GenerateProjectFiles.sh
-- DANG! no useable version of libssl found
-  - a bunch of web searching followed
-    - eventually followed instructions here: https://askubuntu.com/questions/1261614/ubuntu-20-04-libssl-so-1-0-0-cannot-open-shared-object-file-no-such-file-or-d
-      - downloaded .deb file from here: http://security.ubuntu.com/ubuntu/pool/main/o/openssl1.0/
-      - this file: libssl1.0.0_1.0.2n-1ubuntu5.8_amd64.deb
-      - installed manually like this: sudo dpkg -i libssl1.0.0_1.0.2n-1ubuntu5.8_amd64.deb
-      - now it works!
-- start 2:22
-- end 2:23
-
-run make
-- start 2:25
-  - building 58 actions with 3 processes...
-  - ...
-  - the biggest one is 4008 actions!
-- end
-
-run the editor:
-- dfferent binary name for UE5, something like UnrealEngineEditor
-- CRASHES at about 80-something percent, just like on the laptop did
+Now, I can run the game in the editor and it's fairly responsive.
 
 * When Unreal Crashes
-crash reports are saved here:
+Crash reports are saved here:
 - UnrealEngine/Engine/Saved/Crashes
 
-* Beginner Tutorials
+* Running a Project
+** Running Project Editor
 
-from phoenix
-https://www.udemy.com/course/unrealblueprint/
+Running project in the editor:
 
-https://www.unrealengine.com/en-US/learn
+: $ UE4Editor ProjectName.uproject
 
-https://www.unrealengine.com/en-US/onlinelearning-courses/your-first-hour-in-unreal-engine-4?sessionInvalidated=true
+... here it is with special command line args for my laptop...
 
-from seamus
-https://www.linkedin.com/learning/topics/unreal-engine-5?u=57077561
-
+: $ __NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only ~/Software/UnrealEngine/Engine/Binaries/Linux/UE4Editor
 
 
-MORE
+Or just run the editor and then select project from recent projects, or browse for project location:
 
-adding Unreal to PATH etc:
-https://stackoverflow.com/questions/67233814/how-to-buildrun-unreal-c-project-on-linux
+: $ UE4Editor
 
-maybe look at this video: Unreal Engine C++ Project Setup, From Scratch
-https://www.youtube.com/watch?v=94FvzO1HVzY
+Running an uncooked game (run editor with -game flag):
+
+: $ UE4Editor ProjectName.uproject -game
+
+Run in a window (default is fullscreen):
+
+: $ UE4Editor ProjectName.uproject -game -windowed -resx=600 -resy=400
+
+Press ~ to bring up the console
+- type "exit" to exit the game
+
+** Running Uncooked Game
+
+Run from same dir as Unreal Editor binary: ~/Software/UnrealEngine/Engine/Binaries/Linux/UE4Editor
+
+: $ __NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only ./UE4Editor ~/Unreal_Projects/TestCPP/TestCPP.uproject -game -windowed -resx=600 -resy=400
+
+* Editor Basics
+
+Play (Alt) --> play game in editor
+
+Launch --> launch current map on device
+- starts VERY LENGTHY build process
+- eventually launched in fullscreen window
+- to exit, press ~ to bring up the console, then type "exit"
+
+Content Browser
+- Map files
 
 * C++ and Blueprints
 
