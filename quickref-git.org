@@ -1,299 +1,110 @@
-==== GIT QUICKSTART GUIDE ============================================
+#+title: GIT Quick-Reference
 
-* ==== BASIC USAGE (walkthrough) =====================================
+* Getting Started
+** Install Git
 
-GET MORE HELP:
-    $ man gittutorial
-    $ git help [COMMAND]
+: $ sudo apt-get install git
 
+** Essential Setup (BEFORE MAKING ANY COMMITS)
 
+Need to setup USERNAME and EMAIL ADDRESS because every git commit will use this
+information to identify you as the author.
 
-INSTALL:
-    $ sudo apt-get install git
+Set username and email addreass like this (only needs to be done once since
+we're using the --global option):
 
+: $ git config --global user.name "your_username"
+: $ git config --global user.email "email.address@example.com"
 
+View current global options to check what you've done:
 
-BASIC USAGE:
-    $ git init                   # creates .git dir in current dir.
-    $ git add [FILES...]         # add new files to be tracked.
-    $ git status                 # to see what files I changed.
-    $ git diff [FILE]            # to see exactly what I modified.
-    $ git commit -a -m "message" # commit all modified files (but not new ones, unless you've added them)
+: $ git config --global --list
 
-    $ git log      # shows a log of all commits starting from HEAD back to the initial commit. (It can do more than that, of course.)
-    $ git shortlog # concise version of log
-    $ git status   # shows which files have changed between the current project state and HEAD. Files are put in one of three categories: new files that haven’t been added (with git add), modified files that haven’t been added, and files that have been added.
-    $ git diff     # shows the diff between HEAD and the current project state. With the --cached option it compares added files against HEAD; otherwise it compares files not yet added (more precisely, git diff compares the staging area, that is, HEAD as modified by all added files, against the current state of all added files. Thus, if you add some but not all changed files and then run git diff, you will see only files that are changed but not added).
-    $ git mv       # mark files to be moved (rename), much like git add.
-    $ git rm       # mark files to be moved removed, much like git add.
+View individual config variables like this:
 
-    $ git ls-files # list files tracked in this repository
+: $ git config --global user.name
+: $ git config --global user.email
 
-    $ git-push     # push local commits to a remote repository
+* Basic Usage (Common Commands)
 
-    $ git-pull     # fetch from and integrate with another repository or a local branch
+GET MORE HELP
+: $ man gittutorial
+: $ git help [COMMAND]
 
-** basic usage walkthrough
+CREATE NEW GIT REPOSITORY IN CURRENT DIR
+: $ git init
 
-Move into base directory of project (directory may or may not be empty).
+BASIC USAGE
+: $ git add [FILES...]         # add new files to be tracked
+: $ git status                 # show what has changed since last commit
+: $ git diff [FILE]            # show exactly what is modified in FILE
+: $ git stage [FILES...]       # stage changes in FILES to be included in next commit
+: $ git commit -a -m "message" # commit all staged changes
 
-    $ git init
+PUSH (SEND CHANGES TO A REMOTE REPOSITORY)
+: $ git push
+: $ git push <DESTINATION> <BRANCH>
+: $ git push origin master
 
-Tell Git which files to include in the commit, with git add. If a file has not changed since the previous commit (the “parent” commit), Git will automatically include it in the commit you are about to perform. Thus, you only need to add files that you have added or modified. Note that it adds directories recursively, so git add . will add everything that has changed.
+PULL (FETCH FROM AND INTEGRATE WITH ANOTHER REPOSITORY OR A LOCAL BRANCH)
+: $ git pull
 
-    $ git add
+GET INFORMATION
+: $ git log      # show a log of all commits starting from HEAD back to the initial commit
+: $ git shortlog # concise version of log
+: $ git ls-files # list all files tracked in this repository
 
-Call git commit to create the commit object. The new commit object will have the current HEAD as its parent (and then, after the commit is complete, HEAD will point to the new commit object).
+MOVE, RENAME OR DELETE FILES
+: $ git mv       # mark files to be moved/renamed
+: $ git rm       # mark files to be removed/deleted
 
-    $ git commit
+RUNNING DIFF ON THE WHOLE REPO
 
-SHORTCUT:
-    $ git commit -a # automatically add all modified files (but not new ones).
+: $ git diff
 
-NOTE that if you modify a file but do not add it, then Git will include the previous version (before modifications) to the commit. The modified file will remain in place.
+Shows the diff between HEAD and the current project state.
 
-======================================================================
+With the --cached option it compares added files against HEAD; otherwise it
+compares files not yet added (more precisely, git diff compares the staging
+area, that is, HEAD as modified by all added files, against the current state of
+all added files. Thus, if you add some but not all changed files and then run
+git diff, you will see only files that are changed but not added).
 
-basic workflow might look like this:
+* Configuration
+** Showing and Configuring Settings
 
-Do some programming.
-    $ git status                 # to see what files I changed
-    $ git diff [file]            # to see exactly what I modified
-    $ git commit -a -m "message" # to commit
+To list all configuration settings that git can find:
 
-** Referring to a Commit
+: $ git config --list
 
-Now that you’ve created commits, how do you refer to a specific commit? Git provides many ways to do so. Here are a few:
+This will list global settings only:
 
-    By its SHA1 name, which you can get from git log.
-    By the first few characters of its SHA1 name.
-    By a head. For example, HEAD refers to the commit object referenced by HEAD. You can also use the name, such as master.
-    Relative to a commit. Putting a caret (^) after a commit name retrieves the parent of that commit. For example, HEAD^ is the parent of the current head commit.
+: $ git config --list --global
 
-* ============== INFORMATION AND STATS ABOUT REPOSITORY ===============
+To display an individual config setting (example):
 
-List all source files...
-$ git ls-files
-
-Count number of source files...
-$ git ls-files | wc -l
-
-Count number of lines in all source files...
-$ git ls-files | xargs wc -l
-
-* ====================== VERIFYING YOUR COMMITS ======================
-
-https://blog.nemit.fi/verify-your-github-commits-2fb42bff6048
-
-* ==== CLONING A REPOSITORY ==========================================
-** command line
-
- $ git clone https://github.com/bschambers/elisp-insanity-code
-
-The format for github URL is https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
-
-** on github
-1. Navigate to the main page of the repository
-2. Click "Clone or download"
-3. Either:
-   1. Download the repository as a zip file
-   2. Copy the URL provided and do 'git clone' in the terminal (as above)
-
-* ==== BACKING UP A LOCAL REPOSITORY =================================
-
-Backup repo into a single archive file so it can be emailed etc:
-    $ git bundle create PATH/BACKUP_FILENAME --all
-
-Unpacking archive file (NEW_DIR cannot already exist):
-    $ git clone PATH/BACKUP_FILENAME PATH/NEW_DIR
-
-* ==== BRANCHING =====================================================
-** CREATING A NEW BRANCH
-
-    git branch [new-head-name] [reference-to-(B)]
-
-or, for example:
-
-    git branch fix-headers HEAD^
-
-This command will create a new head with the given name, and point that head at the requested commit object. If the commit object is left out, it will point to HEAD.
-
-Now our commit tree looks like this:
-
-    (A) -- (B) ------- (C)
-            |           |
-       fix-headers    master
-                        |
-                       HEAD
-
-** SWITCHING BETWEEN BRANCHES
-
-In order to start working on the headers, you need to set the fix-headers head
-to be the current head. This is done with git checkout:
-
-    git checkout [head-name]
-
-This command does the following:
-
-    Points HEAD to the commit object specified by [head-name]
-    Rewrites all the files in the directory to match the files stored in the new HEAD commit.
-
-Important note: if there are any uncommitted changes when you run git checkout,
-Git will behave very strangely. The strangeness is predictable and sometimes
-useful, but it is best to avoid it. All you need to do, of course, is commit all
-the new changes before checking out the new head.
-
-...
-
-** Other useful commands at this point:
-
-    $ git branch # with no arguments lists the existing heads, with a star next to the current head.
-    $ git diff [head1]..[head2] # shows the diff between the commits referenced by head2 and head1.
-    $ git diff [head1]...[head2] # (three dots) shows the diff between head2 and the common ancestor of head1 and head2. For example, diff master...fix-headers above would show the diff between (D) and (B).
-    $ git log [head1]..[head2] # shows the change log between head2 and the common ancestor of head1 and head2. With three dots, it also shows the changes between head1 and the common ancestor; this is not so useful. (Switching head1 and head2, on the other hand, is very useful.)
-
-** COMMON BRANCHING USE PATTERNS
-
-A common way to use Git branching is to maintain one “main” or “trunk” branch
-and create new branches to implement new features. Often the default Git branch,
-master, is used as the main branch.
-
-So, in the example above, it may have been better to leave master at (B), where
-the paper was submitted to the reviewers. You could then start a new branch to
-store changes regarding new data.
-
-Ideally, in this pattern, the master branch is always in a releaseable
-state. Other branches will contain half-finished work, new features, and so on.
-
-This pattern is particularly important when there are multiple developers
-working on a single project. If all developers are adding commits in sequence to
-a single branch, then new features need to be added in a single commit, in order
-not to cause the branch to become unusable. However, if each developer creates a
-new branch to make a new feature, then commits can be made at any time, whether
-or not they are unfinished.
-
-This is what Git users mean when they say that COMMITS ARE CHEAP. If you are
-working on your own branch, there is no reason you need to be particularly
-careful about what you commit to the repository. It won’t affect anything else.
-
-** MERGING
-
-    $ git merge [head]
-    $ git pull . [head]
-
-They are identical in result. (Though the merge form seems simpler for now, the reason for the pull form will become apparent when discussing multiple developers.)
-
-These commands perform the following operations. Let the current head be called current, and the head to be merged called merge.
-
-    Identify the common ancestor of current and merge. Call it ancestor-commit.
-    Deal with the easy cases. If the ancestor-commit equals merge, then do nothing. If ancestor-commit equals current, then do a fast forward merge.
-    Otherwise, determine the changes between the ancestor-commit and merge.
-    Attempt to merge those changes into the files in current.
-    If there were no conflicts, create a new commit, with two parents, current and merge. Set current (and HEAD) to point to this new commit, and update the working files for the project accordingly.
-    If there was a conflict, insert appropriate conflict markers and inform the user. No commit is created.
-
-Important note: Git can get very confused if there are uncommitted changes in the files when you ask it to perform a merge. So make sure to commit whatever changes you have made so far before you merge.
-
-** COMMON MERGE USE PATTERNS
-
-There are two common reasons to merge two branches. The first, as explained above, is to draw the changes from a new feature branch into the main branch.
-
-The second use pattern is to draw the main branch into a feature branch you are developing. This keeps the feature branch up to date with the latest bug fixes and new features added to the main branch. Doing this regularly reduces the risk of creating a conflict when you merge your feature into the main branch.
-
-One disadvantage of doing the above is that your feature branch will end up with a lot of merge commits. An alternative that solves this problem is rebasing, although that comes with problems of its own.
-
-** DELETING A BRANCH
-
-After you have merged a development branch into the main branch, you probably don’t need the development branch anymore. Hence, you may want to delete it so it doesn’t clutter your git branch listing.
-
-To delete a branch, use git branch -d [head]. This simply removes the specified head from the repository’s list of heads.
-
-For example, in this repository from above:
-
-             +---------- (D) ---------------+
-            /             |                  \
-    (A) -- (B) -- (C) -------------- (E) -- (F)
-                          |                  |
-                     fix-headers           master
-                                             |
-                                            HEAD
-
-we probably don’t need the fix-headers head any more. So we can use:
-
-    git branch -d fix-headers
-
-and the resulting repository looks like:
-
-             +---------- (D) ---------------+
-            /                                \
-    (A) -- (B) -- (C) -------------- (E) -- (F)
-                                             |
-                                           master
-                                             |
-                                            HEAD
-
-Important note: git branch -d will cause an error if the branch to be deleted is not reachable from another head. Why? Consider the following repository:
-
-             +----------- (E)
-            /              |
-    (A) -- (B) -- (C)      |
-                   |       |
-                 head1   head2
-
-Say you delete head2. Now how can you use commit (E)? You can’t check it out, because it isn’t a head. And it doesn’t appear in any logs or anywhere else, because it isn’t an ancestor of head1. So commit (E) is practically useless. In Git terminology, it is a “dangling commit,” and its information is lost.
-
-Git does allow you to use the -D option to force deletion of a branch that would create a dangling commit. However, it should be a rare situation that you want to do that. Think very carefully before using git branch -D.
-
-* ============================= STASHING =============================
-
-Often, when you’ve been working on part of your project, things are in a messy
-state and you want to switch branches for a bit to work on something else. The
-problem is, you don’t want to do a commit of half-done work just so you can get
-back to this point later. The answer to this issue is the git stash command.
-
-Stashing takes the dirty state of your working directory — that is, your
-modified tracked files and staged changes — and saves it on a stack of
-unfinished changes that you can reapply at any time.
-
-$ git stash       # stashes all un-committed work and leaves the working directory clean
-
-$ git stash list  # lists all stashes
-
-$ git stash apply
-$ git stash pop   # apply stash and then get rid of it
-
-$ git stash drop  # get rid of a stash
-
-
-CREATING A BRANCH FROM A STASH
-
-$ git stash branch testchanges
-
-... creates a new branch called testchanges, checks out the commit you were on
-when you stashed your work, reapplies your work there, and then drops the stash
-if it applies successfully
-
-* ========================== CONFIGURATION ===========================
-** THE BASICS
-To list all settings that git can find:
-
- $ git config --list
-
-To display an individual config setting:
-
- $ git config user.name
+: $ git config user.name
+: $ git config --global user.name
 
 Use config command to change some settings:
 
- $ git config --global user.name "John Doe"
- $ git config --global user.email johndoe@example.com
+: $ git config --global user.name "John Doe"
 
-These settings will apply globally --> omit '--global' and it will apply only to the local repo:
+That setting will apply globally --> omit '--global' and it will apply only to the local repo:
 
- $ git config user.name "John Doe"
- $ git config user.email johndoe@example.com
+: $ git config user.name "John Doe"
 
-** ADVANCED CONFIGURATION
+** Linking to a Remote Repository
+
+To see a current list of remote repositories:
+
+: $ git remote -v
+
+To add a new remote repository:
+
+: $ git remote add <SOURCE-NAME> <REPOSITORY-PATH>
+
+** Advanced Configuration
 
  Can manually create a config file:
  ~/.gitconfig
@@ -558,7 +369,242 @@ These settings will apply globally --> omit '--global' and it will apply only to
     snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
     :END:
 
-* ====================== TAGS AND VERSION NUMBERS ======================
+* Information About Repository
+
+Show log of commits:
+
+: $ git log
+
+Show concise version of log:
+
+: $ git log --oneline # condensed (single line per entry) version of the above
+: $ git shortlog      # just shows commit messages
+
+List all tracked files:
+
+: $ git ls-files
+
+Count number of source files:
+
+: $ git ls-files | wc -l
+
+Count number of lines in all source files:
+
+: $ git ls-files | xargs wc -l
+
+* Referring to a Commit
+
+How do you refer to a specific commit? There are multiple ways to do so. Here
+are a few:
+- By its SHA1 name, which you can get from git log.
+- By the first few characters of its SHA1 name.
+- By a head. For example, HEAD refers to the commit object referenced by
+  HEAD. You can also use the name, such as master.
+- Relative to a commit. Putting a caret (^) after a commit name retrieves the
+  parent of that commit. For example, HEAD^ is the parent of the current head
+  commit.
+
+* Verifying Your Commits
+
+https://blog.nemit.fi/verify-your-github-commits-2fb42bff6048
+
+* Cloning a Repository
+** Command Line
+
+: $ git clone https://github.com/bschambers/elisp-insanity-code
+
+The format for github URL is https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+
+** On Github
+1. Navigate to the main page of the repository
+2. Click "Clone or download"
+3. Either:
+   1. Download the repository as a zip file
+   2. Copy the URL provided and do 'git clone' in the terminal (as above)
+
+* Backing Up a Local Repository
+
+The "bundle" command rolls up the whole repository into a single archive file. I
+have used this in the past for backup purposes i.e. so that I can easily add it
+to an email or upload to One Drive.
+
+Creating the bundle file:
+
+: $ git bundle create PATH/BACKUP_FILENAME --all
+
+Unpacking archive file (NEW_DIR cannot already exist):
+
+: $ git clone PATH/BACKUP_FILENAME PATH/NEW_DIR
+
+* Branching
+** Creating a New Branch
+
+: git branch [new-head-name] [reference-to-(B)]
+
+or, for example:
+
+: git branch fix-headers HEAD^
+
+This command will create a new head with the given name, and point that head at
+the requested commit object. If the commit object is left out, it will point to
+HEAD.
+
+Now our commit tree looks like this:
+
+    (A) -- (B) ------- (C)
+            |           |
+       fix-headers    master
+                        |
+                       HEAD
+
+** Switching Between Branches
+
+In order to start working on the headers, you need to set the fix-headers head
+to be the current head. This is done with git checkout:
+
+    git checkout [head-name]
+
+This command does the following:
+
+    Points HEAD to the commit object specified by [head-name]
+    Rewrites all the files in the directory to match the files stored in the new HEAD commit.
+
+Important note: if there are any uncommitted changes when you run git checkout,
+Git will behave very strangely. The strangeness is predictable and sometimes
+useful, but it is best to avoid it. All you need to do, of course, is commit all
+the new changes before checking out the new head.
+
+...
+
+** Other useful commands at this point:
+
+    $ git branch # with no arguments lists the existing heads, with a star next to the current head.
+    $ git diff [head1]..[head2] # shows the diff between the commits referenced by head2 and head1.
+    $ git diff [head1]...[head2] # (three dots) shows the diff between head2 and the common ancestor of head1 and head2. For example, diff master...fix-headers above would show the diff between (D) and (B).
+    $ git log [head1]..[head2] # shows the change log between head2 and the common ancestor of head1 and head2. With three dots, it also shows the changes between head1 and the common ancestor; this is not so useful. (Switching head1 and head2, on the other hand, is very useful.)
+
+** Common Branching Use Patterns
+
+A common way to use Git branching is to maintain one “main” or “trunk” branch
+and create new branches to implement new features. Often the default Git branch,
+master, is used as the main branch.
+
+So, in the example above, it may have been better to leave master at (B), where
+the paper was submitted to the reviewers. You could then start a new branch to
+store changes regarding new data.
+
+Ideally, in this pattern, the master branch is always in a releaseable
+state. Other branches will contain half-finished work, new features, and so on.
+
+This pattern is particularly important when there are multiple developers
+working on a single project. If all developers are adding commits in sequence to
+a single branch, then new features need to be added in a single commit, in order
+not to cause the branch to become unusable. However, if each developer creates a
+new branch to make a new feature, then commits can be made at any time, whether
+or not they are unfinished.
+
+This is what Git users mean when they say that COMMITS ARE CHEAP. If you are
+working on your own branch, there is no reason you need to be particularly
+careful about what you commit to the repository. It won’t affect anything else.
+
+** Merging
+
+    $ git merge [head]
+    $ git pull . [head]
+
+They are identical in result. (Though the merge form seems simpler for now, the reason for the pull form will become apparent when discussing multiple developers.)
+
+These commands perform the following operations. Let the current head be called current, and the head to be merged called merge.
+
+    Identify the common ancestor of current and merge. Call it ancestor-commit.
+    Deal with the easy cases. If the ancestor-commit equals merge, then do nothing. If ancestor-commit equals current, then do a fast forward merge.
+    Otherwise, determine the changes between the ancestor-commit and merge.
+    Attempt to merge those changes into the files in current.
+    If there were no conflicts, create a new commit, with two parents, current and merge. Set current (and HEAD) to point to this new commit, and update the working files for the project accordingly.
+    If there was a conflict, insert appropriate conflict markers and inform the user. No commit is created.
+
+Important note: Git can get very confused if there are uncommitted changes in the files when you ask it to perform a merge. So make sure to commit whatever changes you have made so far before you merge.
+
+** Common Merge Use Patterns
+
+There are two common reasons to merge two branches. The first, as explained above, is to draw the changes from a new feature branch into the main branch.
+
+The second use pattern is to draw the main branch into a feature branch you are developing. This keeps the feature branch up to date with the latest bug fixes and new features added to the main branch. Doing this regularly reduces the risk of creating a conflict when you merge your feature into the main branch.
+
+One disadvantage of doing the above is that your feature branch will end up with a lot of merge commits. An alternative that solves this problem is rebasing, although that comes with problems of its own.
+
+** Deleting a Branch
+
+After you have merged a development branch into the main branch, you probably don’t need the development branch anymore. Hence, you may want to delete it so it doesn’t clutter your git branch listing.
+
+To delete a branch, use git branch -d [head]. This simply removes the specified head from the repository’s list of heads.
+
+For example, in this repository from above:
+
+             +---------- (D) ---------------+
+            /             |                  \
+    (A) -- (B) -- (C) -------------- (E) -- (F)
+                          |                  |
+                     fix-headers           master
+                                             |
+                                            HEAD
+
+we probably don’t need the fix-headers head any more. So we can use:
+
+    git branch -d fix-headers
+
+and the resulting repository looks like:
+
+             +---------- (D) ---------------+
+            /                                \
+    (A) -- (B) -- (C) -------------- (E) -- (F)
+                                             |
+                                           master
+                                             |
+                                            HEAD
+
+Important note: git branch -d will cause an error if the branch to be deleted is not reachable from another head. Why? Consider the following repository:
+
+             +----------- (E)
+            /              |
+    (A) -- (B) -- (C)      |
+                   |       |
+                 head1   head2
+
+Say you delete head2. Now how can you use commit (E)? You can’t check it out, because it isn’t a head. And it doesn’t appear in any logs or anywhere else, because it isn’t an ancestor of head1. So commit (E) is practically useless. In Git terminology, it is a “dangling commit,” and its information is lost.
+
+Git does allow you to use the -D option to force deletion of a branch that would create a dangling commit. However, it should be a rare situation that you want to do that. Think very carefully before using git branch -D.
+
+* Stashing
+
+Often, when you’ve been working on part of your project, things are in a messy
+state and you want to switch branches for a bit to work on something else. The
+problem is, you don’t want to do a commit of half-done work just so you can get
+back to this point later. The answer to this issue is the git stash command.
+
+Stashing takes the dirty state of your working directory — that is, your
+modified tracked files and staged changes — and saves it on a stack of
+unfinished changes that you can reapply at any time.
+
+$ git stash       # stashes all un-committed work and leaves the working directory clean
+
+$ git stash list  # lists all stashes
+
+$ git stash apply
+$ git stash pop   # apply stash and then get rid of it
+
+$ git stash drop  # get rid of a stash
+
+
+CREATING A BRANCH FROM A STASH
+
+$ git stash branch testchanges
+
+... creates a new branch called testchanges, checks out the commit you were on
+when you stashed your work, reapplies your work there, and then drops the stash
+if it applies successfully
+
+* Tags and Version Numbers
 
 how to do version numbers...
 
@@ -590,63 +636,7 @@ $ git show v1.8.5
 include the beginning of the hash for the commit...
 $ git tag -a v0.4.5 -m "Blah blah..." 0bc4dc5
 
-* =========================== LISTING STUFF ============================
-
-compact view of log history
-$ git log --oneline
-
-show all tracked files
-$ git ls-files
-
-* GIT-PUSH
-** SETUP
-*** username and email
-Make sure that your Git username and email are configured. This is important,
-since every Git commit will use this information to identify you as the author.
-
-View the current global options to see whether your name and email are currently
-configured correctly:
-
- $ git config --global --list
-
-View individual config variables like this:
-
- $ git config --global user.name
- $ git config --global user.email
-
-To set your name or email address, use the following commands:
-
- $ git config --global user.name "YOUR_USERNAME"
- $ git config --global user.email "your_email_address@example.com"
-
-You’ll need to do this only once, since you are using the --global option. It
-tells Git to always use this information for anything you do on that system. If
-you want to override this with a different username or email address for
-specific projects or repositories, you can run the command without the --global
-option when you’re in that project, and that will default to --local. You can
-read more on how Git manages configurations in the Git Config documentation.
-Check your information
-
-*** remote
-
-To see a current list of remote repositories:
-
- $ git remove -v
-
-To add a new remote repository:
-
- $ git remote add <source-name> <repository-path>
-
-** USAGE
-
- $ git push <destination> <branch>
-
-e.g.
-
- $ git push origin master
-
-* GIT-PULL
-* GITHUB SSH SETUP
+* Github SSH Setup
 ** review your SSH keys on github
 click on your profile picture to get up the menu
 
@@ -757,7 +747,7 @@ Verify that the remote URL has changed.
  > origin  git@github.com:USERNAME/REPOSITORY.git (fetch)
  > origin  git@github.com:USERNAME/REPOSITORY.git (push)
 
-* PERSONAL ACCESS TOKEN (PAT)
+* Personal Access Token (PAT)
 
 GENERAL NOTES
 - delete PATs as soon as they are not needed
@@ -771,3 +761,52 @@ GENERATE A NEW PAT:
   - EXPIRY:
   - SCOPE: usually just choose "repo"
 - copy the generated token and STORE IT SOMEWHERE SAFE!
+
+* Git LFS (Large File Storage)
+** Introduction
+
+Git LFS is an open source Git extension for versioning large files.
+
+Git Large File Storage (LFS) replaces large files such as audio samples, videos,
+datasets, and graphics with text pointers inside Git, while storing the file
+contents on a remote server like GitHub.com or GitHub Enterprise.
+
+** Installation and Setup
+
+(May 2022) I downloaded the latest version from the website because the version
+in the apt repo was a bit old.
+
+Unpack the download into a new dir.
+
+Run the install script:
+
+: sudo ./install.sh
+
+Now, to set up git-lfs for your user account (only need to do this once for each
+user account):
+
+: git lfs install
+
+Look at git config and you should see some new entries relating to lfs:
+
+: git config --list --global
+
+** Tell Git LFS Which Files to Track
+
+Track all .png files with Git LFS:
+
+: git lfs track "*.png"
+
+This will add a line to .gitattributes.
+
+Make sure that .gitattributes is added to your repository to be tracked:
+
+: git add .gitattributes
+
+** How does it actually work? Where are my files stored? etc?
+
+Where are my files?
+
+** Further Information
+
+https://github.com/git-lfs/git-lfs/wiki/Tutorial
