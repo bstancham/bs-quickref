@@ -1834,6 +1834,7 @@ C-c | ; convert region into an org table
 M-x org-table-transpose-table-at-point ; transposes columns to rows & vice versa
 
 ** SPREADSHEETS
+*** SPREADSHEET - BASICS
 SEE ALSO: SES
 
 CELL REFERENCES:
@@ -1849,7 +1850,14 @@ FORMULAS:
 =$-2+$-1 ; add together values of two relatively positioned columns
 =$-1 * @2$2 ; multiply value of column 1 space to left by value of an absolute-referenced cell
 
+FORMULA EDITING BUFFER (INTERACTIVE FORMULA EDITING):
+C-c ' ; opens the formula editing buffer
+C-c   ; exit formula editing buffer
+- reference under cursor is hilighted on the sheet
+- select reference using S-<up/down/left/right> keys
+
 RECOMPUTING TABLES:
+C-c C-c (while on the formula line)
 C-c * ;  org-ctrl-c-star --> calls org-table-recalculate
 C-u C-u C-c * ; recompute entire table and iterate until stable
 SEE INFO FOR MORE RECOMPUTE COMMANDS...
@@ -1861,10 +1869,34 @@ FUNCTIONS:
 =vmean($2..$5) ; mean of cells in range from COL 2 - col 5
 ...
 
-NAMED CELLS/NAMED COLUMNS ; see info: (org)Top > Tables > The spreadsheet > Advanced features
+*** SPREADSHEET - ADVANCED FEATURES (NAMED CELLS/NAMED COLUMNS ETC)
 
-ORG-PLOT (using gnuplot):
-... must install Gnuplot and gnuplot-mode...
+See info: (org)Top > Tables > The spreadsheet > Advanced features
+
+*** SPREADSHEET - ORG-PLOT
+
+Need to install gnuplot and gnuplot-mode.
+
+*** !!!! SPREADSHEET TROUBLESHOOTING !!!!
+**** Trouble with Recomputing Table
+
+I had a formula to get the sum of a column of data (range from first to second
+horizontal separator).
+
+: #+TBLFM: $1=vsum(@I..@II)
+
+When I did C-c * the value would be inserted into the row where the cursor was
+currently located rather than the cell beneath the data, which is where I wanted
+it. If I did C-c C-c on the formula line then all of the values in the column
+would go crazy high!
+
+SOLUTION
+
+Need to specify the precise target cell, not just the row
+
+: #+TBLFM: @12$1=vsum(@I..@II)
+
+Now it works fine.
 
 ** ORG MODE: TODO ITEMS
  ** TODO A Sample todo...
@@ -2209,7 +2241,7 @@ https://www.orgroam.com/manual.html
 Org-roam provides utilities for maintaining a digital slip-box. This section
 aims to provide a brief introduction to the “slip-box”, or “Zettelkasten”
 method.
- 
+
 * SES (Simple Emacs Spreadsheet)
 SEE ALSO: org mode/org tables
 
@@ -2299,24 +2331,24 @@ COMPANY FRONTENDS....
 
 * EMAIL
 ** INTRO
-NOTE: Sending and recieving email are completely different things...
-... you don't need an email account to send email, whereas you do need an email account to recieve email...
-... almost all SMTP servers now require you to authenticate before sending mail - this is the only reason why you need an email account to send email.
+- Sending and recieving email are completely different things.
+- You don't need an email account to send email, whereas you do need an email
+  account to recieve email.
+- Almost all SMTP servers now require you to authenticate before sending mail,
+  this is the reason why you need an email account to send email.
 
 ** SENDING EMAIL
+*** Basics
 
 C-x m   ; (compose-mail)          ; ... go to *unsent mail* buffer...
 C-c C-c ; (message-send-and-exit) ; ... computer will ask for system password...
 C-c C-s ; (message-send)          ; ... computer will ask for system password...
 
-
 === IN MAIL-MODE ===
 ... separate email addresses with comma
 ... address completion should work if bbdb/company are set up
 
-
-
-=== SETUP USING EXTERNAL SMTP SERVER ===
+*** SETUP USING EXTERNAL SMTP SERVER
 
 1: INSTALL AN SMTP PROGRAM:
 
@@ -2345,9 +2377,7 @@ These lines are required in .emacs...
 (setq user-full-name "[Ben Chambers]")
 (setq user-mail-address "ben@bschambers.info")
 
-
-
-=== TROUBLESHOOTING ===
+*** TROUBLESHOOTING
 
 PROBLEM:
 With the setup above I am able to send email from one @bschambers.info email address to another, but when I try to send to benopod@hotmail.com it fails and tells me:
@@ -2362,20 +2392,52 @@ SOLUTION:
 ... this is the forum post which finally helped me to do this:
 http://superuser.com/questions/702698/smtp-protocol-error-when-sending-mail-in-emacs
 
+*** COMPOSING AND SENDING HTML EMAIL
+
+TODO: package org-mime can send html emails from org files, but not sure it
+supports my very basic (sending only) setup... might have to get gnus configured
+again to be able to use it...
+
+
+
+... began to experiment with writing html code directly into email...
+... didn't work - I think it might be more work than it's worth to make it work...
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Demystifying Email Design</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+<body style="margin: 0; padding: 0;">
+ <table border="1" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+   <td>
+    Hello!
+   </td>
+  </tr>
+ </table>
+</body>
+
+</html>
+
 ** RECIEVING EMAIL
+*** Introduction
 
-POP3 or IMAP protocol...
+POP3 or IMAP protocol.
 
+mail reading programs:
+- gnus
+- mu4e
+- notmuch
 
-gnus ---
+*** GNUS
 
-mu4e
+I have actually got gnus to work but learning how to use it effectively was hard
+work and I gave up on it pretty quickly.
 
-notmuch
-
-
-
-================================ GNUS ================================
 NOTE: gnus is a news reader, so we refer to articles instead of mail or messages
 
 WARNING: always quit gnus before closing emacs!
@@ -2436,52 +2498,27 @@ g ; return to default display mode
 MISC
 G c ; customize gnus
 
+*** NOTMUCH
+**** About
 
+https://notmuchmail.org/
 
-======================= NOTMUCH (EMAIL SYSTEM) =======================
+Notmuch seems really nice - I would like to get it working but didn't manage when I tried.
 
-Notmuch is fast, global-search and tag-based email system for use within a text editor or terminal.
+- Notmuch is fast, global-search and tag-based email system for use within a
+  text editor or terminal.
+- It doesn't store the emails.
+- It doesn't send or recieve the emails.
 
-It doesn't store the emails
+**** Installation and Setup
 
-It doesn't send or recieve the emails
+Install notmuch on system (emacs frontend is bundled by default I think):
 
+: $ apt-get install notmuch
 
+FOR RECEIVING EMAIL:
 
-FIRST: must have notmuch set up on system (SEE: quickstart-system)
-
-
-
-================== COMPOSING AND SENDING HTML EMAIL ==================
-
-TODO: package org-mime can send html emails from org files, but not sure it
-supports my very basic (sending only) setup... might have to get gnus configured
-again to be able to use it...
-
-
-
-... began to experiment with writing html code directly into email...
-... didn't work - I think it might be more work than it's worth to make it work...
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
- <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title>Demystifying Email Design</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-</head>
-
-<body style="margin: 0; padding: 0;">
- <table border="1" cellpadding="0" cellspacing="0" width="100%">
-  <tr>
-   <td>
-    Hello!
-   </td>
-  </tr>
- </table>
-</body>
-
-</html>
+FOR SENDING EMAIL:
 
 * WEB BROWSER
 
