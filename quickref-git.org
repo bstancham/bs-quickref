@@ -771,6 +771,14 @@ Git Large File Storage (LFS) replaces large files such as audio samples, videos,
 datasets, and graphics with text pointers inside Git, while storing the file
 contents on a remote server like GitHub.com or GitHub Enterprise.
 
+** Commands Cheatsheet
+
+IMPORTANT: make sure to track .gitattributes - git lfs setup info is stored there
+
+: git lfs track "*.wav" # track all .wav files from now on
+: git lfs track         # list all patterns tracked by git lfs
+: git lfs ls-files      # list all files in repo tracked by git lfs
+
 ** Installation and Setup
 
 (May 2022) I downloaded the latest version from the website because the version
@@ -810,3 +818,114 @@ Where are my files?
 ** Further Information
 
 https://github.com/git-lfs/git-lfs/wiki/Tutorial
+
+** Troubleshooting
+*** Asks for ssh passphrase repeatedly during push
+
+See this page: https://github.com/git-lfs/git-lfs/wiki/Tutorial
+
+Since git-lfs only supports http/https, git will need to authenticate over
+http/https when pushing files, even if you are using ssh/git protocol for
+git. Without the credential helper, you will be asked to enter your username and
+password for EVERY connection, which is pretty unusable. To get around this, git
+credential helpers will help handling passwords for you.
+
+Solution is to switch project to use hhtps instead of ssh and to use a
+credentials manager.
+
+** Installing Git Credential Manager
+
+https://github.com/GitCredentialManager/git-credential-manager/releases/tag/v2.0.696
+
+: $ sudo dpkg -i <path-to-package>
+
+: $ git-credential-manager-core configure
+
+Still asked for passphrase five times - need to switch projects using git LFS to
+https rather that ssh
+
+* Splitting a Repository with filter-repo
+** Installation and Setup
+
+followed instructions from here
+
+https://docs.github.com/en/get-started/using-git/splitting-a-subfolder-out-into-a-new-repository
+
+git-filter-repo is an addon which has to be installed
+
+https://github.com/newren/git-filter-repo
+
+could not find it on apt, so installed via pip
+
+: python3 -m pip install git-filter-repo
+
+worked perfectly - git now recognises the filter-repo command and will autocomplete it
+
+
+
+manpage with useful examples here:
+
+https://www.mankier.com/1/git-filter-repo
+
+** Usage: Creating New Repo from a Subdirectory of an Existing Repo
+
+In this example, I wanted to split my final project dir out from the coding_1 repo.
+
+Clone the existing repo - don't want to operate on the original!
+
+The title of the new repo is going to be teeny_tiny_people, so I rename the repo as I clone it.
+
+: $ git clone coding_1 teeny_tiny_people
+
+cd inside the cloned repo
+
+: $ cd teeny_tiny_people
+
+use filter-repo to remove everything except for the one folder we want to keep
+
+NOTE: it kept telling me that my repo wasn't clean (I think it was), so I had to
+use the --force option
+
+: $ git filter-repo --path final_project --force
+
+Now, there is only one folder in the repo!
+
+Everything else has been removed, but the commit history for the folder I kept
+has been maintained.
+
+Now, I want to move the contents of that folder (./final_project) up into the
+top level directory rather than having it as a subdirectory.
+
+: $ git filter-repo --path-rename final_project/:
+
+That's it!
+
+Now, create a new repo on github, add it as "origin" and push.
+
+** Usage: Removing the separated part from the main repo
+
+IMPORTANT! make a clone of the repository and keep the old one as backup, for a
+while until we are very sure that nothing has gone wrong.
+
+I rename the old repo to coding_1_old before cloning, so that my new one can be called coding_1
+
+: $ mv coding_1 coding_1_old
+
+: $ git clone coding_1_old coding_1
+
+: $ cd new_coding_1
+
+We use the filter-repo command same as above, but we supply the --invert-paths
+option so that it gets rid of final_project and keeps everything else.
+
+(again, I had to use --force because git told me that my repo wasn't clean)
+
+: $ git filter-repo --path final_project --invert-paths --force
+
+History has been rewritten, so we have to redo our remove repository as well.
+
+On github, I rename my original repo so that my new one can use the name. I
+won't delete the old repo for a while, just in case anything goes wrong.
+
+Then I make a new remote repo, add it to my new coding_1 repo as remote
+"origin", and push.
