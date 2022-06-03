@@ -1,0 +1,25 @@
+#+title: Shader Languages Quick-Reference
+
+* Introduction
+Each shader language is generally tied to a particular 3D Graphics framework:
+
+| Graphics Framework                  | Shader Language                      |
+|-------------------------------------+--------------------------------------|
+| OpenGL                              | GLSL (OpenGL Shading Language)       |
+| WebGL                               | GLSL ES (also known as ESSL)         |
+| OpenGL ES (OpenGL Embedded Systems) | GLSL ES (also known as ESSL)         |
+| DirectX                             | HLSL (High Level Shading Language)   |
+| Vulkan                              | Anthing compiled to SPIR-V bytecode* |
+
+NOTE: * shaders for Vulkan may be written in different shading languages, so
+long as a compiler exists to translate into SPIR-V bytecode. Can certainly use
+GLSL no problem.
+
+* Vertex Shader
+
+* Fragment Shader
+** Builtins
+vec4 gl_FragCoord
+input variable: window relative coordinate (x, y, z, 1/w) values for the fragment.
+x/y is often all we'll want
+z is depth
