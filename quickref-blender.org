@@ -1,58 +1,90 @@
-* donut tutorial
-up to part 7 (texturing)
-https://www.youtube.com/watch?v=CmrAv8TSAao
+#+title: Blender Quick-Reference
 
-* DOWNLOAD/INSTALL/SETUP
+* Installation & Setup
+December 2021:
+- Blender version 3.0.0
+- downloaded from website
+- uncompressed in ~/Software
+- double-click to run
 
-(December 2021)
+* Basic Controls
 
-downloaded from website
+Viewport Controls:
+- Middle-Mouse = rotate
+- Shift+Middle-Mouse = pan
+- Ctrl+Middle-Mouse OR Mouse-Wheel = zoom
 
-uncompressed in ~/Software
-
-double-click to run
-
-* MISC USEFUL THINGS
-
-Shift+C = return 3D cursor to the origin and reset view
-
-Shift+Space = toggle fullscreen (for viewport with mouse over)
-
-To ORBIT VIEWPOINT:
+To Orbit Viewpoint:
 click & drag on the Axes gizmo (in 3D Viewport)
 
+Some Keyboard Shortcuts:
+- x = delete
+- Shift+a = add
+- Shift+r = repeat last action
+
+- Alt+g = reset position of object
+- Alt+r = reset rotation of object
+
+* Blender UI
+
+Ctrl+Space = toggle fullscreen (for panel with mouse over)
+
+Shift+c = return 3D cursor to the origin and reset view
+
+* Walk/Fly Navigation
+
+walk or fly around scene like a computer game:
+- View-->Navigation-->Walk Navigation
+- View-->Navigation-->Fly Navigation
+
+Controls (General):
+- wsad
+- q/e = move up/down
+- LeftClick = confirm new view
+- RighClick OR Esc = cancel and return to old view
+- WheelUp/WheelDown = increase/decrease speed
+- Shift = speed up temporarily
+- Alt = slow down temporarily
+
+Controls (Walk):
+- Space = teleport to location at crosshairs
+- Tab = toggle gravity
+- v = jump (when gravity is off)
+
+Controls (Fly):
+- in Fly Navigation you have momentum
+- Ctrl = disable rotation (so you can do a fly-by)
+
+* Preferences
+
+Emulate Numpad (useful for laptop):
+- Edit-->Preferences-->Input
+
 Scale interface (text etc):
-Edit-->Preferences-->Interface
+- Edit-->Preferences-->Interface
 
-shift-A = add
+* Modes
+- Object Mode
+- Edit Mode
 
-- object mode
-- edit mode
+* Modelling
+** Misc
 
-faces-> delete
+Create a cylinder with segments:
+- Add-->Mesh-->Cylinder
+- switch to Edit Mode/Edges
+- switch to wireframe view (so we can select hidden edges)
+- LeftClick & drag to select all edges except for end caps
+- RightClick-->Subdivide
 
+** Editing Shapes
 
-select vertices all the way through an object:
-- switch to x-ray mode
-- make box-selection as normal
+(in edit mode)
 
-make selected vertices into a new separate object
-- select vertices
-- duplicate (Shift-D)
-- p (to make part of an object into a new object)
-- ... choose 'selection'
-
-select only linked/connected parts
-- Ctrl-L
-
-dragging donut icing
-- snap to face
-- project individual elements
-
-
-APPLY modifier
-
-** editing shape
+delete vs dissolve:
+- DELETE will leave a hole in your model
+- DISSOLVE will join faces together to leave surface intact
+- delete/dissove vertices/edges/faces in edit mode
 
 moving vertices around (use proportional editing to drag along nearby vertices as well):
 - in edit mode
@@ -61,98 +93,295 @@ moving vertices around (use proportional editing to drag along nearby vertices a
 - g - to move
 - mouse wheel to change radius of proportional editing effect
 
-shring/fatten (Alt-S):
+shrink/fatten (Alt-S):
 - in edit mode
 - select some vertices
 - alt-s - to move along direction of normals
 
 select random vertices/edges/faces:
 - in edit mode
-- select-->random
+- Select-->Random
 
-** sculpting
+Separate part into new mesh:
+- RightClick-->Separate-->Selection
+- RightClick-->Separate-->Loose Parts
+
+More shape-editing methods:
+- knife cut
+- bisect
+- bevel loop cuts
+- auto-smooth - automatically chooses which angles to smooth based on maximum angle
+- dissolve edges (instead of delete edges)
+- bend - shift-W
+- shrink - shrink/fatten
+- bridge faces
+- bridge edge loops
+
+** Cuboid Operations (Rapid Build Rectilinear Forms)
+- start with a cube
+- Edit Mode/Faces
+- Extrude Region (e)
+- Inset Faces (i)
+- loop cut (Ctrl+r)
+
+** Sculpting
 
 Stroke-->Stroke Methods
 - Space/Airbrush etc
 
-** world properties
+* Selecting
 
-- lighting strength
+Ctrl+i = inverse selection
 
-** rendering
+Select only linked/connected parts:
+- Ctrl-L
+
+Select vertices all the way through an object:
+- switch to x-ray mode
+- make box-selection as normal
+
+Make selected vertices into a new separate object
+- select vertices
+- duplicate (Shift-D)
+- p (to make part of an object into a new object)
+  - choose 'selection'
+
+Select shortest path of faces/edges:
+- select face/edge
+- Ctrl+LeftClick
+
+More selection methods:
+- select linked flat faces (can adjust sharpness)
+- select linked (apply limits, materials/seams etc)
+- select boundary loops
+- circle select - click and drag to "paint" selection area
+
+* Modifiers
+** Introduction
+
+Add a modifier:
+- In the inspector, go to Modifier Properties (the single-spanner symbol)
+- click Add Modifier
+
+Applying Modifiers:
+- applying modifiers will make things easier for the computer because all the
+  modifiers don't have to be generated on the fly anymore
+- cons: can no longer edit modifier parameters
+
+Other things to bear in mind:
+- can change the order of modifiers
+
+** Boolean Modifiers
+
+- need two geometry objects
+- Add Modifier-->Boolean
+
+** Symmetry (Mirror Modifier)
+
+MIRROR SYMMETRY:
+- Add Modifier-->Generate-->Mirror
+
+RADIAL SYMMETRY is a bit more tricky to do - here is one good method:
+- add Empty-->Plain Axes (just for reference point as centre for rotation -
+  could also just use origin)
+- make something, then move it away from the origin a bit
+- make as many instances of the thing as you need e.g. 4 extra copies for five-fold radial symmetry
+- calculate the number of degrees to rotate each e.g. 360/5 for five-fold radial symmetry
+- select the first instance and rotate by chosen amount e.g. 360/5 degrees
+- select next instance and use Shift-r (repeat last action) twice, thrice, etc...
+- using instances, so can still edit as one :-)
+
+** Skin Modifier (Add Skin to a Path)
+
+EXAMPLE: Making a Low-Poly Tree:
+- Start with a single vertex
+  - add cube (Shift-A --> mesh --> cube)
+  - (Edit Mode/Vertices) RightClick-->Merge Vertices (to end up with a single vertex)
+- build skeleton of tree
+  - Ctrl+RightClick to add connected vertex/edge to current vertex
+- Add Modifier-->Generate-->Skin
+  - switch to wireframe mode (so that we can see the skeleton vertices)
+  - select any vertex
+  - press Ctrl-A to scale the skin around the vertex
+    - make each section as thick or thin as you like
+- uses square section by default - for a rounder cross section:
+  - Add Modifier-->Generate-->Subdivision
+
+** Convert to Voxels (Remesh Modifier)
+Add Modifier-->Generate-->Remesh
+- Select "Blocks"
+- "Octree Depth" sets the size of the blocks
+
+** Make Model Smoother (Mesh Subdivision)
+- Add Modifier-->Generate-->Subdivision
+
+* Rendering
+** Introduction
 
 F12 to start rendering
 ESC to stop
 
+Tips:
+- render with transparent background
 
+** Rendering Engines
+*** Builtin Renderers: WORKBENCH
+Useful when you need a responsive UI and don't need to see a realistic preview.
 
+*** Builtin Renderers: EEVEE (Realtime Rendering)
+This is similar to what you'd get in a game engine e.g. Unreal or Unity.
 
+*** Builting Renderers: CYCLES (Raytracing)
+Raytracing is more realistic, but not realtime.
 
-** camera
-
-camera to view:
-- Ctrl-Alt-Numpad0
-OR
-- n (bring up properties)
-- view-->camera to view
-- ... untick box when you want to stop moving the camera
-
-** lights
-
-
-
-** render engines
-*** workbench
-*** eevee = realtime - similar to what you'd get in a game engine e.g. unreal
-
-
-*** cycles = raytracing - more realistic (not realtime)
-
-make rendering faster - good for use in viewport:
+How to make rendering faster (good for use in viewport):
 - set max samples count low
 - then add denoiser
 
-more handy settings:
+Denoiser should help to get rid of those little specks in the rendered image.
+
+More handy settings:
 - noise threshold
 - max/min samples (adaptive sampling may be used to reduce number of samples in easy-to-render areas)
 - time limit (stop rendering after set time limit)
 
-** material properties
+*** External Renderers
+External rendering engines are available.
 
-** lighting
+* World Properties
+- lighting strength
+
+* Camera
+
+Toggle camera view:
+- 0 on numpad
+- or use the little icon in the viewport
+
+Moving the camera:
+- in camera view
+- select the box
+- press g, then move the mouse
+- to zoom:
+  - (after pressing g)
+  - press middle mounse button, then move mouse
+
+Set camera position to current view:
+- View-->Align View-->AlignActive Camera to View
+- OR Ctrl+Alt+Numpad0
+
+* Material Properties
+** Surface
+Principled BSDF is a general purpose shader which includes most of the usual stuff
+
+** Bump Maps/Displacement Maps
+
+
+
+** Normal Maps
+
+* EXAMPLE: Making Pointy Tree
+** v1
+- make point at origin
+- (edit/vertices mode) extend upwards - 1 edge
+- select edge
+- subdivide edge
+- Add Modifier-->Generate-->Skin
+- wireframe view
+- expand/shrink vertices to make long point (Shift-a, or Ctrl+a?)
+- Add Modifier-->Generate-->Subdivision
+- Add Modifier-->Deform-->Simple Bend
+
+add displacement map
+- texture is saved as jpg
+- Add Modifier-->Deform-->Displace
+- (might also add Displacement Map using nodes editor (maybe more common))
+-
+
+** v2
+trunk:
+- tall cone
+  - 50m tall
+  - subdivide long edges (20 subdivisions) (select edges in wireframe view)
+
+branches:
+- separate top part of trunk into new mesh and rename as "Branch"
+  - Edit/Edges
+  - select upper 1/3
+  - RightClick-->Separate-->Selection
+- give branch a nice bend
+  - Add-->Empty-->Plain Axes (this will be the origin for the bend)
+  - position at base of branch (for me, was [0, 0, 33])
+  - select branch and add modifier: Deform-->Simple Deform
+  - select the "Bend" box
+  - amount was 20
+- apply the bend modifier - otherwise the rotation step won't work
+- duplicate and rotate
+  - create 5 additional instances of branch
+  - rotate around the z axis
+  - angle-step for 6 instances is 60 degrees
+- doing the rotation
+  - select object
+  - put mouse inside the scene window
+  - press r (rotate)
+  - press z (constrain to z axis)
+  - type amount e.g. 60
+  - press enter
+
+foliage:
+- cone: upside-down & truncated
+  - 5m tall
+  - 5m top radius
+  - 3m bottom radius
+
+* Lighting
 
 - sun is very bright!
 - spot
 - point light
 
-** preferences
+* 2D Shapes
 
-emulate numpad:
-Edit-->Preferences-->Input
+Draw outline in SVG program such as Inkscape
 
-** boolean operations
+import SVG - imports as curves by default --> convert to mesh etc
 
-select two geometry objects
-single-spanner symbol -> add modifier -> boolean
+grid-fill - fill 2D shape with quads
 
-* CREATING A 2D MESH
-
-draw outline in SVG program such as Inkscape
-
-* bezier curve
+* Bezier Curve
 
 Shift-A --> add curve/bezier curve
 
-TAB (edit mode)
+Switch to edit mode (TAB)
 
-select control point(s) and press G to move them
+Select control point(s) and press G to move them
 
 EXTENDING/ADDING MORE NODES
 - (in edit mode)
 - select an end point
 - press E, or R-Click-->Extrude Curve and Move
 
-* repeat an object along a curve
+* Extrude Profile Along Curve
+
+To do this, we need two curve objects.
+
+Make path:
+- make a bezier curve
+
+Make profile to be extruded:
+- make a circle
+- convert to curve
+  - in object mode
+  - Convert To-->Curve
+  - icon should change to the curve symbol
+
+Extrude profile along path:
+- select the bezier curve
+- Object Data Properties (curve symbol with little squares at endpoints)
+  - Geometry-->Bevel
+    - choose "Object" and select the circle, either by choosing it from the list
+      or by using the eyedropper thingy
+
+* Repeat an Object Along a Curve
 
 NOTE: want CURVE and MESH to both be in same location, otherwise there will be
 offset, which is usually undesirable
@@ -174,90 +403,20 @@ add a curve modifier to the mesh
 
 That should do it!
 
-* scripting
+* Scripting in Python
+** Introduction
 
-- python console
-
-- flow chart/nodes view
-
-* 100 blender tips video
-- drag and drop materials
-- copy to selected
-- knife cut
-- ctrl + space
-- bisect
-- ivy generator addon
-- bsckspace to reset parameters
-- alt-G = reset position of object - alt-R = reset rotation
-- ctrl+right click -> auto find shortest path of faces
-- HDRI - 360 view textures which contain lighting data - download from HDRI HAVEN
-- convert to voxels --> modifiers
-- select linked flat faces (can adjust sharpness)
-- architecture addons - archimesh/archipack
-- color ramp node
-- pixabay - for good backgrounds
-- textures.com - for good textures
-- use image as a colour palette
-- walk navigation - walk around scene link fps game with WASD etc
-- separate by loose parts
-- select linked (apply limits, materials/seams etc)
-- render with transparent background
-- convert texture to normal map
-- snap view to face (shift/numpad key)
-- use alt-D instead of shift-D --> shift-D = duplicate --> alt-D = instance
-- discombobulator (addon)
-- auto-smooth - automatically chooses which angles to smooth based on maximum angle
-- radial symmetry - for sculpting
-- grid-fill - fill 2D shape with quads
-- select boundary loops
-- scatter objects (addon)
-- recalculate normals
-- dissolve edges (instead of delete edges)
-- node wrangler (addon) --> see any node on it's own
-- ray visibility options (cycles renderer)
-- "steal like an artist" (book) - use blendswap to get free models
-- import SVG - imports as curves by default --> convert to mesh etc
-- circle select - click and drag to "paint" selection area
-- pie menus
-- set camera to view - Ctrl+Alt+Numpad0
-- display all UVs
-- loop cuts
-- bevel loop cuts
-- ctrl-i - inverse selection
-- hardOps/boxcutter (addons)
-- denoiser (rendering)
-- bend - shift-W
-- blender sync - sync blender settings on the cloud
-- animating in edit mode
-- follow path constraint - offset value
-- skin modifier --> add skin to a path!
-  - add cube (shift-A --> mesh --> cube)
-  - TAB (edit mode), then RIGHT-CLICK-->merge vertices (to end up with a single vertex)
-  - Ctrl+RightClick to add connected vertex/edge
-  - add sking modifier
-  - switch to wireframe mode
-  - select any vertex
-  - press Ctrl-A to scale the skin around the vertex
-  - ... make each section as thick or thin as you like
-- boolTool (addon)
-- snapping settings - snap to face, edge, vertex etc
-- shrink - shrink/fatten
-- symmetrize
-- bridge faces
-- bridge edge loops
-- transform locks
-- repeat last action - shift-R
-- ctrl-LMB (with something selected i.e. a face) to extend...
-- the blender manual - technical definitions
-- join blender community on social media
-
-* scripting in python
-** documentation
 API documentation: https://docs.blender.org/api/current/
 API quickstart: https://docs.blender.org/api/current/info_quickstart.html
 
-** key concepts
-*** data access
+Tips:
+- use the python console to learn names of objects, methods etc
+- flow chart/nodes view
+
+** Deleting an Object (NOT TESTED)
+bpy.ops.object.delete(use_global=False)
+
+** Data Access
 Accessing data from the currently loaded blend-file is done with the module bpy.data
 
 : bpy.data.objects
@@ -322,9 +481,8 @@ if bpy.ops.view3d.render_border.poll():
     bpy.ops.view3d.render_border()
 #+END_SRC
 
-** scripting examples
-
-Basic add cuboids:
+* Script Examples
+** Add Random Cuboids
 #+BEGIN_SRC python
 import bpy
 from random import randint
@@ -337,7 +495,7 @@ for c in range(0, 5):
     bpy.ops.mesh.primitive_cube_add(location=(x, y, z), scale(0.5, 6, 0.5))
 #+END_SRC
 
-Add a cuboid, then subtract parts of it using boolean difference:
+** Add a Cuboid, then Subtract Parts of it Using Boolean Difference
 #+BEGIN_SRC python
   import bpy
 
@@ -364,7 +522,7 @@ Add a cuboid, then subtract parts of it using boolean difference:
       c2.hide_set(True)
 #+END_SRC
 
-Switch mode, do something, then return to original mode:
+** Switch Mode, Do Something, Then Return to Original Mode
 #+BEGIN_SRC python
 import bpy
 oldMode = bpy.context.mode
@@ -373,7 +531,7 @@ bpy.ops.object.mode_set(mode='OBJECT')
 bpy.ops.object.mode_set(mode=oldMode)
 #+END_SRC
 
-Make a curved path, then add a bunch of spheres along it:
+** Make a Curved Path, Ten Add a Bunch of Spheres Along It
 #+BEGIN_SRC python
   import bpy
 
@@ -382,9 +540,9 @@ Make a curved path, then add a bunch of spheres along it:
       crv.dimensions = '3D'
       spline = crv.splines.new(type='NURBS')
       spline.use_endpoint_u = True
-      spline.points.add(len(coords_list) - 1) 
+      spline.points.add(len(coords_list) - 1)
       for p, new_co in zip(spline.points, coords_list):
-          p.co = (new_co + [1.0])  # (add nurbs 
+          p.co = (new_co + [1.0])  # (add nurbs
       obj = bpy.data.objects.new('object_name', crv)
       bpy.data.scenes[0].collection.objects.link(obj)
 
@@ -413,9 +571,9 @@ Make a curved path, then add a bunch of spheres along it:
 
 #+END_SRC
 
-Make spheres within an cuboid area and add them with BOOLEAN UNION
-... need to CONVERT TO MESH so that I can get rid of all the boolean operations
-and dependent objects, but that part of script doesn't work yet!
+** Make Spheres Within a Cuboid Area and Add Them with Boolean Union
+NOTE: need to CONVERT TO MESH so that I can get rid of all the boolean
+operations and dependent objects, but that part of script doesn't work yet!
 #+BEGIN_SRC python
 import bpy
 #from random import randint
@@ -429,7 +587,7 @@ for c in range(0, 5):
     y = randfloat(-1, 1)
     z = randfloat(0, 0.2)
     bpy.ops.mesh.primitive_uv_sphere_add(location=(x, y, z), scale=(1, 1, 1))
-    
+
     if agregate == None:
         agregate = bpy.context.selected_objects[0]
         agregate.name = "agregate"
@@ -459,8 +617,7 @@ for c in range(0, 5):
 
 #+END_SRC
 
-* useful little scripts
-** create a new uv sphere primitive and add as a boolean difference modifier to existing scene object
+** Create New UV Sphere Primitive & Add as Boolean Modifier to Existing Scene Object
 
 USAGE:
 - change name "subtractive01" to name of whichever object you want to add subtractive modifer to
@@ -551,7 +708,7 @@ creating random step patterns by boolean union
   # adds a step at the current point
   def add_step():
       temp = create_base_shape(x, y, z)
-    
+
       # perform boolean operation
       # - add new boolean modifier to base_object
       # - set temp as the OBJECT of the modifier
@@ -635,7 +792,7 @@ chimney created with cosine function
           z = math.sin(1 - dist) * 5
       bpy.ops.mesh.primitive_uv_sphere_add(radius=r, location=(x, y, z))
       return bpy.context.selected_objects[0]
-    
+
   def bool_union(base_object, union_object):
       # perform boolean operation
       # - add new boolean modifier to base_object
@@ -664,6 +821,50 @@ chimney created with cosine function
       bool_union(base, temp)
       delete_object(temp)
 #+END_SRC
+* Donut Tutorial
+up to part 7 (texturing)
+https://www.youtube.com/watch?v=CmrAv8TSAao
 
-* script deleting an object (not tested)
-bpy.ops.object.delete(use_global=False)
+Dragging donut icing:
+- snap to face
+- project individual elements
+
+* 100 Blender Tips Video
+- drag and drop materials
+- copy to selected
+- backspace to reset parameters
+- color ramp node
+- use image as a colour palette
+- convert texture to normal map
+- snap view to face (shift/numpad key)
+- use "instance" (Alt+d) instead of "duplicate" (Shift+d)
+- radial symmetry - for sculpting
+- recalculate normals
+- ray visibility options (cycles renderer)
+- display all UVs
+- animating in edit mode
+- follow path constraint - offset value
+- snapping settings - snap to face, edge, vertex etc
+- symmetrize
+- transform locks
+
+Addons
+- boolTool (addon)
+- scatter objects (addon)
+- ivy generator addon
+- node wrangler (addon) --> see any node on it's own
+- hardOps/boxcutter (addons)
+- discombobulator (addon)
+- architecture addons - archimesh/archipack
+
+* Getting (Free) Assets
+
+Reccomendations from 100 blender tips video:
+- HDRI - 360 view textures which contain lighting data - download from HDRI HAVEN
+- pixabay - for good backgrounds
+- textures.com - for good textures
+- blendswap to get free models
+
+
+- pexels
+- https://cloud.blender.org/p/textures (have to create an account and sign in)
